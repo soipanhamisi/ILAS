@@ -1,0 +1,373 @@
+{
+  "info": {
+    "name": "LMS Exam Assessment System",
+    "description": "Complete API collection for Instructor and Student exam operations",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Instructor Operations",
+      "item": [
+        {
+          "name": "Create Exam",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "instructorId",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "courseId",
+                  "value": "101",
+                  "type": "text"
+                },
+                {
+                  "key": "examTitle",
+                  "value": "Midterm Exam",
+                  "type": "text"
+                },
+                {
+                  "key": "maxScore",
+                  "value": "100",
+                  "type": "text"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/instructor/exams/create",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "instructor", "exams", "create"]
+            }
+          }
+        },
+        {
+          "name": "Grade Submission",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"instructorId\": 1,\n  \"grade\": 85,\n  \"feedback\": \"Excellent work!\",\n  \"gradeJustification\": \"Strong understanding of concepts\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/instructor/exams/submissions/:submissionId/grade",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "instructor", "exams", "submissions", ":submissionId", "grade"],
+              "variable": [
+                {
+                  "key": "submissionId",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Feedback",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"instructorId\": 1,\n  \"feedback\": \"Updated feedback\",\n  \"gradeJustification\": \"Updated justification\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/instructor/exams/submissions/:submissionId/feedback",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "instructor", "exams", "submissions", ":submissionId", "feedback"],
+              "variable": [
+                {
+                  "key": "submissionId",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Submissions for Exam",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/instructor/exams/:examId/submissions?instructorId=1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "instructor", "exams", ":examId", "submissions"],
+              "query": [
+                {
+                  "key": "instructorId",
+                  "value": "1"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "examId",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Ungraded Submissions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/instructor/exams/:examId/submissions/ungraded?instructorId=1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "instructor", "exams", ":examId", "submissions", "ungraded"],
+              "query": [
+                {
+                  "key": "instructorId",
+                  "value": "1"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "examId",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Exams for Course",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/instructor/exams/courses/:courseId?instructorId=1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "instructor", "exams", "courses", ":courseId"],
+              "query": [
+                {
+                  "key": "instructorId",
+                  "value": "1"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "courseId",
+                  "value": "101"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Student Operations",
+      "item": [
+        {
+          "name": "Submit Exam",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "studentId",
+                  "value": "5",
+                  "type": "text"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/student/exams/:examId/submit",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "student", "exams", ":examId", "submit"],
+              "variable": [
+                {
+                  "key": "examId",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Grade and Feedback",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/student/exams/:examId/grade?studentId=5",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "student", "exams", ":examId", "grade"],
+              "query": [
+                {
+                  "key": "studentId",
+                  "value": "5"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "examId",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Submissions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/student/exams/submissions?studentId=5",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "student", "exams", "submissions"],
+              "query": [
+                {
+                  "key": "studentId",
+                  "value": "5"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Graded Submissions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/student/exams/submissions/graded?studentId=5",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "student", "exams", "submissions", "graded"],
+              "query": [
+                {
+                  "key": "studentId",
+                  "value": "5"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Available Exams",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/student/exams/available?studentId=5",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "student", "exams", "available"],
+              "query": [
+                {
+                  "key": "studentId",
+                  "value": "5"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Exam Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/student/exams/:examId?studentId=5",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "student", "exams", ":examId"],
+              "query": [
+                {
+                  "key": "studentId",
+                  "value": "5"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "examId",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Check Submission Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/student/exams/:examId/submitted?studentId=5",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "student", "exams", ":examId", "submitted"],
+              "query": [
+                {
+                  "key": "studentId",
+                  "value": "5"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "examId",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+
