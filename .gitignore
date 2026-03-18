@@ -37,3 +37,14 @@ build/
 
 /.env
 
+/frontend/dist/assets/CreateExam-Drio8gzQ.js
+/frontend/dist/assets/CreateExam-NbOXu6U5.css
+/frontend/dist/assets/ExamSubmissions-CEXE4hc2.js
+/frontend/dist/assets/Home-CTTJEqo5.js
+/frontend/dist/assets/index-DLMEgJAN.js
+/frontend/dist/assets/InstructorDashboard-fMq7UGn_.js
+/frontend/dist/assets/Login-BZxwDwuJ.js
+/frontend/dist/assets/StudentDashboard-Cvz0YYgN.js
+/frontend/dist/assets/TakeExam-ve9frx79.js
+/frontend/dist/assets/ViewResults-6YOV9PWc.js
+/storage/.gitkeep
