@@ -39,13 +39,27 @@
         </div>
 
         <div class="form-group">
+          <label>Question Input Method</label>
+          <div class="creation-mode-toggle">
+            <label>
+              <input v-model="creationMode" type="radio" value="upload" />
+              Upload CSV
+            </label>
+            <label>
+              <input v-model="creationMode" type="radio" value="manual" />
+              Build Questions Manually
+            </label>
+          </div>
+        </div>
+
+        <div v-if="creationMode === 'upload'" class="form-group">
           <label>CSV Template File</label>
           <div class="file-upload">
             <input
               type="file"
               @change="handleFileChange"
               accept=".csv"
-              required
+              :required="creationMode === 'upload'"
               ref="fileInput"
               id="csvFile"
             />
@@ -59,8 +73,57 @@
           </small>
         </div>
 
+        <div v-else class="manual-builder">
+          <div
+            v-for="(question, index) in manualQuestions"
+            :key="index"
+            class="manual-question-card"
+          >
+            <div class="manual-question-header">
+              <h4>Question {{ index + 1 }}</h4>
+              <button
+                v-if="manualQuestions.length > 1"
+                type="button"
+                class="btn-danger"
+                @click="removeQuestion(index)"
+              >
+                Remove
+              </button>
+            </div>
+            <div class="form-group">
+              <label>Question Text</label>
+              <textarea
+                v-model="question.text"
+                rows="4"
+                placeholder="Type the question prompt here"
+              />
+            </div>
+            <div class="form-group">
+              <label>Question Max Grade</label>
+              <input
+                v-model="question.maxGrade"
+                type="number"
+                min="1"
+                placeholder="e.g., 10"
+              />
+            </div>
+          </div>
+          <button type="button" class="btn-secondary add-question-btn" @click="addQuestion">
+            + Add Another Question
+          </button>
+          <small class="help-text">
+            Manual entries are converted to CSV and stored the same way as uploaded templates.
+          </small>
+        </div>
+
+        <div v-if="creationMode === 'manual'" class="csv-preview-info">
+          <h4>Preview Generated CSV:</h4>
+          <pre v-if="!manualPreviewError">{{ manualCsvPreview }}</pre>
+          <div v-else class="preview-error-message">{{ manualPreviewError }}</div>
+        </div>
+
         <div class="csv-format-info">
-          <h4>Expected CSV Format:</h4>
+          <h4>CSV Format Used for Storage:</h4>
           <pre>question,learnerResponses,maxGrade,grade
 What is 2+2?,,[10],
 Define OOP?,,[20],</pre>
@@ -85,7 +148,7 @@ Define OOP?,,[20],</pre>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import { instructorAPI } from '../services/api'
@@ -99,11 +162,92 @@ const formData = ref({
   maxScore: ''
 })
 
+const creationMode = ref('upload')
 const selectedFile = ref(null)
+const manualQuestions = ref([{ text: '', maxGrade: '' }])
 const fileInput = ref(null)
 const loading = ref(false)
 const error = ref('')
 const success = ref(false)
+
+const addQuestion = () => {
+  manualQuestions.value.push({ text: '', maxGrade: '' })
+}
+
+const removeQuestion = (index) => {
+  manualQuestions.value.splice(index, 1)
+}
+
+const escapeCsvValue = (value) => {
+  const normalized = String(value ?? '').replace(/\r?\n/g, ' ')
+  const escaped = normalized.replace(/"/g, '""')
+  return `"${escaped}"`
+}
+
+const getCleanManualQuestions = () => {
+  return manualQuestions.value
+    .map((question) => ({
+      text: question.text.trim(),
+      maxGrade: Number(question.maxGrade)
+    }))
+    .filter((question) => question.text)
+}
+
+const buildManualCsvContent = () => {
+  const cleanedQuestions = getCleanManualQuestions()
+
+  if (!cleanedQuestions.length) {
+    throw new Error('Please add at least one question with text')
+  }
+
+  if (cleanedQuestions.some((question) => !Number.isInteger(question.maxGrade) || question.maxGrade <= 0)) {
+    throw new Error('Each manual question must have a valid max grade greater than 0')
+  }
+
+  const manualTotal = cleanedQuestions.reduce((sum, question) => sum + question.maxGrade, 0)
+  const examMaxScore = parseInt(formData.value.maxScore, 10)
+  if (manualTotal !== examMaxScore) {
+    throw new Error(`Sum of manual question grades (${manualTotal}) must equal Maximum Score (${examMaxScore})`)
+  }
+
+  const rows = cleanedQuestions.map((question) => `${escapeCsvValue(question.text)},,${question.maxGrade},`)
+  return ['question,learnerResponses,maxGrade,grade', ...rows].join('\n')
+}
+
+const buildManualCsvFile = () => {
+  const csvContent = buildManualCsvContent()
+  const safeExamTitle = (formData.value.examTitle || 'exam').trim() || 'exam'
+  const fileName = `${safeExamTitle.replace(/\s+/g, '_')}_manual.csv`
+
+  return new File([csvContent], fileName, {
+    type: 'text/csv'
+  })
+}
+
+const manualPreviewError = computed(() => {
+  if (creationMode.value !== 'manual') {
+    return ''
+  }
+
+  try {
+    buildManualCsvContent()
+    return ''
+  } catch (previewError) {
+    return previewError.message
+  }
+})
+
+const manualCsvPreview = computed(() => {
+  if (creationMode.value !== 'manual') {
+    return ''
+  }
+
+  try {
+    return buildManualCsvContent()
+  } catch {
+    return 'question,learnerResponses,maxGrade,grade'
+  }
+})
 
 const handleFileChange = (event) => {
   const file = event.target.files[0]
@@ -119,9 +263,21 @@ const handleFileChange = (event) => {
 }
 
 const handleSubmit = async () => {
-  if (!selectedFile.value) {
-    error.value = 'Please select a CSV file'
-    return
+  let csvFile
+
+  if (creationMode.value === 'upload') {
+    if (!selectedFile.value) {
+      error.value = 'Please select a CSV file'
+      return
+    }
+    csvFile = selectedFile.value
+  } else {
+    try {
+      csvFile = buildManualCsvFile()
+    } catch (buildError) {
+      error.value = buildError.message
+      return
+    }
   }
 
   loading.value = true
@@ -134,7 +290,7 @@ const handleSubmit = async () => {
       parseInt(formData.value.courseId),
       formData.value.examTitle,
       parseInt(formData.value.maxScore),
-      selectedFile.value
+      csvFile
     )
 
     if (response.data.success) {
@@ -147,6 +303,8 @@ const handleSubmit = async () => {
         maxScore: ''
       }
       selectedFile.value = null
+      creationMode.value = 'upload'
+      manualQuestions.value = [{ text: '', maxGrade: '' }]
       if (fileInput.value) {
         fileInput.value.value = ''
       }
@@ -199,12 +357,68 @@ const handleSubmit = async () => {
 }
 
 .form-group input,
-.form-group select {
+.form-group select,
+.form-group textarea {
   width: 100%;
   padding: 12px;
   border: 2px solid rgba(112, 113, 77, 0.3);
   border-radius: 8px;
   font-size: 16px;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 96px;
+}
+
+.creation-mode-toggle {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.creation-mode-toggle label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.manual-builder {
+  margin-bottom: 24px;
+}
+
+.manual-question-card {
+  background: rgba(207, 218, 197, 0.38);
+  border: 1px solid rgba(67, 96, 50, 0.16);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.manual-question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.manual-question-header h4 {
+  margin: 0;
+  color: var(--color-primary);
+}
+
+.btn-danger {
+  border: 1px solid rgba(112, 113, 77, 0.4);
+  background: rgba(112, 113, 77, 0.12);
+  color: var(--color-primary);
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.add-question-btn {
+  margin-bottom: 8px;
 }
 
 .file-upload {
@@ -261,6 +475,37 @@ const handleSubmit = async () => {
   overflow-x: auto;
   font-size: 14px;
   color: var(--color-text);
+}
+
+.csv-preview-info {
+  background: rgba(207, 218, 197, 0.52);
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(67, 96, 50, 0.08);
+}
+
+.csv-preview-info h4 {
+  margin-bottom: 8px;
+  color: var(--color-primary);
+}
+
+.csv-preview-info pre {
+  background: rgba(255, 255, 255, 0.88);
+  padding: 12px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 14px;
+  color: var(--color-text);
+  white-space: pre-wrap;
+}
+
+.preview-error-message {
+  background: rgba(112, 113, 77, 0.16);
+  color: var(--color-primary);
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(67, 96, 50, 0.18);
 }
 
 .form-actions {

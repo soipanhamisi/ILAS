@@ -10,7 +10,18 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 /**
- * Service for Student-related exam operations
+ * <h1>Service for Student-related exam operations</h1><br>
+ * Purpose: Student submits their completed exam as CSV file<br>
+ *
+ * @params: studentId - ID of the student,
+ * examId - ID of the exam,
+ * csvFile - Completed exam CSV file,
+ * @returns: ExamSubmission object<br>
+ *
+ * @validations: Student must exist,
+ * Exam must exist,
+ * Student must be enrolled in the course,
+ * Student cannot submit duplicate exams
  */
 @Service
 public class StudentExamService {

@@ -39,7 +39,7 @@
 
 ### Exam
 ```java
-examId       : Long
+examId      : Long
 course       : Course
 examTitle    : String
 maxScore     : int
