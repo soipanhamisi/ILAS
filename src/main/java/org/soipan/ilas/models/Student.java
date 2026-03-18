@@ -19,6 +19,7 @@ public class Student {
     private int studentId;
     private String name;
     private String email;
+    private String password;
 
     @OneToMany(mappedBy = "student")
     private List<Enrollment> enrollments;
