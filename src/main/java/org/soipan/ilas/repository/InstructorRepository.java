@@ -14,6 +14,9 @@ public interface InstructorRepository extends CrudRepository<Instructor, Integer
     // Find instructor by email
     Optional<Instructor> findByEmail(String email);
 
+    // Find instructor by username
+    Optional<Instructor> findByUsername(String username);
+
     // Find instructor by name
     List<Instructor> findByName(String name);
 

@@ -9,6 +9,29 @@ const apiClient = axios.create({
   }
 })
 
+// Auth API Service
+export const authAPI = {
+  // Login with username and password
+  login(username, password, userType) {
+    return apiClient.post('/auth/login', {
+      username,
+      password,
+      userType
+    })
+  },
+
+  // Signup new user
+  signup(name, email, username, password, userType) {
+    return apiClient.post('/auth/signup', {
+      name,
+      email,
+      username,
+      password,
+      userType
+    })
+  }
+}
+
 // Instructor API Service
 export const instructorAPI = {
   // Create exam

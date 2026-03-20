@@ -17,6 +17,8 @@ public class Instructor {
     private int instructorId;
     private String name;
     private String email;
+    private String username;
+    private String password;
 
     @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL)
     private List<Course> courses;
@@ -27,5 +29,12 @@ public class Instructor {
     public Instructor(String name, String email) {
         this.name = name;
         this.email = email;
+    }
+
+    public Instructor(String name, String email, String username, String password) {
+        this.name = name;
+        this.email = email;
+        this.username = username;
+        this.password = password;
     }
 }
