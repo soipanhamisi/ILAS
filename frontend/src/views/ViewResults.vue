@@ -180,16 +180,18 @@ onMounted(() => {
 .page-title {
   font-size: 32px;
   font-weight: 700;
-  color: var(--color-white);
+  color: var(--color-primary);
 }
 
 .loading {
-  background: rgba(255, 255, 255, 0.96);
+  background: var(--glass-bg-strong);
   padding: 60px 20px;
   text-align: center;
   border-radius: 16px;
   color: var(--color-text-soft);
   box-shadow: var(--shadow-soft);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px);
 }
 
 .results-container {
@@ -198,12 +200,13 @@ onMounted(() => {
 }
 
 .exam-info-card {
-  background: rgba(255, 255, 255, 0.96);
+  background: var(--glass-bg-strong);
   border-radius: 16px;
   padding: 32px;
   margin-bottom: 24px;
   box-shadow: var(--shadow-soft);
-  border: 1px solid rgba(67, 96, 50, 0.08);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px);
 }
 
 .exam-info-card h2 {
@@ -218,13 +221,14 @@ onMounted(() => {
 }
 
 .grade-card {
-  background: rgba(255, 255, 255, 0.96);
+  background: var(--glass-bg-strong);
   border-radius: 16px;
   padding: 40px;
   margin-bottom: 24px;
   box-shadow: var(--shadow-soft);
   text-align: center;
-  border: 1px solid rgba(67, 96, 50, 0.08);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px);
 }
 
 .graded-content {
@@ -274,7 +278,7 @@ onMounted(() => {
 .grade-bar {
   width: 100%;
   height: 20px;
-  background: rgba(112, 113, 77, 0.2);
+  background: rgba(255, 255, 255, 0.62);
   border-radius: 10px;
   overflow: hidden;
   margin-bottom: 24px;
@@ -282,17 +286,17 @@ onMounted(() => {
 
 .grade-bar-fill {
   height: 100%;
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-accent) 100%);
   transition: width 1s ease;
 }
 
 .grading-info {
   width: 100%;
-  background: rgba(207, 218, 197, 0.52);
+  background: rgba(255, 255, 255, 0.5);
   padding: 16px;
   border-radius: 12px;
   text-align: left;
-  border: 1px solid rgba(67, 96, 50, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.45);
 }
 
 .grading-info p {
@@ -328,11 +332,12 @@ onMounted(() => {
 
 .feedback-card,
 .justification-card {
-  background: rgba(255, 255, 255, 0.96);
+  background: var(--glass-bg-strong);
   border-radius: 16px;
   padding: 32px;
   box-shadow: var(--shadow-soft);
-  border: 1px solid rgba(67, 96, 50, 0.08);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px);
 }
 
 .feedback-card h3,
@@ -351,12 +356,13 @@ onMounted(() => {
 }
 
 .performance-card {
-  background: rgba(255, 255, 255, 0.96);
+  background: var(--glass-bg-strong);
   border-radius: 16px;
   padding: 32px;
   box-shadow: var(--shadow-soft);
   text-align: center;
-  border: 1px solid rgba(67, 96, 50, 0.08);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px);
 }
 
 .performance-card h3 {
@@ -374,32 +380,32 @@ onMounted(() => {
 }
 
 .performance-badge.excellent {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
-  color: var(--color-white);
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-accent) 100%);
+  color: #27423a;
 }
 
 .performance-badge.good {
-  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-muted) 100%);
-  color: var(--color-white);
+  background: linear-gradient(135deg, #c7e8b7 0%, #b6dfd9 100%);
+  color: #27423a;
 }
 
 .performance-badge.average {
-  background: linear-gradient(135deg, var(--color-muted) 0%, var(--color-primary) 100%);
-  color: var(--color-white);
+  background: linear-gradient(135deg, #ebeeb9 0%, #d0e4a1 100%);
+  color: #425335;
 }
 
 .performance-badge.needs-work {
-  background: linear-gradient(135deg, var(--color-surface-strong) 0%, var(--color-muted) 100%);
+  background: linear-gradient(135deg, #f6f5e6 0%, #d7e6c0 100%);
   color: var(--color-text);
 }
 
 .error-message {
-  background: rgba(112, 113, 77, 0.16);
+  background: rgba(255, 255, 255, 0.56);
   color: var(--color-primary);
   padding: 16px;
   border-radius: 12px;
   text-align: center;
   margin-top: 20px;
-  border: 1px solid rgba(67, 96, 50, 0.18);
+  border: 1px solid var(--glass-border);
 }
 </style>

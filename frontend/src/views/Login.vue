@@ -1,8 +1,8 @@
 <template>
   <div class="login-container">
     <div class="login-card">
-      <h1 class="login-title">Welcome Back</h1>
-      <p class="login-subtitle">Sign in to continue</p>
+      <h1 class="login-title">Hey there 👋</h1>
+      <p class="login-subtitle">Jump in to your learning space</p>
 
       <form @submit.prevent="handleLogin" class="login-form">
         <div class="form-group">
@@ -97,13 +97,14 @@ const handleLogin = () => {
 }
 
 .login-card {
-  background: rgba(255, 255, 255, 0.97);
+  background: var(--glass-bg-strong);
   border-radius: 24px;
   padding: 48px;
-  box-shadow: 0 20px 60px rgba(56, 101, 71, 0.24);
+  box-shadow: var(--shadow-strong);
   max-width: 450px;
   width: 100%;
-  border: 1px solid rgba(67, 96, 50, 0.1);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(16px);
 }
 
 .login-title {
@@ -152,33 +153,33 @@ const handleLogin = () => {
 }
 
 .btn-login {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
-  color: var(--color-white);
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-accent) 100%);
+  color: #224139;
   padding: 16px;
-  border-radius: 10px;
+  border-radius: 999px;
   font-size: 18px;
   font-weight: 600;
   margin-top: 8px;
 }
 
 .error-message {
-  background: rgba(112, 113, 77, 0.16);
+  background: rgba(255, 255, 255, 0.55);
   color: var(--color-primary);
   padding: 12px;
   border-radius: 8px;
   text-align: center;
   margin-top: 16px;
-  border: 1px solid rgba(67, 96, 50, 0.18);
+  border: 1px solid var(--glass-border);
 }
 
 .demo-info {
   margin-top: 24px;
   padding: 16px;
-  background: rgba(207, 218, 197, 0.62);
+  background: rgba(255, 255, 255, 0.48);
   border-radius: 8px;
   font-size: 14px;
   color: var(--color-text-soft);
-  border: 1px solid rgba(67, 96, 50, 0.1);
+  border: 1px solid var(--glass-border);
 }
 
 .demo-info p {

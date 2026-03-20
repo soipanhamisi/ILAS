@@ -257,16 +257,18 @@ onMounted(() => {
 .page-title {
   font-size: 32px;
   font-weight: 700;
-  color: var(--color-white);
+  color: var(--color-primary);
 }
 
 .loading,
 .empty-state {
-  background: rgba(255, 255, 255, 0.96);
+  background: var(--glass-bg-strong);
   padding: 60px 20px;
   text-align: center;
   border-radius: 16px;
   box-shadow: var(--shadow-soft);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px);
 }
 
 .empty-icon {
@@ -284,10 +286,12 @@ onMounted(() => {
 }
 
 .submissions-container {
-  background: rgba(255, 255, 255, 0.96);
+  background: var(--glass-bg-strong);
   border-radius: 16px;
   padding: 24px;
   box-shadow: var(--shadow-soft);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px);
 }
 
 .filters {
@@ -295,20 +299,21 @@ onMounted(() => {
   gap: 12px;
   margin-bottom: 24px;
   padding-bottom: 16px;
-  border-bottom: 2px solid rgba(112, 113, 77, 0.22);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.45);
 }
 
 .filter-btn {
-  background: rgba(207, 218, 197, 0.75);
+  background: rgba(255, 255, 255, 0.55);
   color: var(--color-text);
   padding: 10px 20px;
-  border-radius: 8px;
+  border-radius: 999px;
   font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.45);
 }
 
 .filter-btn.active {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
-  color: var(--color-white);
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-accent) 100%);
+  color: #27423a;
 }
 
 .submissions-grid {
@@ -317,10 +322,11 @@ onMounted(() => {
 }
 
 .submission-card {
-  border: 2px solid rgba(112, 113, 77, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 12px;
   padding: 20px;
-  background: rgba(207, 218, 197, 0.18);
+  background: rgba(255, 255, 255, 0.42);
+  backdrop-filter: blur(10px);
 }
 
 .submission-header {
@@ -349,21 +355,21 @@ onMounted(() => {
 }
 
 .status-badge.graded {
-  background: rgba(183, 203, 145, 0.65);
+  background: rgba(182, 223, 217, 0.48);
   color: var(--color-primary);
 }
 
 .status-badge.pending {
-  background: rgba(207, 218, 197, 0.85);
+  background: rgba(255, 255, 255, 0.62);
   color: var(--color-muted);
 }
 
 .grade-display {
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(246, 245, 230, 0.62);
   padding: 16px;
   border-radius: 8px;
   margin-bottom: 16px;
-  border: 1px solid rgba(67, 96, 50, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.45);
 }
 
 .grade-value {
@@ -385,7 +391,7 @@ onMounted(() => {
 
 .grading-form {
   padding-top: 16px;
-  border-top: 2px solid rgba(112, 113, 77, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.45);
 }
 
 .form-group {
@@ -414,13 +420,13 @@ onMounted(() => {
 }
 
 .error-message {
-  background: rgba(112, 113, 77, 0.16);
+  background: rgba(255, 255, 255, 0.56);
   color: var(--color-primary);
   padding: 16px;
   border-radius: 12px;
   text-align: center;
   margin-top: 20px;
-  border: 1px solid rgba(67, 96, 50, 0.18);
+  border: 1px solid var(--glass-border);
 }
 </style>
 

@@ -202,16 +202,18 @@ onMounted(() => {
 .page-title {
   font-size: 32px;
   font-weight: 700;
-  color: var(--color-white);
+  color: var(--color-primary);
 }
 
 .loading {
-  background: rgba(255, 255, 255, 0.96);
+  background: var(--glass-bg-strong);
   padding: 60px 20px;
   text-align: center;
   border-radius: 16px;
   color: var(--color-text-soft);
   box-shadow: var(--shadow-soft);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px);
 }
 
 .exam-container {
@@ -220,12 +222,13 @@ onMounted(() => {
 }
 
 .exam-info-card {
-  background: rgba(255, 255, 255, 0.96);
+  background: var(--glass-bg-strong);
   border-radius: 16px;
   padding: 32px;
   margin-bottom: 24px;
   box-shadow: var(--shadow-soft);
-  border: 1px solid rgba(67, 96, 50, 0.08);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px);
 }
 
 .exam-info-card h2 {
@@ -250,13 +253,13 @@ onMounted(() => {
 }
 
 .info-message {
-  background: rgba(183, 203, 145, 0.48);
+  background: rgba(255, 255, 255, 0.56);
   color: var(--color-primary);
   padding: 16px;
   border-radius: 12px;
   margin-bottom: 24px;
   text-align: center;
-  border: 1px solid rgba(67, 96, 50, 0.14);
+  border: 1px solid var(--glass-border);
 }
 
 .info-message a {
@@ -265,11 +268,12 @@ onMounted(() => {
 }
 
 .submission-card {
-  background: rgba(255, 255, 255, 0.96);
+  background: var(--glass-bg-strong);
   border-radius: 16px;
   padding: 32px;
   box-shadow: var(--shadow-soft);
-  border: 1px solid rgba(67, 96, 50, 0.08);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px);
 }
 
 .submission-card h3 {
@@ -308,19 +312,19 @@ onMounted(() => {
 .file-label {
   display: block;
   padding: 20px;
-  border: 2px dashed rgba(112, 113, 77, 0.35);
+  border: 2px dashed rgba(255, 255, 255, 0.62);
   border-radius: 12px;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  background: rgba(207, 218, 197, 0.42);
+  background: rgba(255, 255, 255, 0.42);
   font-size: 16px;
   color: var(--color-text);
 }
 
 .file-label:hover {
   border-color: var(--color-accent);
-  background: rgba(183, 203, 145, 0.45);
+  background: rgba(182, 223, 217, 0.3);
 }
 
 .help-text {
@@ -331,11 +335,12 @@ onMounted(() => {
 }
 
 .csv-format-info {
-  background: rgba(207, 218, 197, 0.52);
+  background: rgba(255, 255, 255, 0.48);
   padding: 20px;
   border-radius: 12px;
   margin-bottom: 24px;
-  border: 1px solid rgba(67, 96, 50, 0.08);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px);
 }
 
 .csv-format-info h4 {
@@ -344,7 +349,7 @@ onMounted(() => {
 }
 
 .csv-format-info pre {
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(246, 245, 230, 0.72);
   padding: 16px;
   border-radius: 8px;
   overflow-x: auto;
@@ -360,7 +365,7 @@ onMounted(() => {
 }
 
 .success-message {
-  background: rgba(183, 203, 145, 0.48);
+  background: rgba(255, 255, 255, 0.56);
   color: var(--color-primary);
   padding: 16px;
   border-radius: 12px;
@@ -368,17 +373,17 @@ onMounted(() => {
   margin-top: 20px;
   font-weight: 600;
   font-size: 16px;
-  border: 1px solid rgba(67, 96, 50, 0.14);
+  border: 1px solid var(--glass-border);
 }
 
 .error-message {
-  background: rgba(112, 113, 77, 0.16);
+  background: rgba(255, 255, 255, 0.56);
   color: var(--color-primary);
   padding: 16px;
   border-radius: 12px;
   text-align: center;
   margin-top: 20px;
-  border: 1px solid rgba(67, 96, 50, 0.18);
+  border: 1px solid var(--glass-border);
 }
 </style>
 

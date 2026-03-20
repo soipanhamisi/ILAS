@@ -336,13 +336,15 @@ const handleSubmit = async () => {
 .page-title {
   font-size: 32px;
   font-weight: 700;
-  color: var(--color-white);
+  color: var(--color-primary);
 }
 
 .form-card {
   max-width: 700px;
   margin: 0 auto;
-  background: rgba(255, 255, 255, 0.97);
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(16px);
 }
 
 .form-group {
@@ -389,11 +391,12 @@ const handleSubmit = async () => {
 }
 
 .manual-question-card {
-  background: rgba(207, 218, 197, 0.38);
-  border: 1px solid rgba(67, 96, 50, 0.16);
+  background: rgba(255, 255, 255, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.48);
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 16px;
+  backdrop-filter: blur(10px);
 }
 
 .manual-question-header {
@@ -409,9 +412,9 @@ const handleSubmit = async () => {
 }
 
 .btn-danger {
-  border: 1px solid rgba(112, 113, 77, 0.4);
-  background: rgba(112, 113, 77, 0.12);
-  color: var(--color-primary);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.58);
+  color: var(--color-text);
   border-radius: 8px;
   padding: 8px 12px;
   cursor: pointer;
@@ -434,18 +437,18 @@ const handleSubmit = async () => {
 .file-label {
   display: block;
   padding: 16px;
-  border: 2px dashed rgba(112, 113, 77, 0.35);
+  border: 2px dashed rgba(255, 255, 255, 0.62);
   border-radius: 8px;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  background: rgba(207, 218, 197, 0.42);
+  background: rgba(255, 255, 255, 0.42);
   color: var(--color-text);
 }
 
 .file-label:hover {
   border-color: var(--color-accent);
-  background: rgba(183, 203, 145, 0.45);
+  background: rgba(182, 223, 217, 0.3);
 }
 
 .help-text {
@@ -456,11 +459,12 @@ const handleSubmit = async () => {
 }
 
 .csv-format-info {
-  background: rgba(207, 218, 197, 0.52);
+  background: rgba(255, 255, 255, 0.48);
   padding: 16px;
   border-radius: 8px;
   margin-bottom: 24px;
-  border: 1px solid rgba(67, 96, 50, 0.08);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px);
 }
 
 .csv-format-info h4 {
@@ -469,7 +473,7 @@ const handleSubmit = async () => {
 }
 
 .csv-format-info pre {
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(246, 245, 230, 0.72);
   padding: 12px;
   border-radius: 4px;
   overflow-x: auto;
@@ -478,11 +482,12 @@ const handleSubmit = async () => {
 }
 
 .csv-preview-info {
-  background: rgba(207, 218, 197, 0.52);
+  background: rgba(255, 255, 255, 0.48);
   padding: 16px;
   border-radius: 8px;
   margin-bottom: 24px;
-  border: 1px solid rgba(67, 96, 50, 0.08);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px);
 }
 
 .csv-preview-info h4 {
@@ -491,7 +496,7 @@ const handleSubmit = async () => {
 }
 
 .csv-preview-info pre {
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(246, 245, 230, 0.72);
   padding: 12px;
   border-radius: 4px;
   overflow-x: auto;
@@ -501,11 +506,11 @@ const handleSubmit = async () => {
 }
 
 .preview-error-message {
-  background: rgba(112, 113, 77, 0.16);
+  background: rgba(255, 255, 255, 0.56);
   color: var(--color-primary);
   padding: 12px;
   border-radius: 6px;
-  border: 1px solid rgba(67, 96, 50, 0.18);
+  border: 1px solid var(--glass-border);
 }
 
 .form-actions {
@@ -520,24 +525,24 @@ const handleSubmit = async () => {
 }
 
 .success-message {
-  background: rgba(183, 203, 145, 0.48);
+  background: rgba(255, 255, 255, 0.56);
   color: var(--color-primary);
   padding: 16px;
   border-radius: 8px;
   text-align: center;
   margin-top: 20px;
   font-weight: 600;
-  border: 1px solid rgba(67, 96, 50, 0.14);
+  border: 1px solid var(--glass-border);
 }
 
 .error-message {
-  background: rgba(112, 113, 77, 0.16);
+  background: rgba(255, 255, 255, 0.56);
   color: var(--color-primary);
   padding: 16px;
   border-radius: 8px;
   text-align: center;
   margin-top: 20px;
-  border: 1px solid rgba(67, 96, 50, 0.18);
+  border: 1px solid var(--glass-border);
 }
 </style>
 

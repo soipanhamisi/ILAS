@@ -65,25 +65,31 @@ onMounted(() => {
 .hero {
   text-align: center;
   margin-bottom: 80px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 28px;
+  padding: 40px 28px;
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-soft);
 }
 
 .hero-title {
   font-size: 72px;
   font-weight: 800;
-  color: var(--color-surface);
+  color: var(--color-primary);
   margin-bottom: 16px;
 }
 
 .hero-subtitle {
   font-size: 32px;
-  color: var(--color-white);
+  color: var(--color-text);
   font-weight: 600;
   margin-bottom: 16px;
 }
 
 .hero-description {
   font-size: 20px;
-  color: rgba(255, 255, 255, 0.86);
+  color: var(--color-text-soft);
   margin-bottom: 32px;
   max-width: 600px;
   margin-left: auto;
@@ -92,10 +98,10 @@ onMounted(() => {
 
 .btn-get-started {
   display: inline-block;
-  background: var(--color-surface);
-  color: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-accent) 100%);
+  color: #224139;
   padding: 16px 48px;
-  border-radius: 12px;
+  border-radius: 999px;
   font-size: 20px;
   font-weight: 700;
   text-decoration: none;
@@ -105,8 +111,7 @@ onMounted(() => {
 
 .btn-get-started:hover {
   transform: translateY(-4px);
-  box-shadow: 0 14px 28px rgba(67, 96, 50, 0.28);
-  background: var(--color-surface-strong);
+  box-shadow: var(--shadow-strong);
 }
 
 .features {
@@ -118,13 +123,14 @@ onMounted(() => {
 }
 
 .feature-card {
-  background: rgba(255, 255, 255, 0.96);
+  background: var(--glass-bg-strong);
   padding: 40px;
   border-radius: 20px;
   text-align: center;
   transition: all 0.3s ease;
   box-shadow: var(--shadow-soft);
-  border: 1px solid rgba(67, 96, 50, 0.08);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px);
 }
 
 .feature-card:hover {

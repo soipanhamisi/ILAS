@@ -168,23 +168,25 @@ onMounted(() => {
 .page-title {
   font-size: 36px;
   font-weight: 700;
-  color: var(--color-white);
+  color: var(--color-primary);
   margin-bottom: 8px;
 }
 
 .welcome-text {
-  color: rgba(255, 255, 255, 0.88);
+  color: var(--color-text-soft);
   font-size: 18px;
   margin-bottom: 32px;
 }
 
 .loading {
-  background: rgba(255, 255, 255, 0.96);
+  background: var(--glass-bg-strong);
   padding: 60px 20px;
   text-align: center;
   border-radius: 16px;
   color: var(--color-text-soft);
   box-shadow: var(--shadow-soft);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px);
 }
 
 .dashboard-content {
@@ -193,11 +195,12 @@ onMounted(() => {
 }
 
 .section {
-  background: rgba(255, 255, 255, 0.96);
+  background: var(--glass-bg-strong);
   border-radius: 16px;
   padding: 32px;
   box-shadow: var(--shadow-soft);
-  border: 1px solid rgba(67, 96, 50, 0.08);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px);
 }
 
 .section-title {
@@ -220,11 +223,12 @@ onMounted(() => {
 }
 
 .exam-card {
-  border: 2px solid rgba(112, 113, 77, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 12px;
   padding: 20px;
   transition: all 0.3s ease;
-  background: rgba(207, 218, 197, 0.2);
+  background: rgba(255, 255, 255, 0.42);
+  backdrop-filter: blur(10px);
 }
 
 .exam-card:hover {
@@ -246,8 +250,8 @@ onMounted(() => {
 }
 
 .exam-score {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
-  color: var(--color-white);
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-accent) 100%);
+  color: #27423a;
   padding: 4px 12px;
   border-radius: 12px;
   font-size: 14px;
@@ -275,9 +279,10 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  border: 2px solid rgba(112, 113, 77, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 12px;
-  background: rgba(207, 218, 197, 0.18);
+  background: rgba(255, 255, 255, 0.42);
+  backdrop-filter: blur(10px);
 }
 
 .submission-info h4 {
@@ -305,8 +310,8 @@ onMounted(() => {
 }
 
 .grade-badge {
-  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
-  color: var(--color-white);
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-accent) 100%);
+  color: #27423a;
   padding: 8px 16px;
   border-radius: 12px;
   font-weight: 600;
@@ -321,7 +326,7 @@ onMounted(() => {
 }
 
 .status-badge.pending {
-  background: rgba(207, 218, 197, 0.85);
+  background: rgba(255, 255, 255, 0.6);
   color: var(--color-muted);
 }
 
@@ -331,13 +336,13 @@ onMounted(() => {
 }
 
 .error-message {
-  background: rgba(112, 113, 77, 0.16);
+  background: rgba(255, 255, 255, 0.56);
   color: var(--color-primary);
   padding: 16px;
   border-radius: 12px;
   text-align: center;
   margin-top: 20px;
-  border: 1px solid rgba(67, 96, 50, 0.18);
+  border: 1px solid var(--glass-border);
 }
 </style>
 
