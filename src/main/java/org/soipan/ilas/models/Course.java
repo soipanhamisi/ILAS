@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 @Table(name = "courses_tbl")
 public class Course {
-    @Id @GeneratedValue
+    @Id
     private int courseId;
     private String courseTitle;
 

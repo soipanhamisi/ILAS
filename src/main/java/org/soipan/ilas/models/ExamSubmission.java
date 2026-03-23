@@ -27,11 +27,17 @@ public class ExamSubmission {
     @JoinColumn(name = "studentId")
     private Student student;
 
-    private String submissionCsvPath; // Path to student's submitted CSV file
+    private String submissionCsvPath; // Legacy field for older file-based submissions
+    @Column(columnDefinition = "TEXT")
+    private String submissionText; // Browser-entered answer text
     private LocalDateTime submittedAt;
 
     private Integer grade; // Actual grade received
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String feedback; // Instructor comments
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String gradeJustification; // Detailed grading explanation
     private LocalDateTime gradedAt;
 
@@ -43,6 +49,18 @@ public class ExamSubmission {
         this.exam = exam;
         this.student = student;
         this.submissionCsvPath = submissionCsvPath;
+        this.submittedAt = LocalDateTime.now();
+    }
+
+    public ExamSubmission(Exam exam, Student student, String submissionText, boolean textSubmission) {
+        this.exam = exam;
+        this.student = student;
+        if (textSubmission) {
+            this.submissionText = submissionText;
+            this.submissionCsvPath = null;
+        } else {
+            this.submissionCsvPath = submissionText;
+        }
         this.submittedAt = LocalDateTime.now();
     }
 }

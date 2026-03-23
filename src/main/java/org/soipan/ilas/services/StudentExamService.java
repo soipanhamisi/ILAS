@@ -5,17 +5,24 @@ import org.soipan.ilas.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.IntStream;
+import java.util.stream.StreamSupport;
 
 /**
  * <h1>Service for Student-related exam operations</h1><br>
- * Purpose: Student submits their completed exam as CSV file<br>
+ * Purpose: Student submits their completed exam answer text<br>
  *
  * @params: studentId - ID of the student,
  * examId - ID of the exam,
- * csvFile - Completed exam CSV file,
+ * questionAnswers - Student answers in question order,
  * @returns: ExamSubmission object<br>
  *
  * @validations: Student must exist,
@@ -39,14 +46,24 @@ public class StudentExamService {
     private EnrollmentRepository enrollmentRepository;
 
     @Autowired
-    private FileStorageService fileStorageService;
+    private CourseRepository courseRepository;
 
     /**
      * Student Use Case 1: Take Assessment and Submit
-     * Student submits their completed exam as CSV file
+     * Student submits their completed exam in-browser as text
      */
     @Transactional
-    public ExamSubmission submitAssessment(int studentId, Long examId, MultipartFile csvFile) {
+    public ExamSubmission submitAssessment(int studentId, Long examId, List<String> questionAnswers) {
+        if (questionAnswers == null || questionAnswers.isEmpty()) {
+            throw new IllegalArgumentException("At least one answer is required");
+        }
+
+        boolean hasBlankAnswer = questionAnswers.stream()
+                .anyMatch(answer -> answer == null || answer.trim().isEmpty());
+        if (hasBlankAnswer) {
+            throw new IllegalArgumentException("Please answer all questions before submitting");
+        }
+
         // Verify student exists
         Student student = studentRepository.findByStudentId(studentId)
                 .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + studentId));
@@ -57,8 +74,11 @@ public class StudentExamService {
 
         // Verify student is enrolled in the course
         Course course = exam.getCourse();
-        Enrollment enrollment = enrollmentRepository
-                .findByStudent_StudentIdAndCourse_CourseId(studentId, course.getCourseId())
+        enrollmentRepository
+                .findByStudent_StudentIdAndCourse_CourseIdAndEnrollmentStatus(
+                        studentId,
+                        course.getCourseId(),
+                        EnrollmentStatus.ACTIVE)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Student is not enrolled in the course for this exam"));
 
@@ -67,14 +87,13 @@ public class StudentExamService {
             throw new IllegalArgumentException("Student has already submitted this exam");
         }
 
-        // Store the submitted CSV file
-        String submissionCsvPath = fileStorageService.storeFile(
-                csvFile,
-                "submission_student" + studentId + "_exam" + examId
-        );
+        String formattedSubmission = IntStream.range(0, questionAnswers.size())
+                .mapToObj(index -> "Q" + (index + 1) + ":\n" + questionAnswers.get(index).trim())
+                .reduce((left, right) -> left + "\n\n" + right)
+                .orElseThrow(() -> new IllegalArgumentException("At least one answer is required"));
 
         // Create and save submission
-        ExamSubmission submission = new ExamSubmission(exam, student, submissionCsvPath);
+        ExamSubmission submission = new ExamSubmission(exam, student, formattedSubmission, true);
         return submissionRepository.save(submission);
     }
 
@@ -130,7 +149,8 @@ public class StudentExamService {
                 .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + studentId));
 
         // Get all enrollments for student
-        List<Enrollment> enrollments = enrollmentRepository.findByStudent_StudentId(studentId);
+        List<Enrollment> enrollments = enrollmentRepository
+                .findByStudent_StudentIdAndEnrollmentStatus(studentId, EnrollmentStatus.ACTIVE);
 
         // Get exams from enrolled courses
         return enrollments.stream()
@@ -161,11 +181,135 @@ public class StudentExamService {
         // Verify student is enrolled in the course
         Course course = exam.getCourse();
         enrollmentRepository
-                .findByStudent_StudentIdAndCourse_CourseId(studentId, course.getCourseId())
+                .findByStudent_StudentIdAndCourse_CourseIdAndEnrollmentStatus(
+                        studentId,
+                        course.getCourseId(),
+                        EnrollmentStatus.ACTIVE)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Student is not enrolled in the course for this exam"));
 
         return exam;
+    }
+
+    /**
+     * Get all courses for enrollment browsing
+     */
+    public List<Course> getAllCoursesForStudent(int studentId) {
+        studentRepository.findByStudentId(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + studentId));
+
+        return StreamSupport.stream(courseRepository.findAll().spliterator(), false)
+                .sorted(Comparator.comparing(Course::getCourseTitle, String.CASE_INSENSITIVE_ORDER))
+                .toList();
+    }
+
+    /**
+     * Get active enrollments for a student
+     */
+    public List<Course> getEnrolledCourses(int studentId) {
+        studentRepository.findByStudentId(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + studentId));
+
+        return enrollmentRepository
+                .findByStudent_StudentIdAndEnrollmentStatus(studentId, EnrollmentStatus.ACTIVE)
+                .stream()
+                .map(Enrollment::getCourse)
+                .sorted(Comparator.comparing(Course::getCourseTitle, String.CASE_INSENSITIVE_ORDER))
+                .toList();
+    }
+
+    /**
+     * Enroll a student in a course
+     */
+    @Transactional
+    public Enrollment enrollStudentInCourse(int studentId, int courseId) {
+        Student student = studentRepository.findByStudentId(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + studentId));
+
+        Course course = courseRepository.findByCourseId(courseId)
+                .orElseThrow(() -> new IllegalArgumentException("Course not found with ID: " + courseId));
+
+        Enrollment existingEnrollment = enrollmentRepository
+                .findByStudent_StudentIdAndCourse_CourseId(studentId, courseId)
+                .orElse(null);
+
+        if (existingEnrollment != null) {
+            if (existingEnrollment.getEnrollmentStatus() == EnrollmentStatus.ACTIVE) {
+                throw new IllegalArgumentException("Student is already enrolled in this course");
+            }
+
+            existingEnrollment.setEnrollmentStatus(EnrollmentStatus.ACTIVE);
+            return enrollmentRepository.save(existingEnrollment);
+        }
+
+        Enrollment enrollment = new Enrollment();
+        enrollment.setStudent(student);
+        enrollment.setCourse(course);
+        enrollment.setEnrollmentStatus(EnrollmentStatus.ACTIVE);
+        return enrollmentRepository.save(enrollment);
+    }
+
+    /**
+     * Get exam questions for display in the student UI.
+     */
+    public List<String> getExamQuestions(int studentId, Long examId) {
+        Exam exam = getExamDetails(studentId, examId);
+
+        String csvPath = exam.getCsvFilePath();
+        if (csvPath == null || csvPath.trim().isEmpty()) {
+            throw new IllegalArgumentException("Exam questions are not available");
+        }
+
+        try {
+            Path path = Paths.get(csvPath);
+            if (!Files.exists(path)) {
+                throw new IllegalArgumentException("Exam question file was not found");
+            }
+
+            return Files.readAllLines(path).stream()
+                    .skip(1)
+                    .map(this::extractFirstCsvColumn)
+                    .map(String::trim)
+                    .filter(question -> !question.isEmpty())
+                    .toList();
+        } catch (IOException ex) {
+            throw new RuntimeException("Unable to read exam questions", ex);
+        }
+    }
+
+    private String extractFirstCsvColumn(String line) {
+        if (line == null || line.isBlank()) {
+            return "";
+        }
+
+        StringBuilder firstColumn = new StringBuilder();
+        boolean inQuotes = false;
+
+        for (int i = 0; i < line.length(); i++) {
+            char current = line.charAt(i);
+
+            if (current == '"') {
+                if (inQuotes && i + 1 < line.length() && line.charAt(i + 1) == '"') {
+                    firstColumn.append('"');
+                    i++;
+                } else {
+                    inQuotes = !inQuotes;
+                }
+                continue;
+            }
+
+            if (current == ',' && !inQuotes) {
+                break;
+            }
+
+            firstColumn.append(current);
+        }
+
+        String value = firstColumn.toString().trim();
+        if (value.toLowerCase(Locale.ROOT).startsWith("question")) {
+            return "";
+        }
+        return value;
     }
 }
 

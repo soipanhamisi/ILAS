@@ -50,13 +50,11 @@ export const instructorAPI = {
     })
   },
 
-  // Grade submission
-  gradeSubmission(submissionId, instructorId, grade, feedback, gradeJustification) {
+  // Grade submission using per-question grades
+  gradeSubmission(submissionId, instructorId, questionGrades) {
     return apiClient.post(`/instructor/exams/submissions/${submissionId}/grade`, {
       instructorId,
-      grade,
-      feedback,
-      gradeJustification
+      questionGrades
     })
   },
 
@@ -88,21 +86,30 @@ export const instructorAPI = {
     return apiClient.get(`/instructor/exams/courses/${courseId}`, {
       params: { instructorId }
     })
+  },
+
+  // Get exam questions
+  getExamQuestions(examId, instructorId) {
+    return apiClient.get(`/instructor/exams/${examId}/questions`, {
+      params: { instructorId }
+    })
+  },
+
+  // Get exam question details (question text + max grade)
+  getExamQuestionDetails(examId, instructorId) {
+    return apiClient.get(`/instructor/exams/${examId}/questions/details`, {
+      params: { instructorId }
+    })
   }
 }
 
 // Student API Service
 export const studentAPI = {
   // Submit exam
-  submitExam(examId, studentId, file) {
-    const formData = new FormData()
-    formData.append('studentId', studentId)
-    formData.append('file', file)
-
-    return apiClient.post(`/student/exams/${examId}/submit`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+  submitExam(examId, studentId, questionAnswers) {
+    return apiClient.post(`/student/exams/${examId}/submit`, {
+      studentId,
+      questionAnswers
     })
   },
 
@@ -137,6 +144,34 @@ export const studentAPI = {
   // Get exam details
   getExamDetails(examId, studentId) {
     return apiClient.get(`/student/exams/${examId}`, {
+      params: { studentId }
+    })
+  },
+
+  // Get exam questions
+  getExamQuestions(examId, studentId) {
+    return apiClient.get(`/student/exams/${examId}/questions`, {
+      params: { studentId }
+    })
+  },
+
+  // Get all courses available for enrollment
+  getAllCourses(studentId) {
+    return apiClient.get('/student/courses', {
+      params: { studentId }
+    })
+  },
+
+  // Get enrolled courses
+  getEnrolledCourses(studentId) {
+    return apiClient.get('/student/courses/enrolled', {
+      params: { studentId }
+    })
+  },
+
+  // Enroll student in a course
+  enrollInCourse(studentId, courseId) {
+    return apiClient.post(`/student/courses/${courseId}/enroll`, null, {
       params: { studentId }
     })
   },

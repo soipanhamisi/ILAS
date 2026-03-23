@@ -7,13 +7,13 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- * Request DTO for grading a submission
+ * Request payload for browser-based exam submissions
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GradeSubmissionRequest {
-    private Integer instructorId;
-    private List<QuestionGradeRequest> questionGrades;
+public class SubmitExamRequest {
+    private Integer studentId;
+    private List<String> questionAnswers;
 }
 

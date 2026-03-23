@@ -4,16 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 /**
- * Request DTO for grading a submission
+ * DTO for course enrollment views
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GradeSubmissionRequest {
+public class CourseEnrollmentDTO {
+    private int courseId;
+    private String courseTitle;
     private Integer instructorId;
-    private List<QuestionGradeRequest> questionGrades;
+    private String instructorName;
+    private boolean enrolled;
 }
 

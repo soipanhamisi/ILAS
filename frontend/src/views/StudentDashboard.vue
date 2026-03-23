@@ -6,6 +6,41 @@
     <div v-if="loading" class="loading">Loading exams...</div>
 
     <div v-else class="dashboard-content">
+      <div class="section">
+        <div class="section-header">
+          <h2 class="section-title">🧭 Course Enrollment</h2>
+          <span class="pill">{{ enrolledCourseIds.size }} enrolled</span>
+        </div>
+
+        <div v-if="allCourses.length === 0" class="empty-state">
+          <p>No courses available right now</p>
+        </div>
+
+        <div v-else class="courses-grid">
+          <div
+            v-for="course in allCourses"
+            :key="course.courseId"
+            class="course-card"
+          >
+            <h3>{{ course.courseTitle }}</h3>
+            <p class="course-meta">Instructor: {{ course.instructorName || 'TBA' }}</p>
+
+            <button
+              v-if="!isEnrolled(course.courseId)"
+              @click="enrollInCourse(course.courseId)"
+              class="btn-primary"
+              :disabled="enrollingCourseId === course.courseId"
+            >
+              {{ enrollingCourseId === course.courseId ? 'Enrolling...' : 'Enroll' }}
+            </button>
+
+            <button v-else class="btn-success" disabled>
+              Enrolled
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Available Exams Section -->
       <div class="section">
         <h2 class="section-title">📚 Available Exams</h2>
@@ -92,6 +127,10 @@
     <div v-if="error" class="error-message">
       {{ error }}
     </div>
+
+    <div v-if="successMessage" class="success-message">
+      {{ successMessage }}
+    </div>
   </div>
 </template>
 
@@ -106,23 +145,42 @@ const authStore = useAuthStore()
 
 const availableExams = ref([])
 const submissions = ref([])
+const allCourses = ref([])
 const submittedExamIds = ref(new Set())
+const enrolledCourseIds = ref(new Set())
+const enrollingCourseId = ref(null)
 const loading = ref(false)
 const error = ref('')
+const successMessage = ref('')
 
 const loadData = async () => {
   loading.value = true
   error.value = ''
 
   try {
+    const [coursesResponse, enrolledCoursesResponse, examsResponse, submissionsResponse] = await Promise.all([
+      studentAPI.getAllCourses(authStore.userId),
+      studentAPI.getEnrolledCourses(authStore.userId),
+      studentAPI.getAvailableExams(authStore.userId),
+      studentAPI.getAllSubmissions(authStore.userId)
+    ])
+
+    if (coursesResponse.data.success) {
+      allCourses.value = coursesResponse.data.data
+    }
+
+    if (enrolledCoursesResponse.data.success) {
+      enrolledCourseIds.value = new Set(
+        enrolledCoursesResponse.data.data.map(course => course.courseId)
+      )
+    }
+
     // Load available exams
-    const examsResponse = await studentAPI.getAvailableExams(authStore.userId)
     if (examsResponse.data.success) {
       availableExams.value = examsResponse.data.data
     }
 
     // Load submissions
-    const submissionsResponse = await studentAPI.getAllSubmissions(authStore.userId)
     if (submissionsResponse.data.success) {
       submissions.value = submissionsResponse.data.data
 
@@ -136,6 +194,30 @@ const loadData = async () => {
     console.error('Error loading data:', err)
   } finally {
     loading.value = false
+  }
+}
+
+const isEnrolled = (courseId) => {
+  return enrolledCourseIds.value.has(courseId)
+}
+
+const enrollInCourse = async (courseId) => {
+  if (enrollingCourseId.value) {
+    return
+  }
+
+  enrollingCourseId.value = courseId
+  error.value = ''
+  successMessage.value = ''
+
+  try {
+    const response = await studentAPI.enrollInCourse(authStore.userId, courseId)
+    successMessage.value = response.data.message || 'You are now enrolled in the course'
+    await loadData()
+  } catch (err) {
+    error.value = err.response?.data?.message || 'Failed to enroll in course'
+  } finally {
+    enrollingCourseId.value = null
   }
 }
 
@@ -208,6 +290,49 @@ onMounted(() => {
   font-weight: 700;
   color: var(--color-primary);
   margin-bottom: 24px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.pill {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.56);
+  color: var(--color-primary);
+  font-size: 13px;
+  font-weight: 700;
+  border: 1px solid var(--glass-border);
+}
+
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.course-card {
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.42);
+  backdrop-filter: blur(10px);
+  display: grid;
+  gap: 10px;
+}
+
+.course-card h3 {
+  color: var(--color-text);
+  font-size: 17px;
+}
+
+.course-meta {
+  color: var(--color-text-soft);
+  font-size: 14px;
 }
 
 .empty-state {
@@ -343,6 +468,16 @@ onMounted(() => {
   text-align: center;
   margin-top: 20px;
   border: 1px solid var(--glass-border);
+}
+
+.success-message {
+  background: rgba(255, 255, 255, 0.56);
+  color: #2f6e5c;
+  padding: 16px;
+  border-radius: 12px;
+  text-align: center;
+  margin-top: 20px;
+  border: 1px solid rgba(61, 130, 110, 0.25);
 }
 </style>
 

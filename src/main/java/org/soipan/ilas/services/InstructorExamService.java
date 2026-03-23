@@ -1,5 +1,7 @@
 package org.soipan.ilas.services;
 
+import org.soipan.ilas.dto.QuestionGradeRequest;
+import org.soipan.ilas.dto.ExamQuestionDTO;
 import org.soipan.ilas.models.*;
 import org.soipan.ilas.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,8 +9,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Service for Instructor-related exam operations
@@ -39,7 +49,7 @@ public class InstructorExamService {
     public Exam createAssessment(int instructorId, int courseId, String examTitle,
                                   int maxScore, MultipartFile csvFile) {
         // Verify instructor exists
-        Instructor instructor = instructorRepository.findByInstructorId(instructorId)
+        instructorRepository.findByInstructorId(instructorId)
                 .orElseThrow(() -> new IllegalArgumentException("Instructor not found with ID: " + instructorId));
 
         // Verify course exists and belongs to instructor
@@ -68,8 +78,8 @@ public class InstructorExamService {
      * Instructor grades a student's exam submission
      */
     @Transactional
-    public ExamSubmission issueGrade(int instructorId, Long submissionId, int grade,
-                                      String feedback, String gradeJustification) {
+    public ExamSubmission issueGrade(int instructorId, Long submissionId,
+                                     List<QuestionGradeRequest> questionGrades) {
         // Verify instructor exists
         Instructor instructor = instructorRepository.findByInstructorId(instructorId)
                 .orElseThrow(() -> new IllegalArgumentException("Instructor not found with ID: " + instructorId));
@@ -84,19 +94,107 @@ public class InstructorExamService {
             throw new IllegalArgumentException("Instructor does not own the course for this exam");
         }
 
+        List<String> examQuestions = getExamQuestions(instructorId, submission.getExam().getExamId());
+        if (questionGrades.size() != examQuestions.size()) {
+            throw new IllegalArgumentException("All questions must be graded before submission");
+        }
+
+        Map<Integer, QuestionGradeRequest> gradeByQuestionNumber = questionGrades.stream()
+                .collect(Collectors.toMap(
+                        QuestionGradeRequest::getQuestionNumber,
+                        Function.identity(),
+                        (left, right) -> right
+                ));
+
+        for (int i = 1; i <= examQuestions.size(); i++) {
+            if (!gradeByQuestionNumber.containsKey(i)) {
+                throw new IllegalArgumentException("Missing grade for question " + i);
+            }
+        }
+
+        int totalGrade = 0;
+        StringBuilder feedbackBuilder = new StringBuilder();
+        StringBuilder justificationBuilder = new StringBuilder();
+
+        for (int i = 1; i <= examQuestions.size(); i++) {
+            QuestionGradeRequest questionGrade = gradeByQuestionNumber.get(i);
+
+            if (questionGrade.getGrade() == null || questionGrade.getGrade() < 0) {
+                throw new IllegalArgumentException("Grade for question " + i + " is invalid");
+            }
+
+            if (questionGrade.getFeedback() == null || questionGrade.getFeedback().trim().isEmpty()) {
+                throw new IllegalArgumentException("Feedback for question " + i + " is required");
+            }
+
+            if (questionGrade.getGradeJustification() == null
+                    || questionGrade.getGradeJustification().trim().isEmpty()) {
+                throw new IllegalArgumentException("Justification for question " + i + " is required");
+            }
+
+            totalGrade += questionGrade.getGrade();
+
+            if (feedbackBuilder.length() > 0) {
+                feedbackBuilder.append("\n\n");
+                justificationBuilder.append("\n\n");
+            }
+
+            feedbackBuilder
+                    .append("Q")
+                    .append(i)
+                    .append(" Feedback: ")
+                    .append(questionGrade.getFeedback().trim());
+
+            justificationBuilder
+                    .append("Q")
+                    .append(i)
+                    .append(" Justification: ")
+                    .append(questionGrade.getGradeJustification().trim());
+        }
+
         // Validate grade
+        int maxScore = submission.getExam().getMaxScore();
+        if (totalGrade > maxScore) {
+            throw new IllegalArgumentException("Total grade cannot exceed " + maxScore);
+        }
+
+        // Set aggregate grade and per-question feedback summaries
+        submission.setGrade(totalGrade);
+        submission.setFeedback(feedbackBuilder.toString());
+        submission.setGradeJustification(justificationBuilder.toString());
+        submission.setGradedAt(LocalDateTime.now());
+        submission.setGradedBy(instructor);
+
+        return submissionRepository.save(submission);
+    }
+
+    /**
+     * Backward-compatible aggregate grading entrypoint.
+     */
+    @Transactional
+    public ExamSubmission issueGrade(int instructorId, Long submissionId, int grade,
+                                     String feedback, String gradeJustification) {
+        Instructor instructor = instructorRepository.findByInstructorId(instructorId)
+                .orElseThrow(() -> new IllegalArgumentException("Instructor not found with ID: " + instructorId));
+
+        ExamSubmission submission = submissionRepository.findBySubmissionId(submissionId)
+                .orElseThrow(() -> new IllegalArgumentException("Submission not found with ID: " + submissionId));
+
+        Course course = submission.getExam().getCourse();
+        if (course.getInstructor().getInstructorId() != instructorId) {
+            throw new IllegalArgumentException("Instructor does not own the course for this exam");
+        }
+
         int maxScore = submission.getExam().getMaxScore();
         if (grade < 0 || grade > maxScore) {
             throw new IllegalArgumentException("Grade must be between 0 and " + maxScore);
         }
 
-        // Set grade and feedback
         submission.setGrade(grade);
         submission.setFeedback(feedback);
         submission.setGradeJustification(gradeJustification);
         submission.setGradedAt(LocalDateTime.now());
         submission.setGradedBy(instructor);
-
         return submissionRepository.save(submission);
     }
 
@@ -134,7 +232,7 @@ public class InstructorExamService {
      */
     public List<ExamSubmission> getSubmissionsForExam(int instructorId, Long examId) {
         // Verify instructor exists
-        Instructor instructor = instructorRepository.findByInstructorId(instructorId)
+        instructorRepository.findByInstructorId(instructorId)
                 .orElseThrow(() -> new IllegalArgumentException("Instructor not found with ID: " + instructorId));
 
         // Verify exam exists
@@ -154,7 +252,7 @@ public class InstructorExamService {
      */
     public List<ExamSubmission> getUngradedSubmissions(int instructorId, Long examId) {
         // Verify instructor exists
-        Instructor instructor = instructorRepository.findByInstructorId(instructorId)
+        instructorRepository.findByInstructorId(instructorId)
                 .orElseThrow(() -> new IllegalArgumentException("Instructor not found with ID: " + instructorId));
 
         // Verify exam exists
@@ -174,7 +272,7 @@ public class InstructorExamService {
      */
     public List<Exam> getExamsForCourse(int instructorId, int courseId) {
         // Verify instructor exists
-        Instructor instructor = instructorRepository.findByInstructorId(instructorId)
+        instructorRepository.findByInstructorId(instructorId)
                 .orElseThrow(() -> new IllegalArgumentException("Instructor not found with ID: " + instructorId));
 
         // Verify course exists and belongs to instructor
@@ -187,5 +285,116 @@ public class InstructorExamService {
 
         return examRepository.findByCourse_CourseId(courseId);
     }
+
+    /**
+     * Get exam questions from the exam CSV.
+     */
+    public List<String> getExamQuestions(int instructorId, Long examId) {
+        return getExamQuestionDetails(instructorId, examId).stream()
+                .map(ExamQuestionDTO::getQuestionText)
+                .toList();
+    }
+
+    /**
+     * Get exam questions including per-question max grade from CSV.
+     */
+    public List<ExamQuestionDTO> getExamQuestionDetails(int instructorId, Long examId) {
+        instructorRepository.findByInstructorId(instructorId)
+                .orElseThrow(() -> new IllegalArgumentException("Instructor not found with ID: " + instructorId));
+
+        Exam exam = examRepository.findByExamId(examId)
+                .orElseThrow(() -> new IllegalArgumentException("Exam not found with ID: " + examId));
+
+        if (exam.getCourse().getInstructor().getInstructorId() != instructorId) {
+            throw new IllegalArgumentException("Instructor does not own the course for this exam");
+        }
+
+        String csvPath = exam.getCsvFilePath();
+        if (csvPath == null || csvPath.trim().isEmpty()) {
+            throw new IllegalArgumentException("Exam questions are not available");
+        }
+
+        try {
+            Path path = Paths.get(csvPath);
+            if (!Files.exists(path)) {
+                throw new IllegalArgumentException("Exam question file was not found");
+            }
+
+            List<String> lines = Files.readAllLines(path);
+            return lines.stream()
+                    .skip(1)
+                    .map(this::extractQuestionDetails)
+                    .filter(question -> !question.getQuestionText().isEmpty())
+                    .collect(Collectors.collectingAndThen(Collectors.toList(), questions -> {
+                        for (int i = 0; i < questions.size(); i++) {
+                            questions.get(i).setQuestionNumber(i + 1);
+                        }
+                        return questions;
+                    }));
+        } catch (IOException ex) {
+            throw new RuntimeException("Unable to read exam questions", ex);
+        }
+    }
+
+    private ExamQuestionDTO extractQuestionDetails(String line) {
+        List<String> columns = splitCsvColumns(line);
+        String questionText = columns.isEmpty() ? "" : columns.get(0).trim();
+        String maxGradeRaw = columns.size() > 2 ? columns.get(2).trim() : "";
+
+        if (questionText.toLowerCase(Locale.ROOT).startsWith("question")) {
+            return new ExamQuestionDTO(null, "", 0);
+        }
+
+        return new ExamQuestionDTO(null, questionText, parseMaxGrade(maxGradeRaw));
+    }
+
+    private int parseMaxGrade(String raw) {
+        if (raw == null || raw.isBlank()) {
+            return 0;
+        }
+
+        String digitsOnly = raw.replaceAll("[^0-9]", "");
+        if (digitsOnly.isEmpty()) {
+            return 0;
+        }
+
+        return Integer.parseInt(digitsOnly);
+    }
+
+    private List<String> splitCsvColumns(String line) {
+        List<String> columns = new java.util.ArrayList<>();
+        if (line == null) {
+            return columns;
+        }
+
+        StringBuilder current = new StringBuilder();
+        boolean inQuotes = false;
+
+        for (int i = 0; i < line.length(); i++) {
+            char ch = line.charAt(i);
+
+            if (ch == '"') {
+                if (inQuotes && i + 1 < line.length() && line.charAt(i + 1) == '"') {
+                    current.append('"');
+                    i++;
+                } else {
+                    inQuotes = !inQuotes;
+                }
+                continue;
+            }
+
+            if (ch == ',' && !inQuotes) {
+                columns.add(current.toString());
+                current.setLength(0);
+                continue;
+            }
+
+            current.append(ch);
+        }
+
+        columns.add(current.toString());
+        return columns;
+    }
+
 }
 
