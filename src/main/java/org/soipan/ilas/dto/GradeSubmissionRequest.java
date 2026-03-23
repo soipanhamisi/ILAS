@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * Request DTO for grading a submission
  */
@@ -12,8 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GradeSubmissionRequest {
     private Integer instructorId;
-    private Integer grade;
-    private String feedback;
-    private String gradeJustification;
+    private List<QuestionGradeRequest> questionGrades;
 }
 

@@ -1,0 +1,11 @@
+question,learnerResponses,maxGrade,grade
+What is Object-Oriented Programming?,,[10],
+Explain the concept of Encapsulation.,,[10],
+What is Inheritance in OOP?,,[10],
+Define Polymorphism.,,[10],
+What is Abstraction?,,[10],
+What is a Class?,,[5],
+What is an Object?,,[5],
+Differentiate between Method Overloading and Method Overriding.,,[10],
+What is a Constructor?,,[5],
+Explain the concept of a Prototype Chain in JavaScript.,,[15],

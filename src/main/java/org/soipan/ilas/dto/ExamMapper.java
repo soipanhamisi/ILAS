@@ -48,6 +48,7 @@ public class ExamMapper {
         ExamSubmissionDTO dto = new ExamSubmissionDTO();
         dto.setSubmissionId(submission.getSubmissionId());
         dto.setSubmissionCsvPath(submission.getSubmissionCsvPath());
+        dto.setSubmissionText(submission.getSubmissionText());
         dto.setSubmittedAt(submission.getSubmittedAt());
         dto.setGrade(submission.getGrade());
         dto.setFeedback(submission.getFeedback());

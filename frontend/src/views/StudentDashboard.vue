@@ -6,6 +6,41 @@
     <div v-if="loading" class="loading">Loading exams...</div>
 
     <div v-else class="dashboard-content">
+      <div class="section">
+        <div class="section-header">
+          <h2 class="section-title">🧭 Course Enrollment</h2>
+          <span class="pill">{{ enrolledCourseIds.size }} enrolled</span>
+        </div>
+
+        <div v-if="allCourses.length === 0" class="empty-state">
+          <p>No courses available right now</p>
+        </div>
+
+        <div v-else class="courses-grid">
+          <div
+            v-for="course in allCourses"
+            :key="course.courseId"
+            class="course-card"
+          >
+            <h3>{{ course.courseTitle }}</h3>
+            <p class="course-meta">Instructor: {{ course.instructorName || 'TBA' }}</p>
+
+            <button
+              v-if="!isEnrolled(course.courseId)"
+              @click="enrollInCourse(course.courseId)"
+              class="btn-primary"
+              :disabled="enrollingCourseId === course.courseId"
+            >
+              {{ enrollingCourseId === course.courseId ? 'Enrolling...' : 'Enroll' }}
+            </button>
+
+            <button v-else class="btn-success" disabled>
+              Enrolled
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Available Exams Section -->
       <div class="section">
         <h2 class="section-title">📚 Available Exams</h2>
@@ -92,6 +127,10 @@
     <div v-if="error" class="error-message">
       {{ error }}
     </div>
+
+    <div v-if="successMessage" class="success-message">
+      {{ successMessage }}
+    </div>
   </div>
 </template>
 
@@ -106,23 +145,42 @@ const authStore = useAuthStore()
 
 const availableExams = ref([])
 const submissions = ref([])
+const allCourses = ref([])
 const submittedExamIds = ref(new Set())
+const enrolledCourseIds = ref(new Set())
+const enrollingCourseId = ref(null)
 const loading = ref(false)
 const error = ref('')
+const successMessage = ref('')
 
 const loadData = async () => {
   loading.value = true
   error.value = ''
 
   try {
+    const [coursesResponse, enrolledCoursesResponse, examsResponse, submissionsResponse] = await Promise.all([
+      studentAPI.getAllCourses(authStore.userId),
+      studentAPI.getEnrolledCourses(authStore.userId),
+      studentAPI.getAvailableExams(authStore.userId),
+      studentAPI.getAllSubmissions(authStore.userId)
+    ])
+
+    if (coursesResponse.data.success) {
+      allCourses.value = coursesResponse.data.data
+    }
+
+    if (enrolledCoursesResponse.data.success) {
+      enrolledCourseIds.value = new Set(
+        enrolledCoursesResponse.data.data.map(course => course.courseId)
+      )
+    }
+
     // Load available exams
-    const examsResponse = await studentAPI.getAvailableExams(authStore.userId)
     if (examsResponse.data.success) {
       availableExams.value = examsResponse.data.data
     }
 
     // Load submissions
-    const submissionsResponse = await studentAPI.getAllSubmissions(authStore.userId)
     if (submissionsResponse.data.success) {
       submissions.value = submissionsResponse.data.data
 
@@ -136,6 +194,30 @@ const loadData = async () => {
     console.error('Error loading data:', err)
   } finally {
     loading.value = false
+  }
+}
+
+const isEnrolled = (courseId) => {
+  return enrolledCourseIds.value.has(courseId)
+}
+
+const enrollInCourse = async (courseId) => {
+  if (enrollingCourseId.value) {
+    return
+  }
+
+  enrollingCourseId.value = courseId
+  error.value = ''
+  successMessage.value = ''
+
+  try {
+    const response = await studentAPI.enrollInCourse(authStore.userId, courseId)
+    successMessage.value = response.data.message || 'You are now enrolled in the course'
+    await loadData()
+  } catch (err) {
+    error.value = err.response?.data?.message || 'Failed to enroll in course'
+  } finally {
+    enrollingCourseId.value = null
   }
 }
 
@@ -168,23 +250,25 @@ onMounted(() => {
 .page-title {
   font-size: 36px;
   font-weight: 700;
-  color: var(--color-white);
+  color: var(--color-primary);
   margin-bottom: 8px;
 }
 
 .welcome-text {
-  color: rgba(255, 255, 255, 0.88);
+  color: var(--color-text-soft);
   font-size: 18px;
   margin-bottom: 32px;
 }
 
 .loading {
-  background: rgba(255, 255, 255, 0.96);
+  background: var(--glass-bg-strong);
   padding: 60px 20px;
   text-align: center;
   border-radius: 16px;
   color: var(--color-text-soft);
   box-shadow: var(--shadow-soft);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px);
 }
 
 .dashboard-content {
@@ -193,11 +277,12 @@ onMounted(() => {
 }
 
 .section {
-  background: rgba(255, 255, 255, 0.96);
+  background: var(--glass-bg-strong);
   border-radius: 16px;
   padding: 32px;
   box-shadow: var(--shadow-soft);
-  border: 1px solid rgba(67, 96, 50, 0.08);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px);
 }
 
 .section-title {
@@ -205,6 +290,49 @@ onMounted(() => {
   font-weight: 700;
   color: var(--color-primary);
   margin-bottom: 24px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.pill {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.56);
+  color: var(--color-primary);
+  font-size: 13px;
+  font-weight: 700;
+  border: 1px solid var(--glass-border);
+}
+
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.course-card {
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.42);
+  backdrop-filter: blur(10px);
+  display: grid;
+  gap: 10px;
+}
+
+.course-card h3 {
+  color: var(--color-text);
+  font-size: 17px;
+}
+
+.course-meta {
+  color: var(--color-text-soft);
+  font-size: 14px;
 }
 
 .empty-state {
@@ -220,11 +348,12 @@ onMounted(() => {
 }
 
 .exam-card {
-  border: 2px solid rgba(112, 113, 77, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 12px;
   padding: 20px;
   transition: all 0.3s ease;
-  background: rgba(207, 218, 197, 0.2);
+  background: rgba(255, 255, 255, 0.42);
+  backdrop-filter: blur(10px);
 }
 
 .exam-card:hover {
@@ -246,8 +375,8 @@ onMounted(() => {
 }
 
 .exam-score {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
-  color: var(--color-white);
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-accent) 100%);
+  color: #27423a;
   padding: 4px 12px;
   border-radius: 12px;
   font-size: 14px;
@@ -275,9 +404,10 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  border: 2px solid rgba(112, 113, 77, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 12px;
-  background: rgba(207, 218, 197, 0.18);
+  background: rgba(255, 255, 255, 0.42);
+  backdrop-filter: blur(10px);
 }
 
 .submission-info h4 {
@@ -305,8 +435,8 @@ onMounted(() => {
 }
 
 .grade-badge {
-  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
-  color: var(--color-white);
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-accent) 100%);
+  color: #27423a;
   padding: 8px 16px;
   border-radius: 12px;
   font-weight: 600;
@@ -321,7 +451,7 @@ onMounted(() => {
 }
 
 .status-badge.pending {
-  background: rgba(207, 218, 197, 0.85);
+  background: rgba(255, 255, 255, 0.6);
   color: var(--color-muted);
 }
 
@@ -331,13 +461,23 @@ onMounted(() => {
 }
 
 .error-message {
-  background: rgba(112, 113, 77, 0.16);
+  background: rgba(255, 255, 255, 0.56);
   color: var(--color-primary);
   padding: 16px;
   border-radius: 12px;
   text-align: center;
   margin-top: 20px;
-  border: 1px solid rgba(67, 96, 50, 0.18);
+  border: 1px solid var(--glass-border);
+}
+
+.success-message {
+  background: rgba(255, 255, 255, 0.56);
+  color: #2f6e5c;
+  padding: 16px;
+  border-radius: 12px;
+  text-align: center;
+  margin-top: 20px;
+  border: 1px solid rgba(61, 130, 110, 0.25);
 }
 </style>
 

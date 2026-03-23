@@ -19,6 +19,7 @@ public class Student {
     private int studentId;
     private String name;
     private String email;
+    private String username;
     private String password;
 
     @OneToMany(mappedBy = "student")
@@ -27,5 +28,12 @@ public class Student {
     public Student(String name, String email) {
         this.name = name;
         this.email = email;
+    }
+
+    public Student(String name, String email, String username, String password) {
+        this.name = name;
+        this.email = email;
+        this.username = username;
+        this.password = password;
     }
 }

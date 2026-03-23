@@ -23,6 +23,28 @@
         </div>
       </div>
 
+      <div class="questions-card">
+        <h3>Exam Questions</h3>
+
+        <p v-if="questionLoadError" class="question-error">
+          {{ questionLoadError }}
+        </p>
+
+        <div v-else-if="examQuestions.length === 0" class="question-empty">
+          Questions are not available for this exam yet.
+        </div>
+
+        <ol v-else class="question-list">
+          <li
+            v-for="(question, index) in examQuestions"
+            :key="`question-${index}`"
+            class="question-item"
+          >
+            {{ question }}
+          </li>
+        </ol>
+      </div>
+
       <div v-if="alreadySubmitted" class="info-message">
         ℹ️ You have already submitted this exam.
         <router-link :to="`/student/results/${exam.examId}`">
@@ -33,41 +55,33 @@
       <div v-else class="submission-card">
         <h3>Submit Your Exam</h3>
         <p class="instructions">
-          Upload your completed exam CSV file. Make sure it includes your responses
-          to all questions.
+          Answer each question in its own text box before submitting.
         </p>
 
         <form @submit.prevent="handleSubmit">
-          <div class="form-group">
-            <label>Exam Response CSV File</label>
-            <div class="file-upload">
-              <input
-                type="file"
-                @change="handleFileChange"
-                accept=".csv"
-                required
-                ref="fileInput"
-                id="examFile"
-              />
-              <label for="examFile" class="file-label">
-                <span v-if="!selectedFile">📄 Choose CSV file</span>
-                <span v-else>✓ {{ selectedFile.name }}</span>
-              </label>
-            </div>
+          <div
+            v-for="(question, index) in examQuestions"
+            :key="`answer-box-${index}`"
+            class="form-group"
+          >
+            <label :for="`answer-${index}`">Question {{ index + 1 }}</label>
+            <p class="question-caption">{{ question }}</p>
+            <textarea
+              :id="`answer-${index}`"
+              v-model="questionAnswers[index]"
+              class="answer-input"
+              rows="5"
+              maxlength="2000"
+              placeholder="Write your answer for this question..."
+              required
+            ></textarea>
             <small class="help-text">
-              Upload your completed exam with all responses filled in
+              {{ answerLength(index) }} / 2000 characters
             </small>
           </div>
 
-          <div class="csv-format-info">
-            <h4>Expected CSV Format:</h4>
-            <pre>question,learnerResponses,maxGrade,grade
-What is 2+2?,4,[10],
-Define OOP?,Object-oriented programming is...,[20],</pre>
-          </div>
-
           <div class="form-actions">
-            <button type="submit" class="btn-primary" :disabled="submitting">
+            <button type="submit" class="btn-primary" :disabled="submitting || !canSubmit">
               {{ submitting ? 'Submitting...' : 'Submit Exam' }}
             </button>
           </div>
@@ -96,64 +110,109 @@ const router = useRouter()
 const authStore = useAuthStore()
 
 const exam = ref(null)
-const selectedFile = ref(null)
-const fileInput = ref(null)
+const examQuestions = ref([])
+const questionAnswers = ref([])
 const loading = ref(false)
 const submitting = ref(false)
 const error = ref('')
+const questionLoadError = ref('')
 const success = ref(false)
 const alreadySubmitted = ref(false)
 
 const examId = computed(() => parseInt(route.params.examId))
+const canSubmit = computed(() => {
+  if (examQuestions.value.length === 0) {
+    return false
+  }
+
+  if (questionAnswers.value.length !== examQuestions.value.length) {
+    return false
+  }
+
+  return questionAnswers.value.every(answer => answer && answer.trim().length > 0)
+})
+
+const answerLength = (index) => {
+  const value = questionAnswers.value[index] || ''
+  return value.trim().length
+}
 
 const loadExamDetails = async () => {
   loading.value = true
   error.value = ''
+  questionLoadError.value = ''
 
   try {
-    // Load exam details
-    const examResponse = await studentAPI.getExamDetails(
-      examId.value,
-      authStore.userId
-    )
+    const [examResponse, questionsResponse, submittedResponse] = await Promise.all([
+      studentAPI.getExamDetails(
+        examId.value,
+        authStore.userId
+      ),
+      studentAPI.getExamQuestions(
+        examId.value,
+        authStore.userId
+      ),
+      studentAPI.hasSubmitted(
+        examId.value,
+        authStore.userId
+      )
+    ])
 
+    // Load exam details
     if (examResponse.data.success) {
       exam.value = examResponse.data.data
     }
 
-    // Check if already submitted
-    const submittedResponse = await studentAPI.hasSubmitted(
-      examId.value,
-      authStore.userId
-    )
+    // Load exam questions
+    if (questionsResponse.data.success) {
+      examQuestions.value = questionsResponse.data.data || []
+      questionAnswers.value = examQuestions.value.map(() => '')
+    }
 
+    // Check if already submitted
     if (submittedResponse.data.success) {
       alreadySubmitted.value = submittedResponse.data.data
     }
   } catch (err) {
-    error.value = err.response?.data?.message || 'Failed to load exam'
-    console.error('Error loading exam:', err)
+    const backendMessage = err.response?.data?.message || 'Failed to load exam'
+
+    // Keep page usable if only question loading fails.
+    if (err.config?.url?.includes('/questions')) {
+      questionLoadError.value = backendMessage
+
+      try {
+        const [examResponse, submittedResponse] = await Promise.all([
+          studentAPI.getExamDetails(examId.value, authStore.userId),
+          studentAPI.hasSubmitted(examId.value, authStore.userId)
+        ])
+
+        if (examResponse.data.success) {
+          exam.value = examResponse.data.data
+        }
+
+        if (submittedResponse.data.success) {
+          alreadySubmitted.value = submittedResponse.data.data
+        }
+      } catch (fallbackErr) {
+        error.value = fallbackErr.response?.data?.message || 'Failed to load exam'
+      }
+    } else {
+      error.value = backendMessage
+      console.error('Error loading exam:', err)
+    }
   } finally {
     loading.value = false
   }
 }
 
-const handleFileChange = (event) => {
-  const file = event.target.files[0]
-  if (file) {
-    if (!file.name.endsWith('.csv')) {
-      error.value = 'Please select a CSV file'
-      event.target.value = ''
-      return
-    }
-    selectedFile.value = file
-    error.value = ''
-  }
-}
-
 const handleSubmit = async () => {
-  if (!selectedFile.value) {
-    error.value = 'Please select a CSV file'
+  if (examQuestions.value.length === 0) {
+    error.value = 'Exam questions are unavailable, so submission is disabled'
+    return
+  }
+
+  if (!canSubmit.value) {
+    error.value = 'Please answer every question before submitting'
     return
   }
 
@@ -165,7 +224,7 @@ const handleSubmit = async () => {
     const response = await studentAPI.submitExam(
       examId.value,
       authStore.userId,
-      selectedFile.value
+      questionAnswers.value.map(answer => answer.trim())
     )
 
     if (response.data.success) {
@@ -202,16 +261,18 @@ onMounted(() => {
 .page-title {
   font-size: 32px;
   font-weight: 700;
-  color: var(--color-white);
+  color: var(--color-primary);
 }
 
 .loading {
-  background: rgba(255, 255, 255, 0.96);
+  background: var(--glass-bg-strong);
   padding: 60px 20px;
   text-align: center;
   border-radius: 16px;
   color: var(--color-text-soft);
   box-shadow: var(--shadow-soft);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px);
 }
 
 .exam-container {
@@ -220,12 +281,49 @@ onMounted(() => {
 }
 
 .exam-info-card {
-  background: rgba(255, 255, 255, 0.96);
+  background: var(--glass-bg-strong);
   border-radius: 16px;
   padding: 32px;
   margin-bottom: 24px;
   box-shadow: var(--shadow-soft);
-  border: 1px solid rgba(67, 96, 50, 0.08);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px);
+}
+
+.questions-card {
+  background: var(--glass-bg-strong);
+  border-radius: 16px;
+  padding: 24px 28px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px);
+}
+
+.questions-card h3 {
+  color: var(--color-primary);
+  margin-bottom: 14px;
+}
+
+.question-list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding-left: 20px;
+}
+
+.question-item {
+  color: var(--color-text);
+  line-height: 1.55;
+}
+
+.question-empty,
+.question-error {
+  color: var(--color-text-soft);
+  background: rgba(255, 255, 255, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 10px;
+  padding: 12px;
 }
 
 .exam-info-card h2 {
@@ -250,13 +348,13 @@ onMounted(() => {
 }
 
 .info-message {
-  background: rgba(183, 203, 145, 0.48);
+  background: rgba(255, 255, 255, 0.56);
   color: var(--color-primary);
   padding: 16px;
   border-radius: 12px;
   margin-bottom: 24px;
   text-align: center;
-  border: 1px solid rgba(67, 96, 50, 0.14);
+  border: 1px solid var(--glass-border);
 }
 
 .info-message a {
@@ -265,11 +363,12 @@ onMounted(() => {
 }
 
 .submission-card {
-  background: rgba(255, 255, 255, 0.96);
+  background: var(--glass-bg-strong);
   border-radius: 16px;
   padding: 32px;
   box-shadow: var(--shadow-soft);
-  border: 1px solid rgba(67, 96, 50, 0.08);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px);
 }
 
 .submission-card h3 {
@@ -295,32 +394,29 @@ onMounted(() => {
   margin-bottom: 8px;
 }
 
-.file-upload {
-  position: relative;
+.question-caption {
+  color: var(--color-text-soft);
+  margin-bottom: 10px;
+  line-height: 1.45;
 }
 
-.file-upload input[type="file"] {
-  opacity: 0;
-  position: absolute;
-  z-index: -1;
-}
-
-.file-label {
-  display: block;
-  padding: 20px;
-  border: 2px dashed rgba(112, 113, 77, 0.35);
+.answer-input {
+  width: 100%;
+  padding: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.62);
   border-radius: 12px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background: rgba(207, 218, 197, 0.42);
-  font-size: 16px;
+  background: rgba(255, 255, 255, 0.42);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-size: 15px;
+  line-height: 1.6;
   color: var(--color-text);
+  resize: vertical;
 }
 
-.file-label:hover {
+.answer-input:focus {
+  outline: none;
   border-color: var(--color-accent);
-  background: rgba(183, 203, 145, 0.45);
+  box-shadow: 0 0 0 3px rgba(182, 223, 217, 0.35);
 }
 
 .help-text {
@@ -330,28 +426,6 @@ onMounted(() => {
   font-size: 14px;
 }
 
-.csv-format-info {
-  background: rgba(207, 218, 197, 0.52);
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 24px;
-  border: 1px solid rgba(67, 96, 50, 0.08);
-}
-
-.csv-format-info h4 {
-  margin-bottom: 12px;
-  color: var(--color-primary);
-}
-
-.csv-format-info pre {
-  background: rgba(255, 255, 255, 0.88);
-  padding: 16px;
-  border-radius: 8px;
-  overflow-x: auto;
-  font-size: 14px;
-  line-height: 1.6;
-  color: var(--color-text);
-}
 
 .form-actions button {
   width: 100%;
@@ -360,7 +434,7 @@ onMounted(() => {
 }
 
 .success-message {
-  background: rgba(183, 203, 145, 0.48);
+  background: rgba(255, 255, 255, 0.56);
   color: var(--color-primary);
   padding: 16px;
   border-radius: 12px;
@@ -368,17 +442,17 @@ onMounted(() => {
   margin-top: 20px;
   font-weight: 600;
   font-size: 16px;
-  border: 1px solid rgba(67, 96, 50, 0.14);
+  border: 1px solid var(--glass-border);
 }
 
 .error-message {
-  background: rgba(112, 113, 77, 0.16);
+  background: rgba(255, 255, 255, 0.56);
   color: var(--color-primary);
   padding: 16px;
   border-radius: 12px;
   text-align: center;
   margin-top: 20px;
-  border: 1px solid rgba(67, 96, 50, 0.18);
+  border: 1px solid var(--glass-border);
 }
 </style>
 

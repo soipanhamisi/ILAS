@@ -4,6 +4,7 @@ import org.soipan.ilas.dto.ApiResponse;
 import org.soipan.ilas.dto.ExamDTO;
 import org.soipan.ilas.dto.ExamMapper;
 import org.soipan.ilas.dto.ExamSubmissionDTO;
+import org.soipan.ilas.dto.SubmitExamRequest;
 import org.soipan.ilas.models.Exam;
 import org.soipan.ilas.models.ExamSubmission;
 import org.soipan.ilas.services.StudentExamService;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,10 +38,20 @@ public class StudentExamController {
     @PostMapping("/{examId}/submit")
     public ResponseEntity<ApiResponse<ExamSubmissionDTO>> submitExam(
             @PathVariable Long examId,
-            @RequestParam("studentId") Integer studentId,
-            @RequestParam("file") MultipartFile file) {
+            @RequestBody SubmitExamRequest request) {
 
-        ExamSubmission submission = examService.submitAssessment(studentId, examId, file);
+        if (request == null || request.getStudentId() == null) {
+            throw new IllegalArgumentException("studentId is required");
+        }
+
+        if (request.getQuestionAnswers() == null || request.getQuestionAnswers().isEmpty()) {
+            throw new IllegalArgumentException("questionAnswers is required");
+        }
+
+        ExamSubmission submission = examService.submitAssessment(
+                request.getStudentId(),
+                examId,
+                request.getQuestionAnswers());
 
         ExamSubmissionDTO dto = examMapper.toDTO(submission);
         return ResponseEntity
@@ -128,6 +138,19 @@ public class StudentExamController {
 
         ExamDTO dto = examMapper.toDTO(exam);
         return ResponseEntity.ok(ApiResponse.success(dto));
+    }
+
+    /**
+     * Get exam questions for student preview.
+     * GET /api/student/exams/{examId}/questions
+     */
+    @GetMapping("/{examId}/questions")
+    public ResponseEntity<ApiResponse<List<String>>> getExamQuestions(
+            @PathVariable Long examId,
+            @RequestParam Integer studentId) {
+
+        List<String> questions = examService.getExamQuestions(studentId, examId);
+        return ResponseEntity.ok(ApiResponse.success(questions));
     }
 
     /**

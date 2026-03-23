@@ -27,6 +27,7 @@ public class ExamSubmissionDTO {
 
     // Submission details
     private String submissionCsvPath;
+    private String submissionText;
     private LocalDateTime submittedAt;
 
     // Grading information
