@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -23,6 +25,15 @@ public class Enrollment {
     @ManyToOne
     @JoinColumn(name = "studentId")
     private Student student;
+
+    private LocalDateTime enrolledAt;
     private int grade;
     private EnrollmentStatus enrollmentStatus;
+
+    @PrePersist
+    public void onCreate() {
+        if (enrolledAt == null) {
+            enrolledAt = LocalDateTime.now();
+        }
+    }
 }

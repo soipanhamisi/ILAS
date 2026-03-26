@@ -208,6 +208,18 @@ public class InstructorExamController {
     }
 
     /**
+     * Get instructor dashboard summary.
+     * GET /api/instructor/exams/dashboard/summary
+     */
+    @GetMapping("/dashboard/summary")
+    public ResponseEntity<ApiResponse<InstructorDashboardSummaryDTO>> getDashboardSummary(
+            @RequestParam Integer instructorId) {
+
+        InstructorDashboardSummaryDTO summary = examService.getDashboardSummary(instructorId);
+        return ResponseEntity.ok(ApiResponse.success(summary));
+    }
+
+    /**
      * Get exam questions for grading preview
      * GET /api/instructor/exams/{examId}/questions
      */

@@ -2,6 +2,7 @@ package org.soipan.ilas.services;
 
 import org.soipan.ilas.dto.QuestionGradeRequest;
 import org.soipan.ilas.dto.ExamQuestionDTO;
+import org.soipan.ilas.dto.InstructorDashboardSummaryDTO;
 import org.soipan.ilas.models.*;
 import org.soipan.ilas.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -37,6 +39,9 @@ public class InstructorExamService {
 
     @Autowired
     private InstructorRepository instructorRepository;
+
+    @Autowired
+    private EnrollmentRepository enrollmentRepository;
 
     @Autowired
     private FileStorageService fileStorageService;
@@ -284,6 +289,96 @@ public class InstructorExamService {
         }
 
         return examRepository.findByCourse_CourseId(courseId);
+    }
+
+    /**
+     * Get instructor dashboard aggregate metrics.
+     */
+    public InstructorDashboardSummaryDTO getDashboardSummary(int instructorId) {
+        instructorRepository.findByInstructorId(instructorId)
+                .orElseThrow(() -> new IllegalArgumentException("Instructor not found with ID: " + instructorId));
+
+        List<Course> courses = courseRepository.findByInstructor_InstructorId(instructorId);
+        LocalDateTime recentCutoff = LocalDateTime.now().minusDays(7);
+
+        int totalNewEnrollments = 0;
+        int totalTestsToBeGraded = 0;
+        double totalEarnedScore = 0;
+        double totalPossibleScore = 0;
+
+        List<InstructorDashboardSummaryDTO.CourseSummaryDTO> courseSummaries = new ArrayList<>();
+        List<InstructorDashboardSummaryDTO.GradingQueueItemDTO> gradingQueueItems = new ArrayList<>();
+
+        for (Course course : courses) {
+            int courseId = course.getCourseId();
+            List<Enrollment> activeEnrollments = enrollmentRepository
+                    .findByCourse_CourseIdAndEnrollmentStatus(courseId, EnrollmentStatus.ACTIVE);
+
+            int courseNewEnrollments = (int) activeEnrollments.stream()
+                    .filter(enrollment -> enrollment.getEnrolledAt() != null
+                            && !enrollment.getEnrolledAt().isBefore(recentCutoff))
+                    .count();
+
+            List<Exam> courseExams = examRepository.findByCourse_CourseId(courseId);
+            int courseTestsToBeGraded = 0;
+            double courseEarnedScore = 0;
+            double coursePossibleScore = 0;
+
+            for (Exam exam : courseExams) {
+                long examUngradedCount = submissionRepository.countByExam_ExamIdAndGradeIsNull(exam.getExamId());
+                if (examUngradedCount > 0) {
+                    courseTestsToBeGraded += (int) examUngradedCount;
+                    gradingQueueItems.add(new InstructorDashboardSummaryDTO.GradingQueueItemDTO(
+                            exam.getExamId(),
+                            exam.getExamTitle(),
+                            courseId,
+                            course.getCourseTitle(),
+                            (int) examUngradedCount
+                    ));
+                }
+
+                List<ExamSubmission> submissions = submissionRepository.findByExam_ExamId(exam.getExamId());
+                for (ExamSubmission submission : submissions) {
+                    if (submission.getGrade() == null) {
+                        continue;
+                    }
+
+                    courseEarnedScore += submission.getGrade();
+                    coursePossibleScore += exam.getMaxScore();
+                }
+            }
+
+            double courseAveragePerformance = coursePossibleScore > 0
+                    ? (courseEarnedScore / coursePossibleScore) * 100
+                    : 0;
+
+            totalNewEnrollments += courseNewEnrollments;
+            totalTestsToBeGraded += courseTestsToBeGraded;
+            totalEarnedScore += courseEarnedScore;
+            totalPossibleScore += coursePossibleScore;
+
+            courseSummaries.add(new InstructorDashboardSummaryDTO.CourseSummaryDTO(
+                    courseId,
+                    course.getCourseTitle(),
+                    activeEnrollments.size(),
+                    courseNewEnrollments,
+                    courseAveragePerformance,
+                    courseTestsToBeGraded
+            ));
+        }
+
+        double averagePerformance = totalPossibleScore > 0
+                ? (totalEarnedScore / totalPossibleScore) * 100
+                : 0;
+
+        return new InstructorDashboardSummaryDTO(
+                courses.size(),
+                totalNewEnrollments,
+                averagePerformance,
+                totalTestsToBeGraded,
+                courseSummaries,
+                gradingQueueItems
+        );
     }
 
     /**

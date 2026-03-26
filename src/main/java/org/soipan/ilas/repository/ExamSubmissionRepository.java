@@ -48,5 +48,8 @@ public interface ExamSubmissionRepository extends CrudRepository<ExamSubmission,
 
     // Count graded submissions for an exam
     long countByExam_ExamIdAndGradeIsNotNull(Long examId);
+
+    // Count ungraded submissions for an exam
+    long countByExam_ExamIdAndGradeIsNull(Long examId);
 }
 

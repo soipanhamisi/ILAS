@@ -7,6 +7,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 /**
  * Database seeder for initial data
  * Runs on application startup to populate the database
@@ -176,13 +178,22 @@ public class DataSeeder implements CommandLineRunner {
         int repairedCount = 0;
 
         for (Enrollment enrollment : enrollmentRepository.findAll()) {
-            if (enrollment.getEnrollmentStatus() != null) {
-                continue;
+            boolean updated = false;
+
+            if (enrollment.getEnrollmentStatus() == null) {
+                enrollment.setEnrollmentStatus(EnrollmentStatus.ACTIVE);
+                updated = true;
             }
 
-            enrollment.setEnrollmentStatus(EnrollmentStatus.ACTIVE);
-            enrollmentRepository.save(enrollment);
-            repairedCount++;
+            if (enrollment.getEnrolledAt() == null) {
+                enrollment.setEnrolledAt(LocalDateTime.now());
+                updated = true;
+            }
+
+            if (updated) {
+                enrollmentRepository.save(enrollment);
+                repairedCount++;
+            }
         }
 
         if (repairedCount > 0) {

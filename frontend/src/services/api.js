@@ -100,6 +100,13 @@ export const instructorAPI = {
     return apiClient.get(`/instructor/exams/${examId}/questions/details`, {
       params: { instructorId }
     })
+  },
+
+  // Get instructor dashboard summary metrics
+  getDashboardSummary(instructorId) {
+    return apiClient.get('/instructor/exams/dashboard/summary', {
+      params: { instructorId }
+    })
   }
 }
 

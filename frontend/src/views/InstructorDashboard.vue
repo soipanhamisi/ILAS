@@ -1,47 +1,81 @@
 <template>
   <div class="container dashboard">
-    <h1 class="page-title">👨‍🏫 Instructor Dashboard</h1>
+    <h1 class="page-title">Instructor Dashboard</h1>
     <p class="welcome-text">Welcome, {{ authStore.user?.name }}!</p>
 
     <div class="dashboard-actions">
       <router-link to="/instructor/exams/create" class="action-card">
-        <div class="action-icon">➕</div>
+        <div class="action-icon">+</div>
         <h3>Create New Exam</h3>
         <p>Upload CSV template and create assessment</p>
       </router-link>
     </div>
 
-    <div class="section">
-      <h2 class="section-title">Your Courses</h2>
+    <div v-if="loading" class="loading">Loading dashboard...</div>
 
-      <div class="form-group">
-        <label>Select Course</label>
-        <select v-model="selectedCourseId" @change="loadExams">
-          <option value="">Choose a course</option>
-          <option value="101">Introduction to Java (101)</option>
-          <option value="102">Data Structures (102)</option>
-          <option value="103">Web Development (103)</option>
-        </select>
+    <div v-else class="dashboard-content">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <p class="stat-label">Courses Taught</p>
+          <p class="stat-value">{{ dashboard.coursesTaught }}</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-label">New Enrollments (7d)</p>
+          <p class="stat-value">{{ dashboard.newEnrollments }}</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-label">Average Performance</p>
+          <p class="stat-value">{{ formatPercent(dashboard.averagePerformancePct) }}</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-label">Tests To Be Graded</p>
+          <p class="stat-value">{{ dashboard.testsToBeGraded }}</p>
+        </div>
       </div>
-    </div>
 
-    <div v-if="loading" class="loading">Loading exams...</div>
+      <div class="section">
+        <h2 class="section-title">Courses You Teach</h2>
 
-    <div v-if="exams.length > 0" class="section">
-      <h2 class="section-title">Exams</h2>
-      <div class="exams-grid">
-        <div v-for="exam in exams" :key="exam.examId" class="exam-card">
-          <div class="exam-header">
-            <h3>{{ exam.examTitle }}</h3>
-            <span class="exam-score">{{ exam.maxScore }} pts</span>
+        <div v-if="dashboard.courses.length === 0" class="empty-state">
+          <p>No courses assigned yet</p>
+        </div>
+
+        <div v-else class="courses-grid">
+          <div
+            v-for="course in dashboard.courses"
+            :key="course.courseId"
+            class="course-card"
+          >
+            <h3>{{ course.courseTitle }}</h3>
+            <p class="course-meta">Course ID: {{ course.courseId }}</p>
+            <p class="course-meta">Enrollments: {{ course.enrollmentCount }}</p>
+            <p class="course-meta">New enrollments (7d): {{ course.newEnrollments }}</p>
+            <p class="course-meta">Average performance: {{ formatPercent(course.averagePerformancePct) }}</p>
+            <p class="course-meta">Pending grading: {{ course.testsToBeGraded }}</p>
           </div>
-          <p class="exam-course">{{ exam.courseTitle }}</p>
-          <div class="exam-actions">
-            <router-link
-              :to="`/instructor/exams/${exam.examId}`"
-              class="btn-primary"
-            >
-              View Submissions
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Tests To Be Graded</h2>
+
+        <div v-if="dashboard.testsToGrade.length === 0" class="empty-state">
+          <p>No tests pending grading</p>
+        </div>
+
+        <div v-else class="queue-list">
+          <div
+            v-for="test in dashboard.testsToGrade"
+            :key="test.examId"
+            class="queue-item"
+          >
+            <div>
+              <h3>{{ test.examTitle }}</h3>
+              <p class="course-meta">{{ test.courseTitle }} ({{ test.courseId }})</p>
+              <p class="course-meta">Ungraded submissions: {{ test.ungradedCount }}</p>
+            </div>
+            <router-link :to="`/instructor/exams/${test.examId}`" class="btn-primary">
+              Grade Now
             </router-link>
           </div>
         </div>
@@ -60,43 +94,47 @@ import { useAuthStore } from '../stores/auth'
 import { instructorAPI } from '../services/api'
 
 const authStore = useAuthStore()
-const exams = ref([])
-const selectedCourseId = ref('')
 const loading = ref(false)
 const error = ref('')
+const dashboard = ref({
+  coursesTaught: 0,
+  newEnrollments: 0,
+  averagePerformancePct: 0,
+  testsToBeGraded: 0,
+  courses: [],
+  testsToGrade: []
+})
 
-const loadExams = async () => {
-  if (!selectedCourseId.value) {
-    exams.value = []
-    return
+const formatPercent = (value) => {
+  if (value === null || value === undefined) {
+    return '0.0%'
   }
 
+  return `${Number(value).toFixed(1)}%`
+}
+
+const loadDashboard = async () => {
   loading.value = true
   error.value = ''
 
   try {
-    const response = await instructorAPI.getExamsForCourse(
-      parseInt(selectedCourseId.value),
-      authStore.userId
-    )
+    const response = await instructorAPI.getDashboardSummary(authStore.userId)
 
     if (response.data.success) {
-      exams.value = response.data.data
+      dashboard.value = response.data.data
     } else {
-      error.value = response.data.message
+      error.value = response.data.message || 'Failed to load dashboard'
     }
   } catch (err) {
-    error.value = err.response?.data?.message || 'Failed to load exams'
-    console.error('Error loading exams:', err)
+    error.value = err.response?.data?.message || 'Failed to load dashboard'
+    console.error('Error loading dashboard:', err)
   } finally {
     loading.value = false
   }
 }
 
 onMounted(() => {
-  // Auto-load first course for demo
-  selectedCourseId.value = '101'
-  loadExams()
+  loadDashboard()
 })
 </script>
 
@@ -122,12 +160,12 @@ onMounted(() => {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
-  margin-bottom: 40px;
+  margin-bottom: 24px;
 }
 
 .action-card {
   background: var(--glass-bg-strong);
-  padding: 32px;
+  padding: 28px;
   border-radius: 16px;
   text-align: center;
   text-decoration: none;
@@ -143,8 +181,9 @@ onMounted(() => {
 }
 
 .action-icon {
-  font-size: 48px;
-  margin-bottom: 16px;
+  font-size: 42px;
+  margin-bottom: 10px;
+  font-weight: 700;
 }
 
 .action-card h3 {
@@ -158,11 +197,51 @@ onMounted(() => {
   font-size: 14px;
 }
 
+.loading {
+  background: var(--glass-bg-strong);
+  padding: 40px;
+  text-align: center;
+  border-radius: 16px;
+  color: var(--color-text-soft);
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--glass-border);
+}
+
+.dashboard-content {
+  display: grid;
+  gap: 24px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.stat-card {
+  background: var(--glass-bg-strong);
+  border-radius: 14px;
+  padding: 20px;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-soft);
+}
+
+.stat-label {
+  color: var(--color-text-soft);
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  color: var(--color-primary);
+  font-size: 28px;
+  font-weight: 700;
+}
+
 .section {
   background: var(--glass-bg-strong);
   border-radius: 16px;
-  padding: 32px;
-  margin-bottom: 24px;
+  padding: 28px;
   box-shadow: var(--shadow-soft);
   border: 1px solid var(--glass-border);
   backdrop-filter: blur(14px);
@@ -175,89 +254,62 @@ onMounted(() => {
   margin-bottom: 20px;
 }
 
-.form-group {
-  margin-bottom: 20px;
+.empty-state {
+  text-align: center;
+  padding: 24px;
+  color: var(--color-text-soft);
 }
 
-.form-group label {
-  display: block;
-  font-weight: 600;
-  color: var(--color-text);
-  margin-bottom: 8px;
-}
-
-.form-group select {
-  width: 100%;
-  max-width: 400px;
-  padding: 12px;
-  border: 2px solid rgba(112, 113, 77, 0.3);
-  border-radius: 8px;
-  font-size: 16px;
-}
-
-.exams-grid {
+.courses-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
 }
 
-.exam-card {
+.course-card {
   border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 12px;
-  padding: 20px;
-  transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(10px);
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.42);
+  display: grid;
+  gap: 6px;
 }
 
-.exam-card:hover {
-  border-color: var(--color-accent);
-  box-shadow: 0 4px 12px rgba(56, 101, 71, 0.18);
+.course-card h3 {
+  color: var(--color-text);
+  font-size: 18px;
+  margin-bottom: 2px;
 }
 
-.exam-header {
+.course-meta {
+  color: var(--color-text-soft);
+  font-size: 14px;
+}
+
+.queue-list {
+  display: grid;
+  gap: 12px;
+}
+
+.queue-item {
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.42);
   display: flex;
   justify-content: space-between;
-  align-items: start;
-  margin-bottom: 12px;
+  align-items: center;
+  gap: 16px;
 }
 
-.exam-header h3 {
-  font-size: 18px;
+.queue-item h3 {
   color: var(--color-text);
-  flex: 1;
-}
-
-.exam-score {
-  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-accent) 100%);
-  color: #27423a;
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.exam-course {
-  color: var(--color-text-soft);
-  font-size: 14px;
-  margin-bottom: 16px;
-}
-
-.exam-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.loading {
-  background: var(--glass-bg-strong);
-  padding: 40px;
-  text-align: center;
-  border-radius: 16px;
-  color: var(--color-text-soft);
-  box-shadow: var(--shadow-soft);
+  font-size: 18px;
+  margin-bottom: 4px;
 }
 
 .error-message {
+  margin-top: 20px;
   background: rgba(255, 255, 255, 0.55);
   color: var(--color-primary);
   padding: 16px;
