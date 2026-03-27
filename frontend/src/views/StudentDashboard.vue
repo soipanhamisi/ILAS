@@ -6,6 +6,83 @@
     <div v-if="loading" class="loading">Loading exams...</div>
 
     <div v-else class="dashboard-content">
+      <div class="overview-grid">
+        <div class="overview-card">
+          <p class="overview-label">Enrolled Courses</p>
+          <p class="overview-value">{{ enrolledCourses.length }}</p>
+        </div>
+        <div class="overview-card">
+          <p class="overview-label">Pending Assessments</p>
+          <p class="overview-value">{{ pendingAssessments.length }}</p>
+        </div>
+        <div class="overview-card">
+          <p class="overview-label">Total Submissions</p>
+          <p class="overview-value">{{ submissions.length }}</p>
+        </div>
+        <div class="overview-card">
+          <p class="overview-label">Graded Results</p>
+          <p class="overview-value">{{ gradedSubmissionsCount }}</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <h2 class="section-title">✅ Enrolled Courses</h2>
+          <span class="pill">{{ enrolledCourses.length }} active</span>
+        </div>
+
+        <div v-if="enrolledCourses.length === 0" class="empty-state">
+          <p>You are not enrolled in any courses yet</p>
+        </div>
+
+        <div v-else class="courses-grid">
+          <div
+            v-for="course in enrolledCourses"
+            :key="`enrolled-${course.courseId}`"
+            class="course-card"
+          >
+            <h3>{{ course.courseTitle }}</h3>
+            <p class="course-meta">Instructor: {{ course.instructorName || 'TBA' }}</p>
+            <span class="status-badge enrolled">Enrolled</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <h2 class="section-title">⏳ Pending Assessments</h2>
+          <span class="pill">{{ pendingAssessments.length }} pending</span>
+        </div>
+
+        <div v-if="pendingAssessments.length === 0" class="empty-state">
+          <p>Great work! You have no pending assessments.</p>
+        </div>
+
+        <div v-else class="exams-grid">
+          <div
+            v-for="exam in pendingAssessments"
+            :key="`pending-${exam.examId}`"
+            class="exam-card"
+          >
+            <div class="exam-header">
+              <h3>{{ exam.examTitle }}</h3>
+              <span class="exam-score">{{ exam.maxScore }} pts</span>
+            </div>
+            <p class="exam-course">{{ exam.courseTitle }}</p>
+            <p class="exam-instructor">Instructor: {{ exam.instructorName }}</p>
+
+            <div class="exam-actions">
+              <button
+                @click="goToExam(exam.examId)"
+                class="btn-primary"
+              >
+                Take Exam
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="section">
         <div class="section-header">
           <h2 class="section-title">🧭 Course Enrollment</h2>
@@ -135,7 +212,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import { studentAPI } from '../services/api'
@@ -146,12 +223,21 @@ const authStore = useAuthStore()
 const availableExams = ref([])
 const submissions = ref([])
 const allCourses = ref([])
+const enrolledCourses = ref([])
 const submittedExamIds = ref(new Set())
 const enrolledCourseIds = ref(new Set())
 const enrollingCourseId = ref(null)
 const loading = ref(false)
 const error = ref('')
 const successMessage = ref('')
+
+const pendingAssessments = computed(() => {
+  return availableExams.value.filter(exam => !submittedExamIds.value.has(exam.examId))
+})
+
+const gradedSubmissionsCount = computed(() => {
+  return submissions.value.filter(submission => submission.grade !== null).length
+})
 
 const loadData = async () => {
   loading.value = true
@@ -170,6 +256,7 @@ const loadData = async () => {
     }
 
     if (enrolledCoursesResponse.data.success) {
+      enrolledCourses.value = enrolledCoursesResponse.data.data
       enrolledCourseIds.value = new Set(
         enrolledCoursesResponse.data.data.map(course => course.courseId)
       )
@@ -274,6 +361,33 @@ onMounted(() => {
 .dashboard-content {
   display: grid;
   gap: 32px;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.overview-card {
+  background: rgba(255, 255, 255, 0.42);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 16px;
+  backdrop-filter: blur(10px);
+}
+
+.overview-label {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-text-soft);
+}
+
+.overview-value {
+  margin: 8px 0 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-primary);
 }
 
 .section {
@@ -455,6 +569,12 @@ onMounted(() => {
   color: var(--color-muted);
 }
 
+.status-badge.enrolled {
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-accent) 100%);
+  color: #27423a;
+  width: fit-content;
+}
+
 .btn-sm {
   padding: 8px 16px;
   font-size: 14px;
@@ -480,4 +600,3 @@ onMounted(() => {
   border: 1px solid rgba(61, 130, 110, 0.25);
 }
 </style>
-
