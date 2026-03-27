@@ -1,32 +1,42 @@
 <template>
-  <nav class="navbar">
-    <div class="container">
-      <div class="nav-content">
-        <div class="logo">
-          <h2>🎓 ILAS</h2>
-        </div>
-
-        <div class="nav-links">
-          <router-link v-if="authStore.isInstructor" to="/instructor" class="nav-link">
-            Dashboard
-          </router-link>
-          <router-link v-if="authStore.isInstructor" to="/instructor/exams/create" class="nav-link">
-            Create Exam
-          </router-link>
-
-          <router-link v-if="authStore.isStudent" to="/student" class="nav-link">
-            Dashboard
-          </router-link>
-
-          <div class="user-info">
-            <span class="user-name">{{ authStore.user?.name }}</span>
-            <span class="user-badge">{{ authStore.userType }}</span>
-            <button @click="handleLogout" class="btn-logout">Logout</button>
-          </div>
-        </div>
-      </div>
+  <aside class="sidebar">
+    <div class="brand-block">
+      <h2>ILAS</h2>
+      <p>Learning Hub</p>
     </div>
-  </nav>
+
+    <nav class="nav-section">
+      <p class="section-label">Main</p>
+      <router-link v-if="authStore.isInstructor" to="/instructor" class="nav-link">
+        Instructor Dashboard
+      </router-link>
+      <router-link v-if="authStore.isInstructor" to="/instructor/exams/create" class="nav-link">
+        Create Assessment
+      </router-link>
+
+      <router-link v-if="authStore.isStudent" to="/student" class="nav-link">
+        Student Dashboard
+      </router-link>
+    </nav>
+
+    <nav class="nav-section muted">
+      <p class="section-label">Shortcuts</p>
+      <router-link to="/" class="nav-link">
+        Home
+      </router-link>
+      <router-link to="/login" class="nav-link">
+        Switch Account
+      </router-link>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <span class="user-name">{{ authStore.user?.name }}</span>
+        <span class="user-badge">{{ authStore.userType }}</span>
+      </div>
+      <button @click="handleLogout" class="btn-logout">Logout</button>
+    </div>
+  </aside>
 </template>
 
 <script setup>
@@ -43,87 +53,130 @@ const handleLogout = () => {
 </script>
 
 <style scoped>
-.navbar {
-  background: rgba(246, 245, 230, 0.42);
-  box-shadow: 0 10px 26px rgba(79, 106, 72, 0.12);
-  backdrop-filter: blur(14px);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  border-bottom: 1px solid var(--glass-border);
-}
-
-.nav-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 0;
-}
-
-.logo h2 {
-  color: var(--color-primary);
-  font-size: 28px;
-  letter-spacing: 0.3px;
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
+.sidebar {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #111827 0%, #0f172a 100%);
+  color: #cbd5e1;
+  border-right: 1px solid rgba(148, 163, 184, 0.2);
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
   gap: 20px;
+  padding: 22px 16px;
+}
+
+.brand-block h2 {
+  color: #f8fafc;
+  font-size: 24px;
+  letter-spacing: 0.04em;
+}
+
+.brand-block p {
+  margin-top: 2px;
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.nav-section {
+  display: grid;
+  gap: 8px;
+}
+
+.nav-section.muted {
+  align-content: start;
+}
+
+.section-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+  padding: 0 12px 6px;
 }
 
 .nav-link {
   text-decoration: none;
-  color: var(--color-text);
-  font-weight: 500;
-  padding: 8px 16px;
-  border-radius: 999px;
+  color: #cbd5e1;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 12px;
+  border-radius: 10px;
   transition: all 0.3s ease;
 }
 
 .nav-link:hover {
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(51, 65, 85, 0.55);
+  color: #ffffff;
 }
 
 .nav-link.router-link-active {
-  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-accent) 100%);
-  color: #27423a;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45);
+  background: rgba(37, 99, 235, 0.24);
+  color: #dbeafe;
+  box-shadow: inset 0 0 0 1px rgba(96, 165, 250, 0.35);
+}
+
+.sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .user-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding-left: 20px;
-  border-left: 1px solid rgba(255, 255, 255, 0.5);
+  display: grid;
+  gap: 4px;
+  width: 100%;
 }
 
 .user-name {
   font-weight: 600;
-  color: var(--color-text);
+  color: #f8fafc;
+  font-size: 14px;
 }
 
 .user-badge {
-  background: rgba(255, 255, 255, 0.56);
-  color: var(--color-text);
-  padding: 4px 12px;
-  border-radius: 16px;
+  width: fit-content;
+  background: rgba(37, 99, 235, 0.22);
+  color: #bfdbfe;
+  padding: 3px 10px;
+  border-radius: 999px;
   font-size: 12px;
   text-transform: uppercase;
   font-weight: 600;
 }
 
 .btn-logout {
-  background: rgba(255, 255, 255, 0.62);
-  color: var(--color-text);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  padding: 8px 16px;
-  border-radius: 999px;
+  width: 100%;
+  background: rgba(248, 250, 252, 0.12);
+  color: #f8fafc;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  padding: 10px 16px;
+  border-radius: 10px;
   font-size: 14px;
 }
 
 .btn-logout:hover {
-  background: rgba(255, 255, 255, 0.82);
+  background: rgba(248, 250, 252, 0.22);
+}
+
+@media (max-width: 980px) {
+  .sidebar {
+    padding: 14px 10px;
+  }
+
+  .brand-block p,
+  .section-label,
+  .nav-link,
+  .user-info {
+    display: none;
+  }
+
+  .brand-block h2 {
+    text-align: center;
+    font-size: 18px;
+  }
+
+  .btn-logout {
+    font-size: 12px;
+    padding: 8px 10px;
+  }
 }
 </style>
