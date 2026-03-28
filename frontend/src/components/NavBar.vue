@@ -1,58 +1,82 @@
 <template>
-  <aside class="sidebar">
-    <div class="brand-block">
-      <h2>ILAS</h2>
-      <p>Learning Hub</p>
-    </div>
-
-    <nav class="nav-section">
-      <p class="section-label">Main</p>
-      <router-link v-if="authStore.isInstructor" to="/instructor" class="nav-link">
-        Instructor Dashboard
-      </router-link>
-      <router-link v-if="authStore.isInstructor" to="/instructor/exams/create" class="nav-link">
-        Create Assessment
-      </router-link>
-
-      <router-link v-if="authStore.isStudent" to="/student" class="nav-link">
-        Student Dashboard
-      </router-link>
-    </nav>
-
-    <nav class="nav-section muted">
-      <p class="section-label">Shortcuts</p>
-      <router-link to="/" class="nav-link">
-        Home
-      </router-link>
-      <router-link to="/login" class="nav-link">
-        Switch Account
-      </router-link>
-    </nav>
-
-    <div class="sidebar-footer">
-      <div class="user-info">
-        <span class="user-name">{{ authStore.user?.name }}</span>
-        <span class="user-badge">{{ authStore.userType }}</span>
+  <div class="navbar-wrapper">
+    <aside :class="['sidebar', { 'drawer-open': isDrawerOpen }]">
+      <div class="brand-block">
+        <h2>ILAS</h2>
+        <p>Learning Hub</p>
       </div>
-      <button @click="handleLogout" class="btn-logout">Logout</button>
-    </div>
-  </aside>
+
+      <nav class="nav-section">
+        <p class="section-label">Main</p>
+        <router-link v-if="authStore.isInstructor" to="/instructor" class="nav-link" @click="closeDrawer">
+          Instructor Dashboard
+        </router-link>
+        <router-link v-if="authStore.isInstructor" to="/instructor/exams/create" class="nav-link" @click="closeDrawer">
+          Create Assessment
+        </router-link>
+
+        <router-link v-if="authStore.isStudent" to="/student" class="nav-link" @click="closeDrawer">
+          Student Dashboard
+        </router-link>
+
+        <router-link v-if="authStore.isAdmin" to="/admin" class="nav-link" @click="closeDrawer">
+          Admin Dashboard
+        </router-link>
+      </nav>
+
+      <nav class="nav-section muted">
+        <p class="section-label">Shortcuts</p>
+        <router-link to="/" class="nav-link" @click="closeDrawer">
+          Home
+        </router-link>
+        <router-link to="/login" class="nav-link" @click="closeDrawer">
+          Switch Account
+        </router-link>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <span class="user-name">{{ authStore.user?.name }}</span>
+          <span class="user-badge">{{ authStore.userType }}</span>
+        </div>
+        <button @click="handleLogout" class="btn-logout">Logout</button>
+      </div>
+    </aside>
+
+    <div v-if="isDrawerOpen" class="drawer-backdrop" @click="closeDrawer" />
+  </div>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
 const router = useRouter()
 const authStore = useAuthStore()
+const isDrawerOpen = ref(false)
+
+const toggleDrawer = () => {
+  isDrawerOpen.value = !isDrawerOpen.value
+}
+
+const closeDrawer = () => {
+  isDrawerOpen.value = false
+}
 
 const handleLogout = () => {
   authStore.logout()
   router.push('/login')
 }
-</script>
 
+// Expose toggleDrawer for parent to use
+defineExpose({ toggleDrawer })
+</script>
 <style scoped>
+.navbar-wrapper {
+  position: relative;
+}
+
 .sidebar {
   min-height: 100vh;
   background: linear-gradient(180deg, #111827 0%, #0f172a 100%);
@@ -157,26 +181,61 @@ const handleLogout = () => {
   background: rgba(248, 250, 252, 0.22);
 }
 
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
 @media (max-width: 980px) {
   .sidebar {
-    padding: 14px 10px;
+    position: fixed;
+    inset: 0;
+    width: 280px;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    border-right: none;
+    box-shadow: 2px 0 16px rgba(0, 0, 0, 0.3);
+  }
+
+  .sidebar.drawer-open {
+    transform: translateX(0);
+  }
+
+  .drawer-backdrop {
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 
   .brand-block p,
-  .section-label,
+  .section-label {
+    display: block;
+  }
+
   .nav-link,
   .user-info {
-    display: none;
+    display: block;
   }
 
   .brand-block h2 {
-    text-align: center;
-    font-size: 18px;
+    font-size: 24px;
+    text-align: left;
   }
 
   .btn-logout {
-    font-size: 12px;
-    padding: 8px 10px;
+    font-size: 14px;
+    padding: 10px 16px;
   }
 }
 </style>

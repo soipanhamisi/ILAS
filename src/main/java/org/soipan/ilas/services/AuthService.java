@@ -3,8 +3,10 @@ package org.soipan.ilas.services;
 import org.soipan.ilas.dto.AuthRequest;
 import org.soipan.ilas.dto.AuthResponse;
 import org.soipan.ilas.dto.SignupRequest;
+import org.soipan.ilas.models.Admin;
 import org.soipan.ilas.models.Instructor;
 import org.soipan.ilas.models.Student;
+import org.soipan.ilas.repository.AdminRepository;
 import org.soipan.ilas.repository.InstructorRepository;
 import org.soipan.ilas.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +17,7 @@ import java.util.UUID;
 
 /**
  * Service for authentication operations
- * Handles login and signup for both students and instructors
+ * Handles login and signup for students, instructors, and admins
  */
 @Service
 public class AuthService {
@@ -25,6 +27,9 @@ public class AuthService {
 
     @Autowired
     private InstructorRepository instructorRepository;
+
+    @Autowired
+    private AdminRepository adminRepository;
 
     /**
      * Login a user with username and password
@@ -73,6 +78,25 @@ public class AuthService {
                     instructor.getUsername(),
                     instructor.getEmail(),
                     "instructor",
+                    generateToken()
+            );
+        } else if ("admin".equalsIgnoreCase(userType)) {
+            Optional<Admin> adminOpt = adminRepository.findByUsername(username);
+            if (adminOpt.isEmpty()) {
+                throw new IllegalArgumentException("Invalid username or password");
+            }
+
+            Admin admin = adminOpt.get();
+            if (!admin.getPassword().equals(password)) {
+                throw new IllegalArgumentException("Invalid username or password");
+            }
+
+            return new AuthResponse(
+                    admin.getAdminId(),
+                    admin.getName(),
+                    admin.getUsername(),
+                    admin.getEmail(),
+                    "admin",
                     generateToken()
             );
         } else {
@@ -133,6 +157,27 @@ public class AuthService {
                     instructor.getUsername(),
                     instructor.getEmail(),
                     "instructor",
+                    generateToken()
+            );
+        } else if ("admin".equalsIgnoreCase(userType)) {
+            // Check if username or email already exists
+            if (adminRepository.findByUsername(username).isPresent()) {
+                throw new IllegalArgumentException("Username already exists");
+            }
+            if (adminRepository.findByEmail(email).isPresent()) {
+                throw new IllegalArgumentException("Email already exists");
+            }
+
+            // Create new admin
+            Admin admin = new Admin(name, email, username, password);
+            admin = adminRepository.save(admin);
+
+            return new AuthResponse(
+                    admin.getAdminId(),
+                    admin.getName(),
+                    admin.getUsername(),
+                    admin.getEmail(),
+                    "admin",
                     generateToken()
             );
         } else {

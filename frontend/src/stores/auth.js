@@ -4,7 +4,7 @@ import { authAPI } from '../services/api'
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null,
-    userType: null, // 'instructor' or 'student'
+    userType: null, // 'instructor', 'student', or 'admin'
     isAuthenticated: false,
     token: null
   }),
@@ -12,6 +12,7 @@ export const useAuthStore = defineStore('auth', {
   getters: {
     isInstructor: (state) => state.userType === 'instructor',
     isStudent: (state) => state.userType === 'student',
+    isAdmin: (state) => state.userType === 'admin',
     userId: (state) => state.user?.userId
   },
 

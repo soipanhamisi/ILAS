@@ -191,5 +191,49 @@ export const studentAPI = {
   }
 }
 
-export default apiClient
+// Admin API Service
+export const adminAPI = {
+  // Get dashboard summary
+  getDashboardSummary(adminId) {
+    return apiClient.get('/admin/dashboard/summary', {
+      params: { adminId }
+    })
+  },
 
+  // Get system statistics
+  getSystemStats(adminId) {
+    return apiClient.get('/admin/stats', {
+      params: { adminId }
+    })
+  },
+
+  // Get total student count
+  getTotalStudents(adminId) {
+    return apiClient.get('/admin/students/count', {
+      params: { adminId }
+    })
+  },
+
+  // Get total instructor count
+  getTotalInstructors(adminId) {
+    return apiClient.get('/admin/instructors/count', {
+      params: { adminId }
+    })
+  },
+
+  // Get total course count
+  getTotalCourses(adminId) {
+    return apiClient.get('/admin/courses/count', {
+      params: { adminId }
+    })
+  },
+
+  // Get total exam count
+  getTotalExams(adminId) {
+    return apiClient.get('/admin/exams/count', {
+      params: { adminId }
+    })
+  }
+}
+
+export default apiClient

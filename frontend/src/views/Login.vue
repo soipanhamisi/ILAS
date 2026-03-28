@@ -35,6 +35,7 @@
             <option value="">Select your role</option>
             <option value="instructor">Instructor</option>
             <option value="student">Student</option>
+            <option value="admin">Admin</option>
           </select>
         </div>
 
@@ -79,6 +80,7 @@
             <option value="">Select your role</option>
             <option value="instructor">Instructor</option>
             <option value="student">Student</option>
+            <option value="admin">Admin</option>
           </select>
         </div>
 

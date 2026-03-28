@@ -1,13 +1,18 @@
 <template>
   <div id="app">
     <div v-if="useLmsShell" class="lms-layout">
-      <NavBar />
+      <NavBar ref="navBarRef" />
 
       <div class="lms-main">
         <header class="top-utility-bar">
-          <div>
-            <p class="top-utility-label">Learning Management</p>
-            <h1 class="top-utility-title">{{ currentSectionTitle }}</h1>
+          <div class="utility-left">
+            <button @click="toggleMobileMenu" class="btn-menu-toggle">
+              <span class="menu-icon">☰</span>
+            </button>
+            <div>
+              <p class="top-utility-label">Learning Management</p>
+              <h1 class="top-utility-title">{{ currentSectionTitle }}</h1>
+            </div>
           </div>
 
           <div class="top-utility-user">
@@ -27,13 +32,14 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from './stores/auth'
 import NavBar from './components/NavBar.vue'
 
 const authStore = useAuthStore()
 const route = useRoute()
+const navBarRef = ref(null)
 
 const routeTitleMap = {
   InstructorDashboard: 'Instructor Dashboard',
@@ -46,6 +52,10 @@ const routeTitleMap = {
 
 const useLmsShell = computed(() => authStore.isAuthenticated && route.meta.requiresAuth)
 const currentSectionTitle = computed(() => routeTitleMap[route.name] || 'Course Workspace')
+
+const toggleMobileMenu = () => {
+  navBarRef.value?.toggleDrawer()
+}
 
 onMounted(() => {
   authStore.checkAuth()
@@ -192,6 +202,37 @@ input:focus, textarea:focus, select:focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
+}
+
+.utility-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  flex: 1;
+}
+
+.btn-menu-toggle {
+  display: none;
+  background: none;
+  color: var(--color-primary);
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  font-size: 24px;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.btn-menu-toggle:hover {
+  background: rgba(148, 163, 184, 0.15);
+  border-radius: 8px;
+}
+
+.menu-icon {
+  display: block;
+  line-height: 1;
 }
 
 .top-utility-label {
@@ -204,12 +245,16 @@ input:focus, textarea:focus, select:focus {
 .top-utility-title {
   font-size: 22px;
   color: var(--color-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .top-utility-user {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-shrink: 0;
 }
 
 .user-pill,
@@ -241,15 +286,23 @@ input:focus, textarea:focus, select:focus {
 
 @media (max-width: 980px) {
   .lms-layout {
-    grid-template-columns: 88px minmax(0, 1fr);
+    grid-template-columns: 1fr;
   }
 
   .top-utility-bar {
     padding: 14px 16px;
   }
 
+  .btn-menu-toggle {
+    display: block;
+  }
+
   .top-utility-user {
     display: none;
+  }
+
+  .top-utility-title {
+    font-size: 18px;
   }
 }
 </style>
