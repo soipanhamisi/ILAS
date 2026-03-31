@@ -10,6 +10,11 @@ import java.util.Map;
 /**
  * REST Controller for admin operations
  * Endpoints for system management and statistics
+ * 
+ * Real-time Monitoring:
+ * - WebSocket: ws://localhost:8080/ws/monitoring
+ * - HTTP Fallback: /admin/dashboard/monitoring (kept for backward compatibility and fallback)
+ * - Heartbeat endpoint: /admin/monitoring/heartbeat
  */
 @RestController
 @RequestMapping("/api/admin")
@@ -129,6 +134,28 @@ public class AdminController {
             return new ApiResponse<>(true, "Exam count retrieved", count);
         } catch (Exception e) {
             return new ApiResponse<>(false, "Error retrieving exam count: " + e.getMessage(), null);
+        }
+    }
+
+    @GetMapping("/dashboard/monitoring")
+    public ApiResponse<Map<String, Object>> getMonitoringSummary(@RequestParam int adminId) {
+        try {
+            Map<String, Object> summary = adminService.getMonitoringSummary(adminId);
+            return new ApiResponse<>(true, "Monitoring summary retrieved successfully", summary);
+        } catch (IllegalArgumentException e) {
+            return new ApiResponse<>(false, e.getMessage(), null);
+        } catch (Exception e) {
+            return new ApiResponse<>(false, "Error retrieving monitoring summary: " + e.getMessage(), null);
+        }
+    }
+
+    @PostMapping("/monitoring/heartbeat")
+    public ApiResponse<Void> heartbeat(@RequestParam String userType, @RequestParam int userId) {
+        try {
+            adminService.heartbeat(userType, userId);
+            return new ApiResponse<>(true, "Heartbeat recorded", null);
+        } catch (Exception e) {
+            return new ApiResponse<>(false, "Error recording heartbeat: " + e.getMessage(), null);
         }
     }
 }

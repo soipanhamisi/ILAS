@@ -160,6 +160,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import { getDashboardRoute } from '../utils/roleRedirect'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -202,11 +203,7 @@ const handleLogin = async () => {
 
     // Redirect after 1 second
     setTimeout(() => {
-      if (userType.value === 'instructor') {
-        router.push('/instructor')
-      } else {
-        router.push('/student')
-      }
+      router.push(getDashboardRoute(userType.value))
     }, 1000)
   } catch (err) {
     error.value = err.response?.data?.message || err.message || 'Login failed'
@@ -250,11 +247,7 @@ const handleSignup = async () => {
 
     // Redirect after 1 second
     setTimeout(() => {
-      if (userType.value === 'instructor') {
-        router.push('/instructor')
-      } else {
-        router.push('/student')
-      }
+      router.push(getDashboardRoute(userType.value))
     }, 1000)
   } catch (err) {
     error.value = err.response?.data?.message || err.message || 'Signup failed'

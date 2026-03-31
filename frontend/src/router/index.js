@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import { getDashboardRoute } from '../utils/roleRedirect'
 
 const routes = [
   {
@@ -61,20 +62,36 @@ const router = createRouter({
   routes
 })
 
+export const resolveAuthNavigation = (to, authState) => {
+  if (to.name === 'Login' && authState.isAuthenticated) {
+    return getDashboardRoute(authState.userType)
+  }
+
+  if (to.meta?.requiresAuth) {
+    if (!authState.isAuthenticated) {
+      return '/login'
+    }
+
+    if (to.meta.role && authState.userType !== to.meta.role) {
+      return getDashboardRoute(authState.userType)
+    }
+  }
+
+  return true
+}
+
 // Navigation guard
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
+  const decision = resolveAuthNavigation(to, {
+    isAuthenticated: authStore.isAuthenticated,
+    userType: authStore.userType
+  })
 
-  if (to.meta.requiresAuth) {
-    if (!authStore.isAuthenticated) {
-      next('/login')
-    } else if (to.meta.role && authStore.userType !== to.meta.role) {
-      next('/')
-    } else {
-      next()
-    }
-  } else {
+  if (decision === true) {
     next()
+  } else {
+    next(decision)
   }
 })
 

@@ -233,6 +233,20 @@ export const adminAPI = {
     return apiClient.get('/admin/exams/count', {
       params: { adminId }
     })
+  },
+
+  // Get real-time monitoring metrics for admin dashboard
+  getMonitoringSummary(adminId) {
+    return apiClient.get('/admin/dashboard/monitoring', {
+      params: { adminId }
+    })
+  },
+
+  // Heartbeat for active-user tracking
+  sendHeartbeat(userType, userId) {
+    return apiClient.post('/admin/monitoring/heartbeat', null, {
+      params: { userType, userId }
+    })
   }
 }
 

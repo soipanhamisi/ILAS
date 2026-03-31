@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Service for admin-related operations
@@ -33,6 +35,9 @@ public class AdminService {
 
     @Autowired
     private ExamRepository examRepository;
+
+    @Autowired
+    private SystemMonitoringService monitoringService;
 
     /**
      * Get dashboard summary statistics
@@ -93,6 +98,60 @@ public class AdminService {
      */
     public boolean adminExists(int adminId) {
         return adminRepository.findByAdminId(adminId).isPresent();
+    }
+
+    public void heartbeat(String userType, int userId) {
+        if (userType == null || userType.isBlank()) {
+            throw new IllegalArgumentException("User type is required");
+        }
+        String normalized = userType.trim().toLowerCase();
+        if (!normalized.equals("student") && !normalized.equals("instructor") && !normalized.equals("admin")) {
+            throw new IllegalArgumentException("Unsupported user type: " + userType);
+        }
+        monitoringService.touchUser(normalized, userId);
+    }
+
+    public Map<String, Object> getMonitoringSummary(int adminId) {
+        if (!adminExists(adminId)) {
+            throw new IllegalArgumentException("Admin not found with ID: " + adminId);
+        }
+
+        int threadPoolCapacity = monitoringService.getThreadPoolCapacity();
+        int totalActiveRequests = monitoringService.getTotalActiveRequests();
+        int activeUsers = monitoringService.getActiveUsers();
+        long totalUsers = studentRepository.count() + instructorRepository.count() + adminRepository.count();
+
+        List<Map<String, Object>> endpointHealth = monitoringService.getEndpointActiveRequests().entrySet()
+                .stream()
+                .map(entry -> {
+                    double utilization = (double) entry.getValue() / threadPoolCapacity;
+                    Map<String, Object> endpoint = new HashMap<>();
+                    endpoint.put("endpoint", entry.getKey());
+                    endpoint.put("activeRequests", entry.getValue());
+                    endpoint.put("utilization", utilization);
+                    endpoint.put("status", utilization >= 0.8 ? "HIGH" : utilization >= 0.5 ? "ELEVATED" : "HEALTHY");
+                    return endpoint;
+                })
+                .sorted((a, b) -> Integer.compare((int) b.get("activeRequests"), (int) a.get("activeRequests")))
+                .limit(12)
+                .collect(Collectors.toList());
+
+        Map<String, Object> users = new HashMap<>();
+        users.put("totalUsers", totalUsers);
+        users.put("activeUsers", activeUsers);
+
+        Map<String, Object> series = new HashMap<>();
+        series.put("requestUtilization", monitoringService.getRequestUtilizationHistory());
+        series.put("activeUsers", monitoringService.getActiveUsersHistory());
+
+        Map<String, Object> summary = new HashMap<>();
+        summary.put("threadPoolCapacity", threadPoolCapacity);
+        summary.put("globalActiveRequests", totalActiveRequests);
+        summary.put("globalUtilization", monitoringService.getGlobalUtilization());
+        summary.put("endpointHealth", endpointHealth);
+        summary.put("users", users);
+        summary.put("series", series);
+        return summary;
     }
 }
 

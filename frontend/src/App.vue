@@ -32,16 +32,18 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from './stores/auth'
 import NavBar from './components/NavBar.vue'
+import { adminAPI } from './services/api'
 
 const authStore = useAuthStore()
 const route = useRoute()
 const navBarRef = ref(null)
 
 const routeTitleMap = {
+  AdminDashboard: 'Admin Dashboard',
   InstructorDashboard: 'Instructor Dashboard',
   CreateExam: 'Create Assessment',
   ExamSubmissions: 'Grade Center',
@@ -52,13 +54,51 @@ const routeTitleMap = {
 
 const useLmsShell = computed(() => authStore.isAuthenticated && route.meta.requiresAuth)
 const currentSectionTitle = computed(() => routeTitleMap[route.name] || 'Course Workspace')
+let heartbeatTimer = null
 
 const toggleMobileMenu = () => {
   navBarRef.value?.toggleDrawer()
 }
 
+const sendHeartbeat = async () => {
+  if (!authStore.isAuthenticated || !authStore.userId || !authStore.userType) return
+  try {
+    await adminAPI.sendHeartbeat(authStore.userType, authStore.userId)
+  } catch (err) {
+    console.debug('Heartbeat failed', err)
+  }
+}
+
+const startHeartbeat = () => {
+  if (heartbeatTimer) return
+  sendHeartbeat()
+  heartbeatTimer = setInterval(sendHeartbeat, 30000)
+}
+
+const stopHeartbeat = () => {
+  if (heartbeatTimer) {
+    clearInterval(heartbeatTimer)
+    heartbeatTimer = null
+  }
+}
+
 onMounted(() => {
   authStore.checkAuth()
+  if (authStore.isAuthenticated) {
+    startHeartbeat()
+  }
+})
+
+watch(() => authStore.isAuthenticated, (isAuthenticated) => {
+  if (isAuthenticated) {
+    startHeartbeat()
+  } else {
+    stopHeartbeat()
+  }
+})
+
+onBeforeUnmount(() => {
+  stopHeartbeat()
 })
 </script>
 

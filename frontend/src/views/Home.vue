@@ -37,17 +37,14 @@
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import { getDashboardRoute } from '../utils/roleRedirect'
 
 const router = useRouter()
 const authStore = useAuthStore()
 
 onMounted(() => {
   if (authStore.isAuthenticated) {
-    if (authStore.isInstructor) {
-      router.push('/instructor')
-    } else if (authStore.isStudent) {
-      router.push('/student')
-    }
+    router.push(getDashboardRoute(authStore.userType))
   }
 })
 </script>

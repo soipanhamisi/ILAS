@@ -31,6 +31,9 @@ public class AuthService {
     @Autowired
     private AdminRepository adminRepository;
 
+    @Autowired
+    private SystemMonitoringService monitoringService;
+
     /**
      * Login a user with username and password
      * @param request AuthRequest containing username, password, and userType
@@ -53,6 +56,8 @@ public class AuthService {
                 throw new IllegalArgumentException("Invalid username or password");
             }
 
+            monitoringService.touchUser("student", student.getStudentId());
+
             return new AuthResponse(
                     student.getStudentId(),
                     student.getName(),
@@ -72,6 +77,8 @@ public class AuthService {
                 throw new IllegalArgumentException("Invalid username or password");
             }
 
+            monitoringService.touchUser("instructor", instructor.getInstructorId());
+
             return new AuthResponse(
                     instructor.getInstructorId(),
                     instructor.getName(),
@@ -90,6 +97,8 @@ public class AuthService {
             if (!admin.getPassword().equals(password)) {
                 throw new IllegalArgumentException("Invalid username or password");
             }
+
+            monitoringService.touchUser("admin", admin.getAdminId());
 
             return new AuthResponse(
                     admin.getAdminId(),
@@ -129,6 +138,7 @@ public class AuthService {
             // Create new student
             Student student = new Student(name, email, username, password);
             student = studentRepository.save(student);
+            monitoringService.touchUser("student", student.getStudentId());
 
             return new AuthResponse(
                     student.getStudentId(),
@@ -150,6 +160,7 @@ public class AuthService {
             // Create new instructor
             Instructor instructor = new Instructor(name, email, username, password);
             instructor = instructorRepository.save(instructor);
+            monitoringService.touchUser("instructor", instructor.getInstructorId());
 
             return new AuthResponse(
                     instructor.getInstructorId(),
@@ -171,6 +182,7 @@ public class AuthService {
             // Create new admin
             Admin admin = new Admin(name, email, username, password);
             admin = adminRepository.save(admin);
+            monitoringService.touchUser("admin", admin.getAdminId());
 
             return new AuthResponse(
                     admin.getAdminId(),

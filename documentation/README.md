@@ -33,6 +33,9 @@ This folder contains all supporting documentation files for the ILAS project.
 - `INTELLIJ_QUICK_CONFIG.md` - Quick configuration summary
 - `INTELLIJ_CONFIG_COPY_PASTE.md` - Copy-paste configuration values
 
+### Frontend Testing
+- `FRONTEND_ROLE_REDIRECT_TESTING.md` - Role redirect and router guard test coverage
+
 ### Exam Storage Documentation
 - `EXAM_STORAGE_README.md` - Exam storage information
 - `EXAM_STORAGE_SUMMARY.md` - Storage summary
@@ -55,6 +58,8 @@ This folder contains all supporting documentation files for the ILAS project.
 - **Set up the frontend** → `SETUP_AND_RUN_GUIDE.md`
 
 - **Run frontend in IntelliJ** → `INTELLIJ_CONFIG_COPY_PASTE.md`
+
+- **Understand role redirect tests** → `FRONTEND_ROLE_REDIRECT_TESTING.md`
 
 - **Understand the API** → `API_DOCUMENTATION.md`
 

@@ -8,6 +8,11 @@ This index provides quick access to all documentation for the LMS services layer
 
 ## 📖 Documentation Files
 
+### Frontend Quality
+**File:** `FRONTEND_ROLE_REDIRECT_TESTING.md`  
+**Purpose:** Documents role redirect behavior and router-guard unit tests  
+**Use When:** You are debugging auth redirects or updating role-based navigation
+
 ### 1. 🚀 Quick Start
 **File:** `SERVICES_QUICK_REFERENCE.md`  
 **Purpose:** Fast lookup reference for methods and common operations  
