@@ -23,6 +23,9 @@ public class ExamMapper {
         dto.setExamTitle(exam.getExamTitle());
         dto.setMaxScore(exam.getMaxScore());
         dto.setCsvFilePath(exam.getCsvFilePath());
+        dto.setGradingRubricsJson(exam.getGradingRubricsJson());
+        dto.setGradingRubricsUpdatedAt(exam.getGradingRubricsUpdatedAt());
+        dto.setGradingRubricsVersion(exam.getGradingRubricsVersion());
 
         if (exam.getCourse() != null) {
             dto.setCourseId(exam.getCourse().getCourseId());
@@ -54,6 +57,11 @@ public class ExamMapper {
         dto.setFeedback(submission.getFeedback());
         dto.setGradeJustification(submission.getGradeJustification());
         dto.setGradedAt(submission.getGradedAt());
+        dto.setGradingSource(submission.getGradingSource());
+        dto.setGradingModel(submission.getGradingModel());
+        dto.setRubricVersionUsed(submission.getRubricVersionUsed());
+        dto.setRequiresInstructorReview(submission.getRequiresInstructorReview());
+        dto.setAutoGradingResultJson(submission.getAutoGradingResultJson());
 
         if (submission.getStudent() != null) {
             dto.setStudentId(submission.getStudent().getStudentId());

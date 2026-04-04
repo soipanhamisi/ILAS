@@ -50,6 +50,21 @@ export const instructorAPI = {
     })
   },
 
+  // Get a single exam and its rubric metadata
+  getExamDetails(examId, instructorId) {
+    return apiClient.get(`/instructor/exams/${examId}`, {
+      params: { instructorId }
+    })
+  },
+
+  // Save per-question grading rubrics
+  saveExamRubrics(examId, instructorId, rubrics) {
+    return apiClient.put(`/instructor/exams/${examId}/rubrics`, {
+      instructorId,
+      rubrics
+    })
+  },
+
   // Grade submission using per-question grades
   gradeSubmission(submissionId, instructorId, questionGrades) {
     return apiClient.post(`/instructor/exams/submissions/${submissionId}/grade`, {
@@ -64,6 +79,13 @@ export const instructorAPI = {
       instructorId,
       feedback,
       gradeJustification
+    })
+  },
+
+  // Trigger LLM-based grading for a submission
+  autoGradeSubmission(submissionId, instructorId) {
+    return apiClient.post(`/instructor/exams/submissions/${submissionId}/auto-grade`, {
+      instructorId
     })
   },
 

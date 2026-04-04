@@ -45,6 +45,13 @@
             <p>
               <strong>Graded on:</strong> {{ formatDate(submission.gradedAt) }}
             </p>
+            <p v-if="submission.gradingSource">
+              <strong>Grading source:</strong> {{ submission.gradingSource }}
+              <span v-if="submission.gradingModel">({{ submission.gradingModel }})</span>
+            </p>
+            <p v-if="submission.requiresInstructorReview">
+              <strong>Status:</strong> Pending instructor review
+            </p>
           </div>
         </div>
 
@@ -58,7 +65,7 @@
       <!-- Feedback Section -->
       <div v-if="submission.grade !== null" class="feedback-section">
         <div class="feedback-card">
-          <h3>📝 Instructor Feedback</h3>
+          <h3>📝 Feedback</h3>
           <div class="feedback-content">
             {{ submission.feedback }}
           </div>

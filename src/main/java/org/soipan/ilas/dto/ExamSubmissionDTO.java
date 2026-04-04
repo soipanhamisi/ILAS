@@ -35,6 +35,11 @@ public class ExamSubmissionDTO {
     private String feedback;
     private String gradeJustification;
     private LocalDateTime gradedAt;
+    private String gradingSource;
+    private String gradingModel;
+    private Integer rubricVersionUsed;
+    private Boolean requiresInstructorReview;
+    private String autoGradingResultJson;
 
     // Grader information
     private Integer gradedByInstructorId;

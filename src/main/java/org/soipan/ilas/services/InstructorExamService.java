@@ -143,7 +143,7 @@ public class InstructorExamService {
 
             totalGrade += questionGrade.getGrade();
 
-            if (feedbackBuilder.length() > 0) {
+            if (!feedbackBuilder.isEmpty()) {
                 feedbackBuilder.append("\n\n");
                 justificationBuilder.append("\n\n");
             }
@@ -293,6 +293,23 @@ public class InstructorExamService {
         }
 
         return examRepository.findByCourse_CourseId(courseId);
+    }
+
+    /**
+     * Get a single exam for an instructor-owned course.
+     */
+    public Exam getExamDetails(int instructorId, Long examId) {
+        instructorRepository.findByInstructorId(instructorId)
+                .orElseThrow(() -> new IllegalArgumentException("Instructor not found with ID: " + instructorId));
+
+        Exam exam = examRepository.findByExamId(examId)
+                .orElseThrow(() -> new IllegalArgumentException("Exam not found with ID: " + examId));
+
+        if (exam.getCourse().getInstructor().getInstructorId() != instructorId) {
+            throw new IllegalArgumentException("Instructor does not own the course for this exam");
+        }
+
+        return exam;
     }
 
     /**

@@ -35,6 +35,20 @@
         </button>
       </div>
 
+      <!-- Rubric Definition Panel (replaces old inline version) -->
+      <RubricEditorPanel
+        v-if="examQuestionDetails.length > 0"
+        :examQuestionDetails="examQuestionDetails"
+        :initialRubrics="parsedRubrics"
+        :title="`Rubrics for ${examTitle}`"
+        :subtitle="`Define what the LLM should look for on each question before auto-grading submissions.`"
+        :saveButtonText="`Save Rubrics`"
+        :showSkipButton="false"
+        :showProgressIndicator="true"
+        :saving="rubricSaving"
+        @save="saveRubrics"
+      />
+
       <div class="submissions-grid">
         <div
           v-for="submission in filteredSubmissions"
@@ -88,6 +102,13 @@
               class="btn-primary"
             >
               {{ submission.grade !== null ? 'Update Grade' : 'Grade' }}
+            </button>
+            <button
+              @click="autoGradeSubmission(submission)"
+              class="btn-secondary"
+              :disabled="autoGrading[submission.submissionId]"
+            >
+              {{ autoGrading[submission.submissionId] ? 'Auto-grading...' : 'Auto-grade with rubric' }}
             </button>
           </div>
 
@@ -161,6 +182,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import { instructorAPI } from '../services/api'
+import RubricEditorPanel from '../components/RubricEditorPanel.vue'
 
 const route = useRoute()
 const authStore = useAuthStore()
@@ -173,8 +195,16 @@ const gradingMode = ref({})
 const gradeForm = ref({})
 const submitting = ref(false)
 const examQuestionDetails = ref([])
+const rubricForm = ref([])
+const rubricSaving = ref(false)
+const autoGrading = ref({})
+const examTitle = ref('')
 
 const examId = computed(() => parseInt(route.params.examId))
+
+const parsedRubrics = computed(() => {
+  return rubricForm.value || []
+})
 
 const filteredSubmissions = computed(() => {
   if (filter.value === 'ungraded') {
@@ -213,7 +243,10 @@ const loadSubmissions = async () => {
 
       if (questionResponse.data.success) {
         examQuestionDetails.value = questionResponse.data.data || []
+        await syncRubricForm()
       }
+
+      await loadExamRubrics()
     } else {
       error.value = response.data.message
     }
@@ -223,6 +256,49 @@ const loadSubmissions = async () => {
   } finally {
     loading.value = false
   }
+}
+
+const loadExamRubrics = async () => {
+  try {
+    const response = await instructorAPI.getExamDetails(examId.value, authStore.userId)
+    if (response.data.success) {
+      const exam = response.data.data
+      examTitle.value = exam?.examTitle || 'Exam'
+      if (exam?.gradingRubricsJson) {
+        const parsed = JSON.parse(exam.gradingRubricsJson)
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          rubricForm.value = parsed.map((item, index) => ({
+            questionNumber: Number(item.questionNumber ?? index + 1),
+            maxScore: Number(item.maxScore ?? getQuestionMaxGrade(index)),
+            rubricText: String(item.rubricText ?? '')
+          }))
+        }
+      }
+      await syncRubricForm()
+    } else {
+      error.value = response.data.message || 'Failed to load rubrics'
+    }
+  } catch (err) {
+    error.value = err.response?.data?.message || 'Failed to load rubrics'
+    console.error('Error loading rubrics:', err)
+  }
+}
+
+const syncRubricForm = async () => {
+  if (!examQuestionDetails.value.length) {
+    rubricForm.value = []
+    return
+  }
+
+  if (rubricForm.value.length === examQuestionDetails.value.length) {
+    return
+  }
+
+  rubricForm.value = examQuestionDetails.value.map((question, index) => ({
+    questionNumber: index + 1,
+    maxScore: Number(question.maxGrade || 0),
+    rubricText: rubricForm.value[index]?.rubricText || ''
+  }))
 }
 
 const startGrading = (submission) => {
@@ -244,6 +320,71 @@ const startGrading = (submission) => {
 
 const cancelGrading = (submissionId) => {
   gradingMode.value[submissionId] = false
+}
+
+const saveRubrics = async (passedRubrics) => {
+  rubricSaving.value = true
+  error.value = ''
+
+  try {
+    // Use passed rubrics from component or fall back to local rubricForm
+    const rubricsToSave = passedRubrics || rubricForm.value
+    const rubrics = rubricsToSave.map((rubric, index) => ({
+      questionNumber: index + 1,
+      maxScore: Number(rubric.maxScore || getQuestionMaxGrade(index)),
+      rubricText: String(rubric.rubricText || '').trim()
+    }))
+
+    const response = await instructorAPI.saveExamRubrics(
+      examId.value,
+      authStore.userId,
+      rubrics
+    )
+
+    if (!response.data.success) {
+      error.value = response.data.message || 'Failed to save rubrics'
+    } else {
+      // Update local rubricForm after successful save
+      rubricForm.value = rubricsToSave
+    }
+  } catch (err) {
+    error.value = err.response?.data?.message || 'Failed to save rubrics'
+    console.error('Error saving rubrics:', err)
+  } finally {
+    rubricSaving.value = false
+  }
+}
+
+const autoGradeSubmission = async (submission) => {
+  // Check if rubrics are defined
+  const rubricsExist = rubricForm.value && rubricForm.value.length > 0 &&
+    rubricForm.value.some(r => r.rubricText && r.rubricText.trim())
+
+  if (!rubricsExist) {
+    error.value = 'Please define grading rubrics for at least one question before auto-grading'
+    return
+  }
+
+  autoGrading.value[submission.submissionId] = true
+  error.value = ''
+
+  try {
+    const response = await instructorAPI.autoGradeSubmission(
+      submission.submissionId,
+      authStore.userId
+    )
+
+    if (response.data.success) {
+      await loadSubmissions()
+    } else {
+      error.value = response.data.message || 'Failed to auto-grade submission'
+    }
+  } catch (err) {
+    error.value = err.response?.data?.message || 'Failed to auto-grade submission'
+    console.error('Error auto-grading submission:', err)
+  } finally {
+    autoGrading.value[submission.submissionId] = false
+  }
 }
 
 const submitGrade = async (submission) => {
@@ -436,6 +577,65 @@ onMounted(() => {
   margin-bottom: 24px;
   padding-bottom: 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.45);
+}
+
+.rubric-panel {
+  background: rgba(255, 255, 255, 0.46);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.rubric-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-size: 24px;
+  color: var(--color-primary);
+  margin-bottom: 6px;
+}
+
+.rubric-help {
+  color: var(--color-text-soft);
+}
+
+.rubric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.rubric-card {
+  background: rgba(255, 255, 255, 0.52);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+}
+
+.rubric-card h3 {
+  color: var(--color-primary);
+}
+
+.rubric-label {
+  font-size: 14px;
+  color: var(--color-text-soft);
+}
+
+.rubric-card input,
+.rubric-card textarea {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid rgba(112, 113, 77, 0.3);
+  border-radius: 8px;
+  font-size: 14px;
 }
 
 .filter-btn {

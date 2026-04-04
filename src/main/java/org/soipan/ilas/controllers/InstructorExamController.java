@@ -3,6 +3,7 @@ package org.soipan.ilas.controllers;
 import org.soipan.ilas.dto.*;
 import org.soipan.ilas.models.Exam;
 import org.soipan.ilas.models.ExamSubmission;
+import org.soipan.ilas.services.AutoGradingService;
 import org.soipan.ilas.services.InstructorExamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,9 @@ public class InstructorExamController {
 
     @Autowired
     private InstructorExamService examService;
+
+    @Autowired
+    private AutoGradingService autoGradingService;
 
     @Autowired
     private ExamMapper examMapper;
@@ -53,6 +57,19 @@ public class InstructorExamController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(ApiResponse.success("Exam created successfully", examDTO));
+    }
+
+    /**
+     * Get a single exam with rubric metadata.
+     * GET /api/instructor/exams/{examId}
+     */
+    @GetMapping("/{examId}")
+    public ResponseEntity<ApiResponse<ExamDTO>> getExamDetails(
+            @PathVariable Long examId,
+            @RequestParam Integer instructorId) {
+
+        Exam exam = examService.getExamDetails(instructorId, examId);
+        return ResponseEntity.ok(ApiResponse.success(examMapper.toDTO(exam)));
     }
 
     /**
@@ -131,6 +148,40 @@ public class InstructorExamController {
 
         ExamSubmissionDTO dto = examMapper.toDTO(graded);
         return ResponseEntity.ok(ApiResponse.success("Submission graded successfully", dto));
+    }
+
+    /**
+     * Save question rubrics for an exam.
+     * PUT /api/instructor/exams/{examId}/rubrics
+     */
+    @PutMapping("/{examId}/rubrics")
+    public ResponseEntity<ApiResponse<ExamDTO>> saveRubrics(
+            @PathVariable Long examId,
+            @RequestBody RubricDefinitionRequest request) {
+
+        if (request == null || request.getInstructorId() == null) {
+            throw new IllegalArgumentException("instructorId is required");
+        }
+
+        Exam exam = autoGradingService.saveRubrics(request.getInstructorId(), examId, request.getRubrics());
+        return ResponseEntity.ok(ApiResponse.success("Rubrics saved successfully", examMapper.toDTO(exam)));
+    }
+
+    /**
+     * Auto-grade a submission using the configured rubrics and LLM endpoint.
+     * POST /api/instructor/exams/submissions/{submissionId}/auto-grade
+     */
+    @PostMapping("/submissions/{submissionId}/auto-grade")
+    public ResponseEntity<ApiResponse<ExamSubmissionDTO>> autoGradeSubmission(
+            @PathVariable Long submissionId,
+            @RequestBody AutoGradeSubmissionRequest request) {
+
+        if (request == null || request.getInstructorId() == null) {
+            throw new IllegalArgumentException("instructorId is required");
+        }
+
+        ExamSubmission graded = autoGradingService.autoGradeSubmission(request.getInstructorId(), submissionId);
+        return ResponseEntity.ok(ApiResponse.success("Submission auto-graded successfully", examMapper.toDTO(graded)));
     }
 
     /**

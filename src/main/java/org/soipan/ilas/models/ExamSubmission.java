@@ -41,6 +41,15 @@ public class ExamSubmission {
     private String gradeJustification; // Detailed grading explanation
     private LocalDateTime gradedAt;
 
+    private String gradingSource;
+    private String gradingModel;
+    private Integer rubricVersionUsed;
+    private Boolean requiresInstructorReview;
+
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String autoGradingResultJson;
+
     @ManyToOne
     @JoinColumn(name = "gradedByInstructorId")
     private Instructor gradedBy;

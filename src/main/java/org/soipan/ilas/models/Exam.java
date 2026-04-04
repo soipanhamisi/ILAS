@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -24,6 +26,14 @@ public class Exam {
     private String examTitle;
     private int maxScore;
     private String csvFilePath;
+
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String gradingRubricsJson;
+
+    private LocalDateTime gradingRubricsUpdatedAt;
+
+    private Integer gradingRubricsVersion;
 
     public Exam(Course course, String examTitle, int maxScore, String csvFilePath) {
         this.course = course;

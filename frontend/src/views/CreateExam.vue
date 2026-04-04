@@ -5,7 +5,24 @@
       <router-link to="/instructor" class="btn-secondary">← Back</router-link>
     </div>
 
-    <div class="card form-card">
+    <!-- Rubric Definition Panel (shown after exam creation, before redirect) -->
+    <div v-if="showRubricPanel" class="rubric-section">
+      <RubricEditorPanel
+        :examQuestionDetails="newExamQuestions"
+        :initialRubrics="[]"
+        :title="`Define Rubrics for ${formData.examTitle}`"
+        :subtitle="`Optionally define grading rubrics now for quick reference during auto-grading. You can also skip this and define rubrics later in the Exam Submissions page.`"
+        :saveButtonText="`Save Rubrics & Continue`"
+        :skipButtonText="`Skip & Go to Dashboard`"
+        :showSkipButton="true"
+        :showProgressIndicator="true"
+        :saving="rubricSaving"
+        @save="saveRubricsAndContinue"
+        @skip="skipRubricsAndContinue"
+      />
+    </div>
+
+    <div v-if="!showRubricPanel" class="card form-card">
       <form @submit.prevent="handleSubmit">
         <div class="form-group">
           <label>Course</label>
@@ -99,6 +116,30 @@
               />
             </div>
             <div class="form-group">
+              <label>Rubric: Key Points That Should Be Covered</label>
+              <textarea
+                v-model="question.rubricKeyPoints"
+                rows="3"
+                placeholder="List the important concepts or points expected in a strong answer"
+              />
+            </div>
+            <div class="form-group">
+              <label>Rubric: Common Mistakes to Watch For</label>
+              <textarea
+                v-model="question.rubricCommonMistakes"
+                rows="3"
+                placeholder="Describe typical mistakes, misconceptions, or missing elements"
+              />
+            </div>
+            <div class="form-group">
+              <label>Rubric: Scoring Criteria</label>
+              <textarea
+                v-model="question.rubricScoringCriteria"
+                rows="3"
+                placeholder="Define how points should be awarded and deducted"
+              />
+            </div>
+            <div class="form-group">
               <label>Question Max Grade</label>
               <input
                 v-model="question.maxGrade"
@@ -112,7 +153,7 @@
             + Add Another Question
           </button>
           <small class="help-text">
-            Manual entries are converted to CSV and stored the same way as uploaded templates.
+            Manual entries are converted to CSV, and rubric details entered here are saved for auto-grading.
           </small>
         </div>
 
@@ -152,6 +193,7 @@ import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import { instructorAPI } from '../services/api'
+import RubricEditorPanel from '../components/RubricEditorPanel.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -164,14 +206,25 @@ const formData = ref({
 
 const creationMode = ref('upload')
 const selectedFile = ref(null)
-const manualQuestions = ref([{ text: '', maxGrade: '' }])
+const createEmptyManualQuestion = () => ({
+  text: '',
+  maxGrade: '',
+  rubricKeyPoints: '',
+  rubricCommonMistakes: '',
+  rubricScoringCriteria: ''
+})
+const manualQuestions = ref([createEmptyManualQuestion()])
 const fileInput = ref(null)
 const loading = ref(false)
 const error = ref('')
 const success = ref(false)
+const showRubricPanel = ref(false)
+const rubricSaving = ref(false)
+const newExamId = ref(null)
+const newExamQuestions = ref([])
 
 const addQuestion = () => {
-  manualQuestions.value.push({ text: '', maxGrade: '' })
+  manualQuestions.value.push(createEmptyManualQuestion())
 }
 
 const removeQuestion = (index) => {
@@ -188,9 +241,40 @@ const getCleanManualQuestions = () => {
   return manualQuestions.value
     .map((question) => ({
       text: question.text.trim(),
-      maxGrade: Number(question.maxGrade)
+      maxGrade: Number(question.maxGrade),
+      rubricKeyPoints: (question.rubricKeyPoints || '').trim(),
+      rubricCommonMistakes: (question.rubricCommonMistakes || '').trim(),
+      rubricScoringCriteria: (question.rubricScoringCriteria || '').trim()
     }))
     .filter((question) => question.text)
+}
+
+const buildManualRubricText = (question) => {
+  const parts = []
+
+  if (question.rubricKeyPoints) {
+    parts.push(`Key points that should be covered:\n${question.rubricKeyPoints}`)
+  }
+
+  if (question.rubricCommonMistakes) {
+    parts.push(`Common mistakes to watch for:\n${question.rubricCommonMistakes}`)
+  }
+
+  if (question.rubricScoringCriteria) {
+    parts.push(`Scoring criteria:\n${question.rubricScoringCriteria}`)
+  }
+
+  return parts.join('\n\n').trim()
+}
+
+const buildManualRubricsPayload = () => {
+  const cleanedQuestions = getCleanManualQuestions()
+
+  return cleanedQuestions.map((question, index) => ({
+    questionNumber: index + 1,
+    maxScore: question.maxGrade,
+    rubricText: buildManualRubricText(question)
+  }))
 }
 
 const buildManualCsvContent = () => {
@@ -249,6 +333,41 @@ const manualCsvPreview = computed(() => {
   }
 })
 
+const saveRubricsAndContinue = async (rubricForm) => {
+  rubricSaving.value = true
+  error.value = ''
+
+  try {
+    // Convert rubricForm to the format expected by the API
+    const rubrics = rubricForm.map((rubric, index) => ({
+      questionNumber: index + 1,
+      maxScore: rubric.maxScore,
+      rubricText: rubric.rubricText
+    }))
+
+    const response = await instructorAPI.saveExamRubrics(newExamId.value, authStore.userId, rubrics)
+
+    if (response.data.success) {
+      // Redirect after successful rubric save
+      setTimeout(() => {
+        router.push('/instructor')
+      }, 1000)
+    } else {
+      error.value = response.data.message || 'Failed to save rubrics'
+    }
+  } catch (err) {
+    error.value = err.response?.data?.message || 'Failed to save rubrics'
+    console.error('Error saving rubrics:', err)
+  } finally {
+    rubricSaving.value = false
+  }
+}
+
+const skipRubricsAndContinue = () => {
+  // Simply redirect to dashboard, skipping rubric definition
+  router.push('/instructor')
+}
+
 const handleFileChange = (event) => {
   const file = event.target.files[0]
   if (file) {
@@ -264,8 +383,10 @@ const handleFileChange = (event) => {
 
 const handleSubmit = async () => {
   let csvFile
+  let manualRubrics = []
+  const isManualMode = creationMode.value === 'manual'
 
-  if (creationMode.value === 'upload') {
+  if (!isManualMode) {
     if (!selectedFile.value) {
       error.value = 'Please select a CSV file'
       return
@@ -274,6 +395,7 @@ const handleSubmit = async () => {
   } else {
     try {
       csvFile = buildManualCsvFile()
+      manualRubrics = buildManualRubricsPayload()
     } catch (buildError) {
       error.value = buildError.message
       return
@@ -296,7 +418,59 @@ const handleSubmit = async () => {
     if (response.data.success) {
       success.value = true
 
-      // Reset form
+      const examData = response.data.data
+      newExamId.value = examData.examId
+
+      if (isManualMode) {
+        const hasManualRubrics = manualRubrics.some((rubric) => rubric.rubricText)
+        if (hasManualRubrics) {
+          try {
+            await instructorAPI.saveExamRubrics(examData.examId, authStore.userId, manualRubrics)
+          } catch (rubricErr) {
+            console.warn('Exam created but manual rubrics could not be saved:', rubricErr)
+            error.value = 'Exam created, but rubric definitions could not be saved. You can update rubrics in the Exam Submissions page.'
+          }
+        }
+      } else {
+        // Fetch exam details to populate post-create rubric panel for upload workflow.
+        try {
+          let detailsResponse
+          let retries = 0
+          const maxRetries = 3
+          const retryDelay = 500
+
+          while (retries < maxRetries) {
+            try {
+              detailsResponse = await instructorAPI.getExamQuestionDetails(examData.examId, authStore.userId)
+              if (detailsResponse.data.success && detailsResponse.data.data && detailsResponse.data.data.length > 0) {
+                newExamQuestions.value = detailsResponse.data.data
+                break
+              }
+              retries++
+              if (retries < maxRetries) {
+                await new Promise((resolve) => setTimeout(resolve, retryDelay))
+              }
+            } catch (retryErr) {
+              retries++
+              if (retries < maxRetries) {
+                await new Promise((resolve) => setTimeout(resolve, retryDelay))
+              } else {
+                throw retryErr
+              }
+            }
+          }
+
+          if (!newExamQuestions.value || newExamQuestions.value.length === 0) {
+            console.warn('No question details returned from API after retries')
+            error.value = 'Warning: Could not load question details. The rubric panel may not display properly.'
+          }
+        } catch (detailErr) {
+          console.error('Could not fetch exam details for rubric panel:', detailErr)
+          error.value = 'Warning: Could not load question details. The rubric panel may not display properly. Please try again or define rubrics later in the Exam Submissions page.'
+        }
+      }
+
+      // Reset form and show rubric panel
       formData.value = {
         courseId: '',
         examTitle: '',
@@ -304,15 +478,17 @@ const handleSubmit = async () => {
       }
       selectedFile.value = null
       creationMode.value = 'upload'
-      manualQuestions.value = [{ text: '', maxGrade: '' }]
+      manualQuestions.value = [createEmptyManualQuestion()]
       if (fileInput.value) {
         fileInput.value.value = ''
       }
 
-      // Redirect after 2 seconds
-      setTimeout(() => {
+      if (isManualMode) {
         router.push('/instructor')
-      }, 2000)
+      } else {
+        // Show rubric panel for CSV upload question definition.
+        showRubricPanel.value = true
+      }
     } else {
       error.value = response.data.message
     }
@@ -543,6 +719,11 @@ const handleSubmit = async () => {
   text-align: center;
   margin-top: 20px;
   border: 1px solid var(--glass-border);
+}
+
+.rubric-section {
+  max-width: 1000px;
+  margin: 0 auto 24px auto;
 }
 </style>
 
