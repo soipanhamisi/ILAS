@@ -34,6 +34,19 @@
       </div>
 
       <div class="section">
+        <h2 class="section-title">Active Students Trend (14d)</h2>
+        <p class="section-subtitle">
+          Unique students submitting course work per day across your courses.
+        </p>
+        <div class="trend-metric">
+          Latest active students: {{ getLatestTrendCount(dashboard.activeStudentsTrend) }}
+        </div>
+        <svg class="sparkline" viewBox="0 0 320 120" preserveAspectRatio="none">
+          <polyline :points="overallActiveStudentPoints" fill="none" stroke="#16a34a" stroke-width="3" />
+        </svg>
+      </div>
+
+      <div class="section">
         <h2 class="section-title">Courses You Teach</h2>
 
         <div v-if="dashboard.courses.length === 0" class="empty-state">
@@ -52,6 +65,15 @@
             <p class="course-meta">New enrollments (7d): {{ course.newEnrollments }}</p>
             <p class="course-meta">Average performance: {{ formatPercent(course.averagePerformancePct) }}</p>
             <p class="course-meta">Pending grading: {{ course.testsToBeGraded }}</p>
+            <p class="course-meta">Latest active students: {{ getLatestTrendCount(course.activeStudentsTrend) }}</p>
+            <svg class="course-sparkline" viewBox="0 0 320 100" preserveAspectRatio="none">
+              <polyline
+                :points="buildSparklinePoints(course.activeStudentsTrend, null, 100)"
+                fill="none"
+                stroke="#1d4ed8"
+                stroke-width="3"
+              />
+            </svg>
           </div>
         </div>
       </div>
@@ -89,7 +111,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useAuthStore } from '../stores/auth'
 import { instructorAPI } from '../services/api'
 
@@ -101,9 +123,34 @@ const dashboard = ref({
   newEnrollments: 0,
   averagePerformancePct: 0,
   testsToBeGraded: 0,
+  activeStudentsTrend: [],
   courses: [],
   testsToGrade: []
 })
+
+const buildSparklinePoints = (series, yMax = null, chartHeight = 120) => {
+  if (!series || series.length === 0) {
+    return `0,${chartHeight} 320,${chartHeight}`
+  }
+
+  const maxVal = yMax || Math.max(...series.map(point => Number(point.activeStudents || point.value || 0)), 1)
+  return series.map((point, index) => {
+    const x = (index / Math.max(series.length - 1, 1)) * 320
+    const rawValue = Number(point.activeStudents || point.value || 0)
+    const y = chartHeight - ((rawValue / maxVal) * (chartHeight - 10))
+    return `${x},${y}`
+  }).join(' ')
+}
+
+const getLatestTrendCount = (series) => {
+  if (!series || series.length === 0) {
+    return 0
+  }
+  const latest = series[series.length - 1]
+  return Number(latest.activeStudents || latest.value || 0)
+}
+
+const overallActiveStudentPoints = computed(() => buildSparklinePoints(dashboard.value.activeStudentsTrend))
 
 const formatPercent = (value) => {
   if (value === null || value === undefined) {
@@ -254,6 +301,24 @@ onMounted(() => {
   margin-bottom: 20px;
 }
 
+.section-subtitle {
+  color: var(--color-text-soft);
+  margin-bottom: 8px;
+}
+
+.trend-metric {
+  color: var(--color-text);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.sparkline {
+  width: 100%;
+  height: 130px;
+  background: rgba(248, 250, 252, 0.8);
+  border-radius: 10px;
+}
+
 .empty-state {
   text-align: center;
   padding: 24px;
@@ -284,6 +349,14 @@ onMounted(() => {
 .course-meta {
   color: var(--color-text-soft);
   font-size: 14px;
+}
+
+.course-sparkline {
+  width: 100%;
+  height: 90px;
+  background: rgba(248, 250, 252, 0.82);
+  border-radius: 10px;
+  margin-top: 6px;
 }
 
 .queue-list {

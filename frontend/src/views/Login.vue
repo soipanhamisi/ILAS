@@ -144,6 +144,8 @@
       <!-- Demo Credentials -->
       <div class="demo-info">
         <p><strong>Demo Credentials:</strong></p>
+        <p><strong>Admin:</strong></p>
+        <p>🛡️ admin / password123</p>
         <p><strong>Instructors:</strong></p>
         <p>📧 smith_instructor / password123</p>
         <p>📧 johnson_instructor / password123</p>
@@ -203,7 +205,7 @@ const handleLogin = async () => {
 
     // Redirect after 1 second
     setTimeout(() => {
-      router.push(getDashboardRoute(userType.value))
+      router.push(getDashboardRoute(authStore.userType))
     }, 1000)
   } catch (err) {
     error.value = err.response?.data?.message || err.message || 'Login failed'
@@ -247,7 +249,7 @@ const handleSignup = async () => {
 
     // Redirect after 1 second
     setTimeout(() => {
-      router.push(getDashboardRoute(userType.value))
+      router.push(getDashboardRoute(authStore.userType))
     }, 1000)
   } catch (err) {
     error.value = err.response?.data?.message || err.message || 'Signup failed'

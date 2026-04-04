@@ -17,6 +17,7 @@ public class InstructorDashboardSummaryDTO {
     private int newEnrollments;
     private double averagePerformancePct;
     private int testsToBeGraded;
+    private List<DailyActiveStudentsPointDTO> activeStudentsTrend;
     private List<CourseSummaryDTO> courses;
     private List<GradingQueueItemDTO> testsToGrade;
 
@@ -30,6 +31,15 @@ public class InstructorDashboardSummaryDTO {
         private int newEnrollments;
         private double averagePerformancePct;
         private int testsToBeGraded;
+        private List<DailyActiveStudentsPointDTO> activeStudentsTrend;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class DailyActiveStudentsPointDTO {
+        private String date;
+        private int activeStudents;
     }
 
     @Data

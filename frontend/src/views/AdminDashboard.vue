@@ -60,17 +60,21 @@
       </div>
 
       <div class="section">
-        <h2 class="section-title">Endpoint Health (Concurrent Requests vs Capacity)</h2>
+        <h2 class="section-title">All Endpoint Health (Concurrent Requests vs Capacity)</h2>
         <div class="endpoint-table">
           <div class="endpoint-row header">
             <span>Endpoint</span>
             <span>Active</span>
+            <span>RPS</span>
+            <span>Total</span>
             <span>Utilization</span>
             <span>Status</span>
           </div>
           <div v-for="entry in monitoring.endpointHealth" :key="entry.endpoint" class="endpoint-row">
             <span class="endpoint-name">{{ entry.endpoint }}</span>
             <span>{{ entry.activeRequests }}</span>
+            <span>{{ formatRate(entry.requestsPerSecond) }}</span>
+            <span>{{ entry.totalRequests || 0 }}</span>
             <span>
               <div class="bar-wrap">
                 <div class="bar-fill" :style="{ width: Math.min(entry.utilization * 100, 100) + '%' }"></div>
@@ -90,28 +94,22 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import { adminAPI } from '../services/api'
-import { useMonitoringWebSocket } from '../services/useMonitoringWebSocket'
 
 const authStore = useAuthStore()
+const router = useRouter()
 
-// WebSocket monitoring
-const {
-  isConnected,
-  monitoringData,
-  error: wsError,
-  lastUpdated,
-  getHTTPFallback
-} = useMonitoringWebSocket(authStore.userId)
-
-// Fallback HTTP polling when WebSocket is unavailable
+// Long polling configuration for realtime monitoring
 const refreshIntervalMs = 5000
-let fallbackTimer = null
+let pollingTimer = null
+let pollingActive = false
+let monitoringRequestInFlight = false
 
 const stats = ref({ totalStudents: 0, totalInstructors: 0, totalCourses: 0, totalExams: 0 })
-const monitoring = computed(() => monitoringData.value || {
+const monitoringData = ref({
   threadPoolCapacity: 0,
   globalActiveRequests: 0,
   globalUtilization: 0,
@@ -119,11 +117,29 @@ const monitoring = computed(() => monitoringData.value || {
   endpointHealth: [],
   series: { requestUtilization: [], activeUsers: [] }
 })
+const monitoring = computed(() => monitoringData.value)
 
 const loading = ref(false)
 const error = ref('')
+const lastUpdated = ref('Never')
+
+const resolveAdminId = () => {
+  if (!authStore.userId) {
+    authStore.checkAuth()
+  }
+  const candidate = Number(authStore.userId)
+  return Number.isInteger(candidate) && candidate > 0 ? candidate : null
+}
+
+const handleInvalidAdminSession = () => {
+  stopMonitoringPolling()
+  authStore.logout()
+  error.value = 'Your admin session is no longer valid. Please sign in again.'
+  router.push('/login')
+}
 
 const formatPercent = (value) => `${Math.round((value || 0) * 100)}%`
+const formatRate = (value) => `${Number(value || 0).toFixed(2)}/s`
 
 const buildSparklinePoints = (series, yMax) => {
   if (!series || series.length === 0) return '0,120 320,120'
@@ -148,8 +164,13 @@ const statusClass = (status) => {
  * Load dashboard summary statistics via HTTP
  */
 const loadDashboardSummary = async () => {
+  const adminId = resolveAdminId()
+  if (!adminId) {
+    return
+  }
+
   try {
-    const summaryRes = await adminAPI.getDashboardSummary(authStore.userId)
+    const summaryRes = await adminAPI.getDashboardSummary(adminId)
     if (summaryRes.data.success) {
       const data = summaryRes.data.data
       stats.value = {
@@ -164,55 +185,82 @@ const loadDashboardSummary = async () => {
   }
 }
 
-/**
- * Fallback to HTTP polling when WebSocket is unavailable
- */
-const enableHTTPFallback = () => {
-  console.log('Enabling HTTP polling fallback...')
-  fallbackTimer = setInterval(async () => {
-    const success = await getHTTPFallback(adminAPI)
-    if (!success) {
-      error.value = 'Unable to connect via WebSocket or HTTP'
-    }
-  }, refreshIntervalMs)
-}
+const loadMonitoringSummary = async () => {
+  if (monitoringRequestInFlight) {
+    return
+  }
 
-/**
- * Disable HTTP fallback when WebSocket reconnects
- */
-const disableHTTPFallback = () => {
-  if (fallbackTimer) {
-    clearInterval(fallbackTimer)
-    fallbackTimer = null
+  const adminId = resolveAdminId()
+  if (!adminId) {
+    error.value = 'Session expired. Please sign in again.'
+    return
+  }
+
+  monitoringRequestInFlight = true
+  try {
+    const monitoringRes = await adminAPI.getMonitoringSummary(adminId)
+    if (monitoringRes.data.success) {
+      monitoringData.value = monitoringRes.data.data
+      error.value = ''
+      lastUpdated.value = new Date().toLocaleString()
+    } else {
+      if ((monitoringRes.data.message || '').includes('Admin not found')) {
+        handleInvalidAdminSession()
+        return
+      }
+      error.value = monitoringRes.data.message || 'Unable to load monitoring data'
+    }
+  } catch (err) {
+    console.error('Error loading monitoring summary:', err)
+    if ((err.response?.data?.message || '').includes('Admin not found')) {
+      handleInvalidAdminSession()
+      return
+    }
+    error.value = 'Unable to load monitoring data'
+  } finally {
+    monitoringRequestInFlight = false
   }
 }
 
-onMounted(() => {
-  loading.value = true
-  loadDashboardSummary()
-  loading.value = false
+const runLongPollingCycle = async () => {
+  if (!pollingActive) {
+    return
+  }
 
-  // Set up fallback polling if WebSocket is not connected after a delay
-  setTimeout(() => {
-    if (!isConnected.value && !fallbackTimer) {
-      enableHTTPFallback()
-    }
-  }, 2000)
+  await loadMonitoringSummary()
+
+  if (!pollingActive) {
+    return
+  }
+
+  pollingTimer = setTimeout(runLongPollingCycle, refreshIntervalMs)
+}
+
+const startMonitoringPolling = () => {
+  if (pollingActive) {
+    return
+  }
+  pollingActive = true
+  runLongPollingCycle()
+}
+
+const stopMonitoringPolling = () => {
+  pollingActive = false
+  if (pollingTimer) {
+    clearTimeout(pollingTimer)
+    pollingTimer = null
+  }
+}
+
+onMounted(async () => {
+  loading.value = true
+  await Promise.all([loadDashboardSummary(), loadMonitoringSummary()])
+  loading.value = false
+  startMonitoringPolling()
 })
 
 onBeforeUnmount(() => {
-  disableHTTPFallback()
-})
-
-// Watch for WebSocket connection changes
-watch(isConnected, (connected) => {
-  if (connected) {
-    disableHTTPFallback()
-    error.value = wsError.value
-  } else if (wsError.value) {
-    error.value = wsError.value
-    enableHTTPFallback()
-  }
+  stopMonitoringPolling()
 })
 </script>
 
@@ -232,7 +280,8 @@ watch(isConnected, (connected) => {
 .section-title { font-size: 18px; margin-bottom: 10px; color: var(--color-primary); }
 .sparkline { width: 100%; height: 130px; background: rgba(248, 250, 252, 0.8); border-radius: 10px; }
 .endpoint-table { display: grid; gap: 8px; }
-.endpoint-row { display: grid; grid-template-columns: 2fr .5fr 1fr .6fr; gap: 10px; align-items: center; font-size: 14px; }
+.endpoint-table { max-height: 380px; overflow-y: auto; }
+.endpoint-row { display: grid; grid-template-columns: 2fr .4fr .6fr .6fr 1fr .6fr; gap: 10px; align-items: center; font-size: 14px; }
 .endpoint-row.header { font-weight: 700; color: var(--color-muted); text-transform: uppercase; font-size: 12px; }
 .endpoint-name { word-break: break-all; }
 .bar-wrap { width: 100%; height: 8px; border-radius: 20px; background: #e5e7eb; margin-bottom: 4px; }

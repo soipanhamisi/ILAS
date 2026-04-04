@@ -1,6 +1,5 @@
 package org.soipan.ilas.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -15,18 +14,18 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Tracks lightweight runtime metrics for the admin dashboard.
- * Broadcasts updates via WebSocket to connected monitoring clients.
  */
 @Service
 public class SystemMonitoringService {
 
-    @Autowired(required = false)
-    private MonitoringWebSocketService webSocketService;
-
     private final ConcurrentMap<String, AtomicInteger> endpointActiveRequests = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, AtomicLong> endpointTotalRequests = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, AtomicInteger> endpointRequestsSinceLastSample = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, Double> endpointRequestsPerSecond = new ConcurrentHashMap<>();
     private final AtomicInteger totalActiveRequests = new AtomicInteger(0);
     private final ConcurrentMap<String, Long> userLastSeenEpochMs = new ConcurrentHashMap<>();
 
@@ -42,8 +41,13 @@ public class SystemMonitoringService {
     @Value("${monitoring.history.max-points:72}")
     private int maxHistoryPoints;
 
+    @Value("${monitoring.sample-interval-ms:5000}")
+    private long sampleIntervalMs;
+
     public void onRequestStart(String endpoint) {
         endpointActiveRequests.computeIfAbsent(endpoint, key -> new AtomicInteger(0)).incrementAndGet();
+        endpointTotalRequests.computeIfAbsent(endpoint, key -> new AtomicLong(0)).incrementAndGet();
+        endpointRequestsSinceLastSample.computeIfAbsent(endpoint, key -> new AtomicInteger(0)).incrementAndGet();
         totalActiveRequests.incrementAndGet();
     }
 
@@ -83,6 +87,16 @@ public class SystemMonitoringService {
         return snapshot;
     }
 
+    public Map<String, Long> getEndpointTotalRequests() {
+        Map<String, Long> snapshot = new HashMap<>();
+        endpointTotalRequests.forEach((endpoint, count) -> snapshot.put(endpoint, Math.max(count.get(), 0L)));
+        return snapshot;
+    }
+
+    public Map<String, Double> getEndpointRequestsPerSecond() {
+        return new HashMap<>(endpointRequestsPerSecond);
+    }
+
     public int getActiveUsers() {
         long threshold = System.currentTimeMillis() - activeUserTimeoutMs;
         userLastSeenEpochMs.entrySet().removeIf(entry -> entry.getValue() < threshold);
@@ -100,6 +114,12 @@ public class SystemMonitoringService {
     @Scheduled(fixedRateString = "${monitoring.sample-interval-ms:5000}")
     public void recordSnapshot() {
         long now = Instant.now().toEpochMilli();
+        double windowSeconds = Math.max(sampleIntervalMs / 1000.0, 0.001);
+
+        endpointRequestsSinceLastSample.forEach((endpoint, count) -> {
+            int requestsInWindow = Math.max(count.getAndSet(0), 0);
+            endpointRequestsPerSecond.put(endpoint, requestsInWindow / windowSeconds);
+        });
 
         Map<String, Object> requestPoint = new HashMap<>();
         requestPoint.put("timestamp", now);
@@ -110,56 +130,6 @@ public class SystemMonitoringService {
         activeUsersPoint.put("timestamp", now);
         activeUsersPoint.put("value", getActiveUsers());
         appendPoint(activeUsersHistory, activeUsersPoint);
-
-        // Broadcast updates via WebSocket if there are connected clients
-        if (webSocketService != null && webSocketService.hasConnectedClients()) {
-            broadcastMonitoringSnapshot();
-        }
-    }
-
-    /**
-     * Broadcast current monitoring snapshot to all connected WebSocket clients
-     */
-    private void broadcastMonitoringSnapshot() {
-        try {
-            int threadPoolCapacity = getThreadPoolCapacity();
-            int totalActiveRequests = getTotalActiveRequests();
-            int activeUsers = getActiveUsers();
-
-            List<Map<String, Object>> endpointHealth = new ArrayList<>();
-            List<Map<String, Object>> finalEndpointHealth = endpointHealth;
-            getEndpointActiveRequests().forEach((endpoint, count) -> {
-                double utilization = (double) count / threadPoolCapacity;
-                Map<String, Object> health = new HashMap<>();
-                health.put("endpoint", endpoint);
-                health.put("activeRequests", count);
-                health.put("utilization", utilization);
-                health.put("status", utilization >= 0.8 ? "HIGH" : utilization >= 0.5 ? "ELEVATED" : "HEALTHY");
-                finalEndpointHealth.add(health);
-            });
-
-            // Sort by active requests (descending) and limit to 12
-            endpointHealth.sort((a, b) -> Integer.compare((int) b.get("activeRequests"), (int) a.get("activeRequests")));
-            if (endpointHealth.size() > 12) {
-                endpointHealth = endpointHealth.subList(0, 12);
-            }
-
-            Map<String, Object> series = new HashMap<>();
-            series.put("requestUtilization", new ArrayList<>(requestUtilizationHistory));
-            series.put("activeUsers", new ArrayList<>(activeUsersHistory));
-
-            Map<String, Object> snapshot = new HashMap<>();
-            snapshot.put("threadPoolCapacity", threadPoolCapacity);
-            snapshot.put("globalActiveRequests", totalActiveRequests);
-            snapshot.put("globalUtilization", getGlobalUtilization());
-            snapshot.put("endpointHealth", endpointHealth);
-            snapshot.put("users", Map.of("totalUsers", 0, "activeUsers", activeUsers));
-            snapshot.put("series", series);
-
-            webSocketService.broadcastMonitoringUpdate(snapshot);
-        } catch (Exception e) {
-            System.err.println("Failed to broadcast monitoring snapshot: " + e.getMessage());
-        }
     }
 
     private void appendPoint(Deque<Map<String, Object>> history, Map<String, Object> point) {

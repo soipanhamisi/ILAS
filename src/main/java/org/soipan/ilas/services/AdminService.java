@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -38,6 +40,9 @@ public class AdminService {
 
     @Autowired
     private SystemMonitoringService monitoringService;
+
+    @Autowired
+    private EndpointCatalogService endpointCatalogService;
 
     /**
      * Get dashboard summary statistics
@@ -121,19 +126,39 @@ public class AdminService {
         int activeUsers = monitoringService.getActiveUsers();
         long totalUsers = studentRepository.count() + instructorRepository.count() + adminRepository.count();
 
-        List<Map<String, Object>> endpointHealth = monitoringService.getEndpointActiveRequests().entrySet()
-                .stream()
-                .map(entry -> {
-                    double utilization = (double) entry.getValue() / threadPoolCapacity;
-                    Map<String, Object> endpoint = new HashMap<>();
-                    endpoint.put("endpoint", entry.getKey());
-                    endpoint.put("activeRequests", entry.getValue());
-                    endpoint.put("utilization", utilization);
-                    endpoint.put("status", utilization >= 0.8 ? "HIGH" : utilization >= 0.5 ? "ELEVATED" : "HEALTHY");
-                    return endpoint;
+        Map<String, Integer> activeByEndpoint = monitoringService.getEndpointActiveRequests();
+        Map<String, Long> totalByEndpoint = monitoringService.getEndpointTotalRequests();
+        Map<String, Double> rpsByEndpoint = monitoringService.getEndpointRequestsPerSecond();
+        Set<String> endpointCatalog = new HashSet<>(endpointCatalogService.getClientFacingEndpoints());
+        endpointCatalog.addAll(activeByEndpoint.keySet());
+        endpointCatalog.addAll(totalByEndpoint.keySet());
+        endpointCatalog.addAll(rpsByEndpoint.keySet());
+
+        List<Map<String, Object>> endpointHealth = endpointCatalog.stream()
+                .map(endpointPath -> {
+                    int activeRequests = activeByEndpoint.getOrDefault(endpointPath, 0);
+                    long totalRequests = totalByEndpoint.getOrDefault(endpointPath, 0L);
+                    double requestsPerSecond = rpsByEndpoint.getOrDefault(endpointPath, 0.0);
+                    double utilization = (double) activeRequests / threadPoolCapacity;
+                    Map<String, Object> endpointDetails = new HashMap<>();
+                    endpointDetails.put("endpoint", endpointPath);
+                    endpointDetails.put("activeRequests", activeRequests);
+                    endpointDetails.put("totalRequests", totalRequests);
+                    endpointDetails.put("requestsPerSecond", requestsPerSecond);
+                    endpointDetails.put("utilization", utilization);
+                    endpointDetails.put("status",
+                            utilization >= 0.8 || requestsPerSecond >= 5.0 ? "HIGH"
+                                    : utilization >= 0.5 || requestsPerSecond >= 1.0 ? "ELEVATED"
+                                    : "HEALTHY");
+                    return endpointDetails;
                 })
-                .sorted((a, b) -> Integer.compare((int) b.get("activeRequests"), (int) a.get("activeRequests")))
-                .limit(12)
+                .sorted((a, b) -> {
+                    int activeCompare = Integer.compare((int) b.get("activeRequests"), (int) a.get("activeRequests"));
+                    if (activeCompare != 0) {
+                        return activeCompare;
+                    }
+                    return String.valueOf(a.get("endpoint")).compareTo(String.valueOf(b.get("endpoint")));
+                })
                 .collect(Collectors.toList());
 
         Map<String, Object> users = new HashMap<>();

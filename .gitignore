@@ -37,44 +37,35 @@ build/
 
 /.env
 
-/frontend/dist/assets/CreateExam-Drio8gzQ.js
-/frontend/dist/assets/CreateExam-NbOXu6U5.css
-/frontend/dist/assets/ExamSubmissions-CEXE4hc2.js
-/frontend/dist/assets/Home-CTTJEqo5.js
-/frontend/dist/assets/index-DLMEgJAN.js
-/frontend/dist/assets/InstructorDashboard-fMq7UGn_.js
-/frontend/dist/assets/Login-BZxwDwuJ.js
-/frontend/dist/assets/StudentDashboard-Cvz0YYgN.js
-/frontend/dist/assets/TakeExam-ve9frx79.js
-/frontend/dist/assets/ViewResults-6YOV9PWc.js
+
 /storage/.gitkeep
-/frontend/node_modules/.vite/deps/chunk-VID4RN2V.js
-/frontend/node_modules/.vite/deps/chunk-VID4RN2V.js.map
-/frontend/node_modules/.vite/deps/chunk-XIE6TSIF.js
-/frontend/node_modules/.vite/deps/chunk-XIE6TSIF.js.map
-/frontend/dist/assets/CreateExam-DVsTEKhy.js
-/frontend/dist/assets/ExamSubmissions-FnFXaC_s.js
-/frontend/dist/assets/Home-D35Wzksa.js
-/frontend/dist/assets/index-B7i0N3RO.js
-/frontend/dist/assets/InstructorDashboard-BtFq7Nft.js
-/frontend/dist/assets/Login-D8H9fSoI.js
-/frontend/dist/assets/StudentDashboard-BF_gWwn1.js
-/frontend/dist/assets/StudentDashboard-DL26avDb.css
-/frontend/dist/assets/TakeExam-BexTR0a8.js
-/frontend/dist/assets/ViewResults-DBtQJH3m.js
-/frontend/dist/assets/AdminDashboard-BROL3uIs.css
-/frontend/dist/assets/AdminDashboard-Du0igtH-.js
-/frontend/dist/assets/CreateExam-BFkDe0zn.js
-/frontend/dist/assets/ExamSubmissions-BiFKOPTx.js
-/frontend/dist/assets/Home-B09ZeJhk.js
-/frontend/dist/assets/index-B04dPCL6.css
-/frontend/dist/assets/index-DlXTAL5J.js
-/frontend/dist/assets/InstructorDashboard-CUOShGMA.js
-/frontend/dist/assets/Login-B90QiyIo.css
-/frontend/dist/assets/Login-DbieiX4Y.js
-/frontend/dist/assets/StudentDashboard-DPr8eoEh.js
-/frontend/dist/assets/TakeExam-Ou5uoC-L.js
-/frontend/dist/assets/ViewResults-qtGrRSec.js
 
 
 documentation
+
+# --- Project startup/runtime artifacts ---
+/frontend/node_modules/
+/frontend/dist/
+/frontend/.vite/
+
+/storage/exam-assessments/
+!/storage/.gitkeep
+
+*.log
+/logs/
+/tmp/
+/temp/
+
+/.env.local
+/.env.development.local
+/.env.test.local
+/.env.production.local
+
+.DS_Store
+Thumbs.db
+
+
+# --- Markdown policy ---
+*.md
+!README.md
+!readme.md

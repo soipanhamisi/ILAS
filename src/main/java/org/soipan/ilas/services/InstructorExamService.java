@@ -14,11 +14,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -300,6 +304,8 @@ public class InstructorExamService {
 
         List<Course> courses = courseRepository.findByInstructor_InstructorId(instructorId);
         LocalDateTime recentCutoff = LocalDateTime.now().minusDays(7);
+        LocalDate trendEndDate = LocalDate.now();
+        int trendWindowDays = 14;
 
         int totalNewEnrollments = 0;
         int totalTestsToBeGraded = 0;
@@ -308,11 +314,16 @@ public class InstructorExamService {
 
         List<InstructorDashboardSummaryDTO.CourseSummaryDTO> courseSummaries = new ArrayList<>();
         List<InstructorDashboardSummaryDTO.GradingQueueItemDTO> gradingQueueItems = new ArrayList<>();
+        Map<LocalDate, Set<Integer>> overallActiveStudentsByDay = createDailyStudentBucket(trendEndDate, trendWindowDays);
 
         for (Course course : courses) {
             int courseId = course.getCourseId();
             List<Enrollment> activeEnrollments = enrollmentRepository
                     .findByCourse_CourseIdAndEnrollmentStatus(courseId, EnrollmentStatus.ACTIVE);
+            Set<Integer> activeEnrollmentStudentIds = activeEnrollments.stream()
+                    .map(enrollment -> enrollment.getStudent().getStudentId())
+                    .collect(Collectors.toSet());
+            Map<LocalDate, Set<Integer>> courseActiveStudentsByDay = createDailyStudentBucket(trendEndDate, trendWindowDays);
 
             int courseNewEnrollments = (int) activeEnrollments.stream()
                     .filter(enrollment -> enrollment.getEnrolledAt() != null
@@ -339,6 +350,16 @@ public class InstructorExamService {
 
                 List<ExamSubmission> submissions = submissionRepository.findByExam_ExamId(exam.getExamId());
                 for (ExamSubmission submission : submissions) {
+                    LocalDateTime submittedAt = submission.getSubmittedAt();
+                    int studentId = submission.getStudent().getStudentId();
+                    if (submittedAt != null && activeEnrollmentStudentIds.contains(studentId)) {
+                        LocalDate submissionDate = submittedAt.toLocalDate();
+                        if (courseActiveStudentsByDay.containsKey(submissionDate)) {
+                            courseActiveStudentsByDay.get(submissionDate).add(studentId);
+                            overallActiveStudentsByDay.get(submissionDate).add(studentId);
+                        }
+                    }
+
                     if (submission.getGrade() == null) {
                         continue;
                     }
@@ -363,7 +384,8 @@ public class InstructorExamService {
                     activeEnrollments.size(),
                     courseNewEnrollments,
                     courseAveragePerformance,
-                    courseTestsToBeGraded
+                    courseTestsToBeGraded,
+                    toTrendPoints(courseActiveStudentsByDay)
             ));
         }
 
@@ -376,9 +398,34 @@ public class InstructorExamService {
                 totalNewEnrollments,
                 averagePerformance,
                 totalTestsToBeGraded,
+                toTrendPoints(overallActiveStudentsByDay),
                 courseSummaries,
                 gradingQueueItems
         );
+    }
+
+    private Map<LocalDate, Set<Integer>> createDailyStudentBucket(LocalDate endDate, int windowDays) {
+        Map<LocalDate, Set<Integer>> buckets = new LinkedHashMap<>();
+        LocalDate startDate = endDate.minusDays(Math.max(windowDays - 1, 0));
+        for (int i = 0; i < windowDays; i++) {
+            buckets.put(startDate.plusDays(i), new HashSet<>());
+        }
+        return buckets;
+    }
+
+    private List<InstructorDashboardSummaryDTO.DailyActiveStudentsPointDTO> toTrendPoints(
+            Map<LocalDate, Set<Integer>> studentsByDay) {
+        if (studentsByDay == null || studentsByDay.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<InstructorDashboardSummaryDTO.DailyActiveStudentsPointDTO> points = new ArrayList<>();
+        studentsByDay.forEach((date, studentIds) -> points.add(
+                new InstructorDashboardSummaryDTO.DailyActiveStudentsPointDTO(
+                        date.toString(),
+                        studentIds == null ? 0 : studentIds.size()
+                )));
+        return points;
     }
 
     /**

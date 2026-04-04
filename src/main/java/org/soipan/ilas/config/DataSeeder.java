@@ -23,6 +23,9 @@ public class DataSeeder implements CommandLineRunner {
     private InstructorRepository instructorRepository;
 
     @Autowired
+    private AdminRepository adminRepository;
+
+    @Autowired
     private CourseRepository courseRepository;
 
     @Autowired
@@ -41,7 +44,7 @@ public class DataSeeder implements CommandLineRunner {
         repairEnrollmentsWithoutStatus();
 
         // Only seed if database is empty
-        if (instructorRepository.count() > 0 || studentRepository.count() > 0
+        if (adminRepository.count() > 0 || instructorRepository.count() > 0 || studentRepository.count() > 0
                 || courseRepository.count() > 0 || enrollmentRepository.count() > 0) {
             System.out.println("Database already seeded, skipping...");
             return;
@@ -67,6 +70,16 @@ public class DataSeeder implements CommandLineRunner {
         instructor2 = instructorRepository.save(instructor2);
 
         System.out.println("Created 2 instructors: " + instructor1.getName() + ", " + instructor2.getName());
+
+        // Create a default admin account for dashboard monitoring and admin testing
+        Admin admin = new Admin(
+                "System Administrator",
+                "admin@localhost.com",
+                "admin",
+                "password123"
+        );
+        admin = adminRepository.save(admin);
+        System.out.println("Created admin: " + admin.getUsername());
 
         // Create Courses with instructor references
         Course javaCourse = new Course();

@@ -12,13 +12,12 @@ import java.util.Map;
  * Endpoints for system management and statistics
  * 
  * Real-time Monitoring:
- * - WebSocket: ws://localhost:8080/ws/monitoring
- * - HTTP Fallback: /admin/dashboard/monitoring (kept for backward compatibility and fallback)
+ * - Long polling endpoint: /admin/dashboard/monitoring
  * - Heartbeat endpoint: /admin/monitoring/heartbeat
  */
 @RestController
 @RequestMapping("/api/admin")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:5173", "http://127.0.0.1:3000", "http://127.0.0.1:5173"})
 public class AdminController {
 
     @Autowired

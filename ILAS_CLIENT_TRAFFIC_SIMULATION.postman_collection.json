@@ -1,0 +1,384 @@
+{
+  "info": {
+    "name": "ILAS Client Traffic Simulation",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Generates repeated client-facing request traffic to simulate user load for admin monitoring."
+  },
+  "item": [
+    {
+      "name": "Student - Available Exams",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const pick = (csv) => {",
+              "  const values = String(csv || '').split(',').map(v => v.trim()).filter(Boolean);",
+              "  return values[Math.floor(Math.random() * values.length)] || '1';",
+              "};",
+              "pm.variables.set('studentId', pick(pm.collectionVariables.get('studentIds')));",
+              "if (!pm.collectionVariables.get('stepCount')) pm.collectionVariables.set('stepCount', '0');"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Server stays responsive', function () {",
+              "  pm.expect(pm.response.code).to.be.below(500);",
+              "});",
+              "",
+              "let stepCount = Number(pm.collectionVariables.get('stepCount') || '0') + 1;",
+              "const maxSteps = Number(pm.collectionVariables.get('maxSteps') || '150');",
+              "pm.collectionVariables.set('stepCount', String(stepCount));",
+              "",
+              "if (stepCount >= maxSteps) {",
+              "  postman.setNextRequest(null);",
+              "} else {",
+              "  const requestPool = [",
+              "    'Student - Available Exams',",
+              "    'Student - All Submissions',",
+              "    'Student - Enrolled Courses',",
+              "    'Instructor - Exams For Course',",
+              "    'Instructor - Submissions For Exam'",
+              "  ];",
+              "  const nextRequest = requestPool[Math.floor(Math.random() * requestPool.length)];",
+              "  postman.setNextRequest(nextRequest);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/student/exams/available?studentId={{studentId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "student",
+            "exams",
+            "available"
+          ],
+          "query": [
+            {
+              "key": "studentId",
+              "value": "{{studentId}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Student - All Submissions",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const pick = (csv) => {",
+              "  const values = String(csv || '').split(',').map(v => v.trim()).filter(Boolean);",
+              "  return values[Math.floor(Math.random() * values.length)] || '1';",
+              "};",
+              "pm.variables.set('studentId', pick(pm.collectionVariables.get('studentIds')));",
+              "if (!pm.collectionVariables.get('stepCount')) pm.collectionVariables.set('stepCount', '0');"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Server stays responsive', function () {",
+              "  pm.expect(pm.response.code).to.be.below(500);",
+              "});",
+              "",
+              "let stepCount = Number(pm.collectionVariables.get('stepCount') || '0') + 1;",
+              "const maxSteps = Number(pm.collectionVariables.get('maxSteps') || '150');",
+              "pm.collectionVariables.set('stepCount', String(stepCount));",
+              "",
+              "if (stepCount >= maxSteps) {",
+              "  postman.setNextRequest(null);",
+              "} else {",
+              "  const requestPool = [",
+              "    'Student - Available Exams',",
+              "    'Student - All Submissions',",
+              "    'Student - Enrolled Courses',",
+              "    'Instructor - Exams For Course',",
+              "    'Instructor - Submissions For Exam'",
+              "  ];",
+              "  const nextRequest = requestPool[Math.floor(Math.random() * requestPool.length)];",
+              "  postman.setNextRequest(nextRequest);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/student/exams/submissions?studentId={{studentId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "student",
+            "exams",
+            "submissions"
+          ],
+          "query": [
+            {
+              "key": "studentId",
+              "value": "{{studentId}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Student - Enrolled Courses",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const pick = (csv) => {",
+              "  const values = String(csv || '').split(',').map(v => v.trim()).filter(Boolean);",
+              "  return values[Math.floor(Math.random() * values.length)] || '1';",
+              "};",
+              "pm.variables.set('studentId', pick(pm.collectionVariables.get('studentIds')));",
+              "if (!pm.collectionVariables.get('stepCount')) pm.collectionVariables.set('stepCount', '0');"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Server stays responsive', function () {",
+              "  pm.expect(pm.response.code).to.be.below(500);",
+              "});",
+              "",
+              "let stepCount = Number(pm.collectionVariables.get('stepCount') || '0') + 1;",
+              "const maxSteps = Number(pm.collectionVariables.get('maxSteps') || '150');",
+              "pm.collectionVariables.set('stepCount', String(stepCount));",
+              "",
+              "if (stepCount >= maxSteps) {",
+              "  postman.setNextRequest(null);",
+              "} else {",
+              "  const requestPool = [",
+              "    'Student - Available Exams',",
+              "    'Student - All Submissions',",
+              "    'Student - Enrolled Courses',",
+              "    'Instructor - Exams For Course',",
+              "    'Instructor - Submissions For Exam'",
+              "  ];",
+              "  const nextRequest = requestPool[Math.floor(Math.random() * requestPool.length)];",
+              "  postman.setNextRequest(nextRequest);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/student/courses/enrolled?studentId={{studentId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "student",
+            "courses",
+            "enrolled"
+          ],
+          "query": [
+            {
+              "key": "studentId",
+              "value": "{{studentId}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Instructor - Exams For Course",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const pick = (csv) => {",
+              "  const values = String(csv || '').split(',').map(v => v.trim()).filter(Boolean);",
+              "  return values[Math.floor(Math.random() * values.length)] || '1';",
+              "};",
+              "pm.variables.set('instructorId', pick(pm.collectionVariables.get('instructorIds')));",
+              "pm.variables.set('courseId', pick(pm.collectionVariables.get('courseIds')));",
+              "if (!pm.collectionVariables.get('stepCount')) pm.collectionVariables.set('stepCount', '0');"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Server stays responsive', function () {",
+              "  pm.expect(pm.response.code).to.be.below(500);",
+              "});",
+              "",
+              "let stepCount = Number(pm.collectionVariables.get('stepCount') || '0') + 1;",
+              "const maxSteps = Number(pm.collectionVariables.get('maxSteps') || '150');",
+              "pm.collectionVariables.set('stepCount', String(stepCount));",
+              "",
+              "if (stepCount >= maxSteps) {",
+              "  postman.setNextRequest(null);",
+              "} else {",
+              "  const requestPool = [",
+              "    'Student - Available Exams',",
+              "    'Student - All Submissions',",
+              "    'Student - Enrolled Courses',",
+              "    'Instructor - Exams For Course',",
+              "    'Instructor - Submissions For Exam'",
+              "  ];",
+              "  const nextRequest = requestPool[Math.floor(Math.random() * requestPool.length)];",
+              "  postman.setNextRequest(nextRequest);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/instructor/exams/courses/{{courseId}}?instructorId={{instructorId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "instructor",
+            "exams",
+            "courses",
+            "{{courseId}}"
+          ],
+          "query": [
+            {
+              "key": "instructorId",
+              "value": "{{instructorId}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Instructor - Submissions For Exam",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const pick = (csv) => {",
+              "  const values = String(csv || '').split(',').map(v => v.trim()).filter(Boolean);",
+              "  return values[Math.floor(Math.random() * values.length)] || '1';",
+              "};",
+              "pm.variables.set('instructorId', pick(pm.collectionVariables.get('instructorIds')));",
+              "pm.variables.set('examId', pick(pm.collectionVariables.get('examIds')));",
+              "if (!pm.collectionVariables.get('stepCount')) pm.collectionVariables.set('stepCount', '0');"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Server stays responsive', function () {",
+              "  pm.expect(pm.response.code).to.be.below(500);",
+              "});",
+              "",
+              "let stepCount = Number(pm.collectionVariables.get('stepCount') || '0') + 1;",
+              "const maxSteps = Number(pm.collectionVariables.get('maxSteps') || '150');",
+              "pm.collectionVariables.set('stepCount', String(stepCount));",
+              "",
+              "if (stepCount >= maxSteps) {",
+              "  postman.setNextRequest(null);",
+              "} else {",
+              "  const requestPool = [",
+              "    'Student - Available Exams',",
+              "    'Student - All Submissions',",
+              "    'Student - Enrolled Courses',",
+              "    'Instructor - Exams For Course',",
+              "    'Instructor - Submissions For Exam'",
+              "  ];",
+              "  const nextRequest = requestPool[Math.floor(Math.random() * requestPool.length)];",
+              "  postman.setNextRequest(nextRequest);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/instructor/exams/{{examId}}/submissions?instructorId={{instructorId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "instructor",
+            "exams",
+            "{{examId}}",
+            "submissions"
+          ],
+          "query": [
+            {
+              "key": "instructorId",
+              "value": "{{instructorId}}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api"
+    },
+    {
+      "key": "studentIds",
+      "value": "1,2,3,4,5"
+    },
+    {
+      "key": "instructorIds",
+      "value": "1,2"
+    },
+    {
+      "key": "courseIds",
+      "value": "101,102,103"
+    },
+    {
+      "key": "examIds",
+      "value": "1,2,3,4,5"
+    },
+    {
+      "key": "stepCount",
+      "value": "0"
+    },
+    {
+      "key": "maxSteps",
+      "value": "150"
+    }
+  ]
+}
+

@@ -124,6 +124,14 @@ npm run dev
 
 ## 🎯 Demo Credentials
 
+### Admin
+```
+Type: Admin
+Username: admin
+Password: password123
+Name: System Administrator
+```
+
 ### Instructor
 ```
 Type: Instructor

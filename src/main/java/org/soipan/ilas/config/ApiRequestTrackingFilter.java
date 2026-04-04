@@ -30,7 +30,7 @@ public class ApiRequestTrackingFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         String uri = request.getRequestURI();
-        if (!uri.startsWith("/api/")) {
+        if (!shouldTrack(uri)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -50,6 +50,21 @@ public class ApiRequestTrackingFilter extends OncePerRequestFilter {
         return uri
                 .replaceAll("/[0-9]+", "/{id}")
                 .replaceAll("/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}", "/{id}");
+    }
+
+    private boolean shouldTrack(String uri) {
+        if (uri == null || uri.isBlank()) {
+            return false;
+        }
+
+        // Exclude internal/ops and static resource traffic from endpoint-health metrics.
+        return !uri.startsWith("/actuator")
+                && !uri.startsWith("/api/admin")
+                && !uri.startsWith("/swagger-ui")
+                && !uri.startsWith("/v3/api-docs")
+                && !uri.startsWith("/error")
+                && !uri.equals("/favicon.ico")
+                && !uri.matches(".*\\.(css|js|map|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf)$");
     }
 }
 
