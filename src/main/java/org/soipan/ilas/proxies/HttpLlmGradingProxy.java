@@ -20,50 +20,66 @@ import java.util.Map;
 @Service
 public class HttpLlmGradingProxy implements LlmGradingProxy {
 
+    private final GradingCredentialResolver credentialResolver;
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
-    private final String provider;
-    private final String endpointUrl;
-    private final String apiKey;
-    private final String model;
-    private final long timeoutSeconds;
-    private final double temperature;
 
     public HttpLlmGradingProxy(GradingCredentialResolver credentialResolver) {
-        GradingCredentialResolver.ResolvedGradingConfig resolved = credentialResolver.resolve();
+        this.credentialResolver = credentialResolver;
         this.objectMapper = new ObjectMapper();
-        this.provider = resolved.provider();
-        this.endpointUrl = resolved.endpointUrl();
-        this.apiKey = resolved.apiKey();
-        this.model = resolved.model();
-        this.timeoutSeconds = resolved.timeoutSeconds();
-        this.temperature = resolved.temperature();
-        this.httpClient = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofSeconds(Math.max(1, timeoutSeconds)))
-                .build();
+        this.httpClient = HttpClient.newBuilder().build();
     }
 
     @Override
     public LlmCompletion complete(String prompt) {
+        GradingCredentialResolver.ResolvedGradingConfig resolved = credentialResolver.resolve();
+        String endpointUrl = resolved.endpointUrl();
+        String apiKey = resolved.apiKey();
+        String model = resolved.model();
+        long timeoutSeconds = resolved.timeoutSeconds();
+        double temperature = resolved.temperature();
+        String provider = resolved.provider();
+
         if (endpointUrl == null || endpointUrl.isBlank()) {
             throw new IllegalStateException("grading.llm.endpoint-url is not configured");
         }
+        if (apiKey == null || apiKey.isBlank()) {
+            throw new IllegalStateException("LLM API key is not configured");
+        }
+
+        boolean geminiStudio = "gemini-studio".equals(provider);
 
         try {
             Map<String, Object> payload = new LinkedHashMap<>();
-            payload.put("model", model);
-            payload.put("temperature", temperature);
-            payload.put("messages", List.of(
-                    Map.of(
-                            "role", "system",
-                            "content", "You are a strict exam grading assistant. Return only valid JSON with overallScore, overallFeedback, overallJustification, requiresInstructorReview, and a questions array."
-                    ),
-                    Map.of(
-                            "role", "user",
-                            "content", prompt
-                    )
-            ));
-            payload.put("response_format", Map.of("type", "json_object"));
+            if (geminiStudio) {
+                payload.put("contents", List.of(
+                        Map.of(
+                                "role", "user",
+                                "parts", List.of(
+                                        Map.of(
+                                                "text",
+                                                "You are a strict exam grading assistant. Return only valid JSON with overallScore, overallFeedback, overallJustification, requiresInstructorReview, and a questions array.\n\n"
+                                                        + prompt
+                                        )
+                                )
+                        )
+                ));
+                payload.put("generationConfig", Map.of("temperature", temperature));
+            } else {
+                payload.put("model", model);
+                payload.put("temperature", temperature);
+                payload.put("messages", List.of(
+                        Map.of(
+                                "role", "system",
+                                "content", "You are a strict exam grading assistant. Return only valid JSON with overallScore, overallFeedback, overallJustification, requiresInstructorReview, and a questions array."
+                        ),
+                        Map.of(
+                                "role", "user",
+                                "content", prompt
+                        )
+                ));
+                payload.put("response_format", Map.of("type", "json_object"));
+            }
 
             String requestBody = objectMapper.writeValueAsString(payload);
             HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
@@ -72,7 +88,9 @@ public class HttpLlmGradingProxy implements LlmGradingProxy {
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody));
 
-            if (apiKey != null && !apiKey.isBlank()) {
+            if (geminiStudio) {
+                requestBuilder.header("x-goog-api-key", apiKey.trim());
+            } else if (apiKey != null && !apiKey.isBlank()) {
                 requestBuilder.header("Authorization", "Bearer " + apiKey.trim());
             }
 
@@ -104,6 +122,26 @@ public class HttpLlmGradingProxy implements LlmGradingProxy {
                 JsonNode messageContent = choices.get(0).path("message").path("content");
                 if (!messageContent.isMissingNode() && !messageContent.isNull()) {
                     return messageContent.asText();
+                }
+            }
+
+            JsonNode candidates = root.path("candidates");
+            if (candidates.isArray() && !candidates.isEmpty()) {
+                JsonNode parts = candidates.get(0).path("content").path("parts");
+                if (parts.isArray() && !parts.isEmpty()) {
+                    StringBuilder builder = new StringBuilder();
+                    for (JsonNode part : parts) {
+                        JsonNode text = part.path("text");
+                        if (!text.isMissingNode() && !text.isNull() && !text.asText().isBlank()) {
+                            if (!builder.isEmpty()) {
+                                builder.append('\n');
+                            }
+                            builder.append(text.asText());
+                        }
+                    }
+                    if (!builder.isEmpty()) {
+                        return builder.toString();
+                    }
                 }
             }
 
