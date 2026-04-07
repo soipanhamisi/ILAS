@@ -64,7 +64,10 @@ public class HttpLlmGradingProxy implements LlmGradingProxy {
                                 )
                         )
                 ));
-                payload.put("generationConfig", Map.of("temperature", temperature));
+                payload.put("generationConfig", Map.of(
+                        "temperature", temperature,
+                        "responseMimeType", "application/json"
+                ));
             } else {
                 payload.put("model", model);
                 payload.put("temperature", temperature);
