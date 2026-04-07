@@ -339,6 +339,22 @@ npm run build
 3. Configure API base URL
 4. Set up NGINX/Apache
 
+### Azure Deployment (Backend + Frontend)
+
+#### Backend (Azure App Service)
+1. Build JAR:
+   - `./mvnw clean package -DskipTests`
+2. Deploy `target/ILAS-0.0.1-SNAPSHOT.jar` to Azure App Service (Java 17).
+3. In App Service **Configuration > Application settings**, add values from `.env.azure.example`.
+4. Set `SPRING_PROFILES_ACTIVE=prod`.
+5. Use Health Check path: `/actuator/health`.
+
+#### Frontend (Azure Static Web Apps or App Service)
+1. Set `VITE_API_BASE_URL` at build time (see `frontend/.env.production.example`).
+2. Build frontend:
+   - `cd frontend && npm install && npm run build`
+3. Deploy `frontend/dist`.
+
 ---
 
 ## 🔐 Security
