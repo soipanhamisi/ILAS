@@ -266,6 +266,13 @@ public class AutoGradingService {
 
     private String extractJsonPayload(String content) {
         String trimmed = content.trim();
+        try {
+            objectMapper.readTree(trimmed);
+            return trimmed;
+        } catch (IOException ignored) {
+            // Continue with tolerant extraction for wrapped/model-formatted output.
+        }
+
         if (trimmed.startsWith("```")) {
             int firstBrace = trimmed.indexOf('{');
             int lastBrace = trimmed.lastIndexOf('}');
@@ -273,6 +280,13 @@ public class AutoGradingService {
                 return trimmed.substring(firstBrace, lastBrace + 1);
             }
         }
+
+        int firstBrace = trimmed.indexOf('{');
+        int lastBrace = trimmed.lastIndexOf('}');
+        if (firstBrace >= 0 && lastBrace > firstBrace) {
+            return trimmed.substring(firstBrace, lastBrace + 1);
+        }
+
         return trimmed;
     }
 
