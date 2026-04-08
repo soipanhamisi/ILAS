@@ -6,10 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -48,6 +44,9 @@ public class StudentExamService {
 
     @Autowired
     private CourseRepository courseRepository;
+
+    @Autowired
+    private FileStorageService fileStorageService;
 
     /**
      * Student Use Case 1: Take Assessment and Submit
@@ -263,18 +262,16 @@ public class StudentExamService {
         }
 
         try {
-            Path path = Paths.get(csvPath);
-            if (!Files.exists(path)) {
-                throw new IllegalArgumentException("Exam question file was not found");
-            }
-
-            return Files.readAllLines(path).stream()
+            return fileStorageService.readAllLines(csvPath).stream()
                     .skip(1)
                     .map(this::extractFirstCsvColumn)
                     .map(String::trim)
                     .filter(question -> !question.isEmpty())
                     .toList();
-        } catch (IOException ex) {
+        } catch (RuntimeException ex) {
+            if (ex instanceof IllegalArgumentException) {
+                throw ex;
+            }
             throw new RuntimeException("Unable to read exam questions", ex);
         }
     }

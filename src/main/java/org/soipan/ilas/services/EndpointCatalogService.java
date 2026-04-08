@@ -1,5 +1,6 @@
 package org.soipan.ilas.services;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
@@ -16,7 +17,7 @@ public class EndpointCatalogService {
 
     private final RequestMappingHandlerMapping handlerMapping;
 
-    public EndpointCatalogService(RequestMappingHandlerMapping handlerMapping) {
+    public EndpointCatalogService(@Qualifier("requestMappingHandlerMapping") RequestMappingHandlerMapping handlerMapping) {
         this.handlerMapping = handlerMapping;
     }
 
@@ -51,4 +52,3 @@ public class EndpointCatalogService {
         return pattern.replaceAll("\\{[^/]+}", "{id}");
     }
 }
-

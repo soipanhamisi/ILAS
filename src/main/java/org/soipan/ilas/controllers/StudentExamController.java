@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/api/student/exams")
-@CrossOrigin(origins = "*")
 public class StudentExamController {
 
     @Autowired
@@ -167,4 +166,3 @@ public class StudentExamController {
         return ResponseEntity.ok(ApiResponse.success(submitted));
     }
 }
-

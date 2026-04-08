@@ -11,9 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -474,12 +471,7 @@ public class InstructorExamService {
         }
 
         try {
-            Path path = Paths.get(csvPath);
-            if (!Files.exists(path)) {
-                throw new IllegalArgumentException("Exam question file was not found");
-            }
-
-            List<String> lines = Files.readAllLines(path);
+            List<String> lines = fileStorageService.readAllLines(csvPath);
             return lines.stream()
                     .skip(1)
                     .map(this::extractQuestionDetails)
@@ -490,7 +482,10 @@ public class InstructorExamService {
                         }
                         return questions;
                     }));
-        } catch (IOException ex) {
+        } catch (RuntimeException ex) {
+            if (ex instanceof IllegalArgumentException) {
+                throw ex;
+            }
             throw new RuntimeException("Unable to read exam questions", ex);
         }
     }

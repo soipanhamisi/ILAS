@@ -69,3 +69,7 @@ Thumbs.db
 *.md
 !README.md
 !readme.md
+/.env.deployment
+/ilasdb_dump.sql
+/scripts/migrate_csv_to_azure.cmd
+/scripts/update_exam_paths_to_azure.cmd

@@ -17,7 +17,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/student/courses")
-@CrossOrigin(origins = "*")
 public class StudentEnrollmentController {
 
     @Autowired
@@ -78,4 +77,3 @@ public class StudentEnrollmentController {
         );
     }
 }
-
