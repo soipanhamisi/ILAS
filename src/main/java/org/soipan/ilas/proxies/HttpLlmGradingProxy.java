@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.soipan.ilas.services.GradingCredentialResolver;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -19,6 +21,8 @@ import java.util.Map;
  */
 @Service
 public class HttpLlmGradingProxy implements LlmGradingProxy {
+
+    private static final Logger logger = LoggerFactory.getLogger(HttpLlmGradingProxy.class);
 
     private final GradingCredentialResolver credentialResolver;
     private final HttpClient httpClient;
@@ -48,6 +52,8 @@ public class HttpLlmGradingProxy implements LlmGradingProxy {
         }
 
         boolean geminiStudio = "gemini-studio".equals(provider);
+
+        logger.info("Initiating LLM grading request to endpoint: {} with provider: {}", endpointUrl, provider);
 
         try {
             Map<String, Object> payload = new LinkedHashMap<>();
@@ -93,23 +99,30 @@ public class HttpLlmGradingProxy implements LlmGradingProxy {
 
             if (geminiStudio) {
                 requestBuilder.header("x-goog-api-key", apiKey.trim());
-            } else if (apiKey != null && !apiKey.isBlank()) {
+            } else if (!apiKey.isBlank()) {
                 requestBuilder.header("Authorization", "Bearer " + apiKey.trim());
             }
 
-            if ("github-models".equals(provider)) {
-                requestBuilder.header("User-Agent", "ILAS-AutoGrader");
-            }
-
+            logger.debug("Sending LLM request to endpoint: {}", endpointUrl);
             HttpResponse<String> response = httpClient.send(requestBuilder.build(), HttpResponse.BodyHandlers.ofString());
+            
+            logger.info("LLM endpoint responded with status: {}", response.statusCode());
+            
             if (response.statusCode() < 200 || response.statusCode() >= 300) {
-                throw new IllegalStateException("LLM grading endpoint returned HTTP " + response.statusCode());
+                String errorDetail = "LLM grading endpoint returned HTTP " + response.statusCode() + 
+                        "\n\nResponse body:\n" + response.body();
+                logger.error(errorDetail);
+                throw new IllegalStateException(errorDetail);
             }
 
             String content = extractContent(response.body());
             return new LlmCompletion(model, content, response.body());
         } catch (Exception ex) {
-            throw new IllegalStateException("Failed to complete LLM grading request", ex);
+            String errorMsg = "Failed to complete LLM grading request: " + ex.getMessage();
+            if (!(ex instanceof IllegalStateException)) {
+                logger.error(errorMsg + "\nFull stack trace:", ex);
+            }
+            throw new IllegalStateException(errorMsg, ex);
         }
     }
 
@@ -164,4 +177,3 @@ public class HttpLlmGradingProxy implements LlmGradingProxy {
         return responseBody;
     }
 }
-

@@ -16,10 +16,6 @@ public class GradingCredentialResolver {
     private final long timeoutSeconds;
     private final double temperature;
 
-    private final String githubEndpointUrl;
-    private final String githubApiKey;
-    private final String githubModel;
-
     private final String geminiEndpointUrl;
     private final String geminiApiKey;
     private final String geminiModel;
@@ -31,9 +27,6 @@ public class GradingCredentialResolver {
             @Value("${grading.llm.model:gpt-4o-mini}") String model,
             @Value("${grading.llm.timeout-seconds:30}") long timeoutSeconds,
             @Value("${grading.llm.temperature:0.0}") double temperature,
-            @Value("${grading.llm.github.endpoint-url:https://models.inference.ai.azure.com/chat/completions}") String githubEndpointUrl,
-            @Value("${grading.llm.github.api-key:}") String githubApiKey,
-            @Value("${grading.llm.github.model:openai/gpt-4.1-mini}") String githubModel,
             @Value("${grading.llm.gemini.endpoint-url:https://generativelanguage.googleapis.com/v1beta/models}") String geminiEndpointUrl,
             @Value("${grading.llm.gemini.api-key:}") String geminiApiKey,
             @Value("${grading.llm.gemini.model:gemini-2.0-flash}") String geminiModel) {
@@ -43,30 +36,18 @@ public class GradingCredentialResolver {
         this.model = model;
         this.timeoutSeconds = timeoutSeconds;
         this.temperature = temperature;
-        this.githubEndpointUrl = githubEndpointUrl;
-        this.githubApiKey = githubApiKey;
-        this.githubModel = githubModel;
         this.geminiEndpointUrl = geminiEndpointUrl;
         this.geminiApiKey = geminiApiKey;
         this.geminiModel = geminiModel;
     }
 
     public ResolvedGradingConfig resolve() {
-        boolean githubModels = isGithubModelsProvider(provider);
-
-        String resolvedEndpoint = githubModels
-                ? firstNonBlank(githubEndpointUrl, endpointUrl)
-                : endpointUrl;
-
-        String resolvedApiKey = githubModels
-                ? firstNonBlank(githubApiKey, apiKey)
-                : apiKey;
-
-        String resolvedModel = githubModels
-                ? firstNonBlank(githubModel, model)
-                : model;
-
         boolean geminiStudio = isGeminiStudioProvider(provider);
+
+        String resolvedEndpoint = endpointUrl;
+        String resolvedApiKey = apiKey;
+        String resolvedModel = model;
+
         if (geminiStudio) {
             resolvedEndpoint = normalizeGeminiEndpoint(firstNonBlank(geminiEndpointUrl, endpointUrl),
                     firstNonBlank(geminiModel, model));
@@ -85,7 +66,7 @@ public class GradingCredentialResolver {
         }
 
         return new ResolvedGradingConfig(
-                githubModels ? "github-models" : (geminiStudio ? "gemini-studio" : "generic"),
+                geminiStudio ? "gemini-studio" : "generic",
                 resolvedEndpoint,
                 resolvedApiKey,
                 resolvedModel,
@@ -94,15 +75,6 @@ public class GradingCredentialResolver {
         );
     }
 
-    private boolean isGithubModelsProvider(String providerValue) {
-        if (providerValue == null) {
-            return false;
-        }
-        String normalized = providerValue.trim().toLowerCase();
-        return normalized.equals("github")
-                || normalized.equals("github-models")
-                || normalized.equals("gh-models");
-    }
 
     private boolean isGeminiStudioProvider(String providerValue) {
         if (providerValue == null) {
