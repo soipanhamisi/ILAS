@@ -16,6 +16,9 @@
           </div>
 
           <div class="top-utility-user">
+            <button @click="toggleTheme" class="btn-theme-toggle" :title="isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+              <span class="theme-icon">{{ isDarkMode ? '☀️' : '🌙' }}</span>
+            </button>
             <span class="user-pill">{{ authStore.user?.name }}</span>
             <span class="role-pill">{{ authStore.userType }}</span>
           </div>
@@ -35,10 +38,12 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from './stores/auth'
+import { useThemeStore } from './stores/theme'
 import NavBar from './components/NavBar.vue'
 import { adminAPI } from './services/api'
 
 const authStore = useAuthStore()
+const themeStore = useThemeStore()
 const route = useRoute()
 const navBarRef = ref(null)
 
@@ -54,10 +59,15 @@ const routeTitleMap = {
 
 const useLmsShell = computed(() => authStore.isAuthenticated && route.meta.requiresAuth)
 const currentSectionTitle = computed(() => routeTitleMap[route.name] || 'Course Workspace')
+const isDarkMode = computed(() => themeStore.isDarkMode)
 let heartbeatTimer = null
 
 const toggleMobileMenu = () => {
   navBarRef.value?.toggleDrawer()
+}
+
+const toggleTheme = () => {
+  themeStore.toggleDarkMode()
 }
 
 const sendHeartbeat = async () => {
@@ -83,6 +93,7 @@ const stopHeartbeat = () => {
 }
 
 onMounted(() => {
+  themeStore.initializeTheme()
   authStore.checkAuth()
   if (authStore.isAuthenticated) {
     startHeartbeat()
@@ -104,6 +115,7 @@ onBeforeUnmount(() => {
 
 <style>
 :root {
+  /* Light mode colors (default) */
   --color-primary: #111827;
   --color-surface: #e5e7eb;
   --color-surface-strong: #f3f4f6;
@@ -118,6 +130,27 @@ onBeforeUnmount(() => {
   --glass-border: rgba(148, 163, 184, 0.28);
   --shadow-soft: 0 8px 20px rgba(15, 23, 42, 0.08);
   --shadow-strong: 0 20px 40px rgba(15, 23, 42, 0.16);
+
+  /* Theme transition */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark mode colors */
+html.dark-mode {
+  --color-primary: #f1f5f9;
+  --color-surface: #1f293a;
+  --color-surface-strong: #0f172a;
+  --color-muted: #cbd5e1;
+  --color-accent: #3b82f6;
+  --color-bg: #0f172a;
+  --color-text: #f1f5f9;
+  --color-text-soft: #cbd5e1;
+  --color-white: #1e293b;
+  --glass-bg: rgba(15, 23, 42, 0.72);
+  --glass-bg-strong: rgba(30, 41, 59, 0.9);
+  --glass-border: rgba(71, 85, 105, 0.28);
+  --shadow-soft: 0 8px 20px rgba(0, 0, 0, 0.4);
+  --shadow-strong: 0 20px 40px rgba(0, 0, 0, 0.6);
 }
 
 #app {
@@ -136,6 +169,11 @@ body {
   background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
   color: var(--color-text);
   line-height: 1.55;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+html.dark-mode body {
+  background: linear-gradient(180deg, #0f172a 0%, #1f293a 100%);
 }
 
 button {
@@ -193,6 +231,14 @@ input, textarea, select {
   color: var(--color-text);
 }
 
+html.dark-mode input,
+html.dark-mode textarea,
+html.dark-mode select {
+  background: rgba(30, 41, 59, 0.8);
+  border-color: rgba(71, 85, 105, 0.55);
+  color: var(--color-text);
+}
+
 input:focus, textarea:focus, select:focus {
   outline: none;
   border-color: #60a5fa;
@@ -227,12 +273,15 @@ input:focus, textarea:focus, select:focus {
   min-height: 100vh;
   display: grid;
   grid-template-columns: 280px minmax(0, 1fr);
+  overflow: hidden;
 }
 
 .lms-main {
   min-width: 0;
   display: grid;
   grid-template-rows: auto 1fr;
+  max-height: 100vh;
+  overflow: hidden;
 }
 
 .top-utility-bar {
@@ -243,6 +292,11 @@ input:focus, textarea:focus, select:focus {
   justify-content: space-between;
   align-items: center;
   gap: 16px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+html.dark-mode .top-utility-bar {
+  background: rgba(15, 23, 42, 0.96);
 }
 
 .utility-left {
@@ -268,6 +322,46 @@ input:focus, textarea:focus, select:focus {
 .btn-menu-toggle:hover {
   background: rgba(148, 163, 184, 0.15);
   border-radius: 8px;
+}
+
+.btn-theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(226, 232, 240, 0.5);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 20px;
+}
+
+.btn-theme-toggle:hover {
+  background: rgba(226, 232, 240, 0.8);
+  box-shadow: var(--shadow-soft);
+  transform: translateY(-2px);
+}
+
+html.dark-mode .btn-theme-toggle {
+  background: rgba(71, 85, 105, 0.5);
+}
+
+html.dark-mode .btn-theme-toggle:hover {
+  background: rgba(71, 85, 105, 0.8);
+}
+
+.theme-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: transform 0.3s ease;
+}
+
+.btn-theme-toggle:active .theme-icon {
+  transform: scale(1.1) rotate(20deg);
 }
 
 .menu-icon {
@@ -305,6 +399,12 @@ input:focus, textarea:focus, select:focus {
   font-size: 12px;
   font-weight: 700;
   color: #0f172a;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html.dark-mode .user-pill {
+  background: #334155;
+  color: #f1f5f9;
 }
 
 .role-pill {
@@ -313,9 +413,16 @@ input:focus, textarea:focus, select:focus {
   color: #1e3a8a;
 }
 
+html.dark-mode .role-pill {
+  background: #1e3a8a;
+  color: #bfdbfe;
+}
+
 .lms-workspace {
   min-width: 0;
   overflow: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .lms-workspace .container {
@@ -338,11 +445,17 @@ input:focus, textarea:focus, select:focus {
   }
 
   .top-utility-user {
-    display: none;
+    display: flex;
+    gap: 12px;
   }
 
   .top-utility-title {
     font-size: 18px;
+  }
+
+  .user-pill,
+  .role-pill {
+    display: none;
   }
 }
 </style>
