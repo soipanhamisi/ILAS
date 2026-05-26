@@ -40,7 +40,7 @@ A complete, modern full-stack Learning Management System for exam creation, subm
 └─────────────┬───────────────────────┘
               │ REST API
 ┌─────────────▼───────────────────────┐
-│  Spring Boot Backend (Port 8080)   │
+│  Spring Boot Backend (Port 8081)   │
 │  • 13 REST endpoints                │
 │  • JWT-ready architecture           │
 │  • File storage service             │
@@ -97,7 +97,7 @@ npm run dev
 
 #### 6. Access Application
 - Frontend: http://localhost:3000
-- Backend: http://localhost:8080
+- Backend: http://localhost:8081
 
 ---
 
@@ -394,7 +394,7 @@ This is a complete educational project. To extend:
 **Backend won't start**
 - Check database connection
 - Verify Java version
-- Check port 8080 availability
+- Check port 8081 availability
 
 **Frontend won't start**
 - Run `npm install`

@@ -1,7 +1,8 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
-const devApiTarget = process.env.VITE_DEV_API_PROXY_TARGET || 'http://localhost:8080'
+// Default to the local Spring Boot port used by the repo's .env file.
+const devApiTarget = process.env.VITE_DEV_API_PROXY_TARGET || 'http://localhost:8081'
 
 export default defineConfig({
   plugins: [vue()],

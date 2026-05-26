@@ -143,7 +143,7 @@ frontend/
 Edit `src/services/api.js` to change API base URL:
 
 ```javascript
-const API_BASE_URL = 'http://localhost:8080/api'
+const API_BASE_URL = 'http://localhost:8081/api'
 ```
 
 ### Proxy Configuration
@@ -154,7 +154,7 @@ server: {
   port: 3000,
   proxy: {
     '/api': {
-      target: 'http://localhost:8080',
+      target: 'http://localhost:8081',
       changeOrigin: true
     }
   }
@@ -208,7 +208,7 @@ Authentication state is managed by Pinia and persisted in localStorage.
 1. **Start Backend**
    ```bash
    cd ILAS
-   ./mvnw spring-boot:run
+   .\mvnw.cmd spring-boot:run
    ```
 
 2. **Start Frontend**
