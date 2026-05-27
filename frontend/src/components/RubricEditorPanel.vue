@@ -62,7 +62,7 @@
 
           <div class="rubric-status">
             <span
-              :class="['status-dot', rubricForm[index].rubricText ? 'filled' : 'empty']"
+              :class="['status-dot', rubricForm[index].rubricText ? 'has-rubric' : 'no-rubric']"
             ></span>
             <span v-if="rubricForm[index].rubricText" class="status-text">Rubric defined</span>
             <span v-else class="status-text empty">Rubric pending</span>
@@ -123,8 +123,6 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['save', 'skip'])
-
 const rubricForm = ref([])
 
 // Initialize rubric form with existing data or empty values
@@ -170,36 +168,41 @@ const progressPercent = computed(() => {
   backdrop-filter: blur(10px);
 }
 
-.rubric-panel-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 20px;
-  gap: 16px;
+html.dark-mode .rubric-panel,
+html.dark-mode .rubric-card,
+html.dark-mode .loading-state {
+  background: rgba(15, 23, 42, 0.94);
+  border-color: rgba(71, 85, 105, 0.35);
 }
 
-.rubric-panel-header h2 {
-  margin: 0 0 8px 0;
-  font-size: 18px;
-  color: var(--color-primary);
-}
-
-.rubric-help {
-  margin: 0;
-  font-size: 14px;
+html.dark-mode .rubric-help,
+html.dark-mode .loading-state p,
+html.dark-mode .loading-hint {
   color: var(--color-text-soft);
 }
 
-.rubric-actions {
-  display: flex;
-  gap: 12px;
-  flex-shrink: 0;
+html.dark-mode .rubric-card h3,
+html.dark-mode .rubric-label,
+html.dark-mode .question-title,
+html.dark-mode .progress-indicator p {
+  color: var(--color-text);
 }
 
-.rubric-actions button {
-  padding: 10px 16px;
-  font-size: 14px;
-  white-space: nowrap;
+html.dark-mode .score-input,
+html.dark-mode .rubric-textarea {
+  background: rgba(30, 41, 59, 0.92);
+  border-color: rgba(71, 85, 105, 0.55);
+  color: var(--color-text);
+}
+
+html.dark-mode .score-input::placeholder,
+html.dark-mode .rubric-textarea::placeholder {
+  color: var(--color-text-soft);
+}
+
+html.dark-mode .rubric-textarea:focus,
+html.dark-mode .score-input:focus {
+  background: rgba(15, 23, 42, 0.98);
 }
 
 .rubric-grid {
@@ -257,13 +260,6 @@ const progressPercent = computed(() => {
   min-height: 100px;
 }
 
-.rubric-textarea:focus,
-.score-input:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  background: rgba(255, 255, 255, 0.9);
-}
-
 .rubric-status {
   display: flex;
   align-items: center;
@@ -280,11 +276,11 @@ const progressPercent = computed(() => {
   transition: background 0.3s ease;
 }
 
-.status-dot.filled {
+.status-dot.has-rubric {
   background: #16a34a;
 }
 
-.status-dot.empty {
+.status-dot.no-rubric {
   background: #cbd5e1;
 }
 
@@ -385,4 +381,3 @@ const progressPercent = computed(() => {
   }
 }
 </style>
-

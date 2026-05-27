@@ -96,9 +96,9 @@
               <p class="course-meta">{{ test.courseTitle }} ({{ test.courseId }})</p>
               <p class="course-meta">Ungraded submissions: {{ test.ungradedCount }}</p>
             </div>
-            <router-link :to="`/instructor/exams/${test.examId}`" class="btn-primary">
+            <button type="button" class="btn-primary grade-now-btn" @click="goToExam(test.examId)">
               Grade Now
-            </router-link>
+            </button>
           </div>
         </div>
       </div>
@@ -112,10 +112,12 @@
 
 <script setup>
 import { computed, ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import { instructorAPI } from '../services/api'
 
 const authStore = useAuthStore()
+const router = useRouter()
 const loading = ref(false)
 const error = ref('')
 const dashboard = ref({
@@ -158,6 +160,10 @@ const formatPercent = (value) => {
   }
 
   return `${Number(value).toFixed(1)}%`
+}
+
+const goToExam = (examId) => {
+  router.push(`/instructor/exams/${examId}`)
 }
 
 const loadDashboard = async () => {
@@ -390,5 +396,37 @@ onMounted(() => {
   text-align: center;
   border: 1px solid var(--glass-border);
 }
-</style>
 
+.grade-now-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 140px;
+  white-space: nowrap;
+}
+
+html.dark-mode .dashboard-actions .action-card,
+html.dark-mode .stat-card,
+html.dark-mode .section,
+html.dark-mode .course-card,
+html.dark-mode .queue-item,
+html.dark-mode .empty-state,
+html.dark-mode .loading {
+  background: rgba(15, 23, 42, 0.9);
+  border-color: rgba(71, 85, 105, 0.35);
+}
+
+html.dark-mode .action-card p,
+html.dark-mode .course-meta,
+html.dark-mode .welcome-text,
+html.dark-mode .section-subtitle,
+html.dark-mode .status-line,
+html.dark-mode .stat-label {
+  color: var(--color-text-soft);
+}
+
+html.dark-mode .sparkline,
+html.dark-mode .course-sparkline {
+  background: rgba(15, 23, 42, 0.72);
+}
+</style>

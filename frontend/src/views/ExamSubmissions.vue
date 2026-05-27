@@ -101,7 +101,7 @@
               @click="startGrading(submission)"
               class="btn-primary"
             >
-              {{ submission.grade !== null ? 'Update Grade' : 'Grade' }}
+              {{ submission.grade !== null ? 'Update Grade' : 'Grade Now' }}
             </button>
             <button
               @click="autoGradeSubmission(submission)"
@@ -831,6 +831,77 @@ onMounted(() => {
   text-align: center;
   margin-top: 20px;
   border: 1px solid var(--glass-border);
+}
+
+html.dark-mode .submissions-container,
+html.dark-mode .loading,
+html.dark-mode .empty-state,
+html.dark-mode .rubric-panel,
+html.dark-mode .submission-card,
+html.dark-mode .grade-display,
+html.dark-mode .answer-preview,
+html.dark-mode .aggregate-grade,
+html.dark-mode .error-message {
+  background: rgba(15, 23, 42, 0.92);
+  border-color: rgba(71, 85, 105, 0.35);
+}
+
+html.dark-mode .section-title,
+html.dark-mode .page-title,
+html.dark-mode .submission-header h3,
+html.dark-mode .question-title,
+html.dark-mode .grade-value,
+html.dark-mode .form-group label,
+html.dark-mode .answer-preview strong,
+html.dark-mode .empty-state h3 {
+  color: var(--color-text);
+}
+
+html.dark-mode .submission-date,
+html.dark-mode .rubric-help,
+html.dark-mode .feedback-preview,
+html.dark-mode .student-answer-inline,
+html.dark-mode .question-max,
+html.dark-mode .grade-limit-hint,
+html.dark-mode .empty-state p {
+  color: var(--color-text-soft);
+}
+
+html.dark-mode .filters {
+  border-bottom-color: rgba(71, 85, 105, 0.35);
+}
+
+html.dark-mode .filter-btn {
+  background: rgba(30, 41, 59, 0.85);
+  color: var(--color-text);
+  border-color: rgba(71, 85, 105, 0.35);
+}
+
+html.dark-mode .filter-btn.active {
+  color: #f8fafc;
+}
+
+html.dark-mode .form-group input,
+html.dark-mode .form-group textarea,
+html.dark-mode .rubric-card input,
+html.dark-mode .rubric-card textarea {
+  background: rgba(30, 41, 59, 0.92);
+  border-color: rgba(71, 85, 105, 0.55);
+  color: var(--color-text);
+}
+
+html.dark-mode .form-group input::placeholder,
+html.dark-mode .form-group textarea::placeholder,
+html.dark-mode .rubric-card input::placeholder,
+html.dark-mode .rubric-card textarea::placeholder {
+  color: var(--color-text-soft);
+}
+
+html.dark-mode .card-actions .btn-primary,
+html.dark-mode .card-actions .btn-secondary,
+html.dark-mode .form-actions .btn-success,
+html.dark-mode .form-actions .btn-secondary {
+  color: #f8fafc;
 }
 </style>
 

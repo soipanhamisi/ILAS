@@ -455,7 +455,8 @@ const handleSubmit = async () => {
               if (retries < maxRetries) {
                 await new Promise((resolve) => setTimeout(resolve, retryDelay))
               } else {
-                throw retryErr
+                detailsResponse = null
+                console.error('Could not fetch exam details for rubric panel after retries:', retryErr)
               }
             }
           }
@@ -724,6 +725,65 @@ const handleSubmit = async () => {
 .rubric-section {
   max-width: 1000px;
   margin: 0 auto 24px auto;
+}
+
+html.dark-mode .form-card,
+html.dark-mode .manual-question-card,
+html.dark-mode .file-label,
+html.dark-mode .csv-format-info,
+html.dark-mode .csv-preview-info {
+  background: rgba(15, 23, 42, 0.92);
+  border-color: rgba(71, 85, 105, 0.35);
+}
+
+html.dark-mode .form-group label,
+html.dark-mode .manual-question-header h4,
+html.dark-mode .csv-format-info h4,
+html.dark-mode .csv-preview-info h4,
+html.dark-mode .page-title {
+  color: var(--color-text);
+}
+
+html.dark-mode .form-group input,
+html.dark-mode .form-group select,
+html.dark-mode .form-group textarea,
+html.dark-mode .score-input,
+html.dark-mode .rubric-textarea {
+  background: rgba(30, 41, 59, 0.92);
+  border-color: rgba(71, 85, 105, 0.55);
+  color: var(--color-text);
+}
+
+html.dark-mode .form-group input::placeholder,
+html.dark-mode .form-group textarea::placeholder,
+html.dark-mode .score-input::placeholder,
+html.dark-mode .rubric-textarea::placeholder {
+  color: var(--color-text-soft);
+}
+
+html.dark-mode .help-text,
+html.dark-mode .welcome-text,
+html.dark-mode .preview-error-message {
+  color: var(--color-text-soft);
+}
+
+html.dark-mode .csv-format-info pre,
+html.dark-mode .csv-preview-info pre {
+  background: rgba(2, 6, 23, 0.92);
+  color: var(--color-text);
+}
+
+html.dark-mode .error-message,
+html.dark-mode .success-message {
+  background: rgba(15, 23, 42, 0.85);
+  color: var(--color-text);
+  border-color: rgba(71, 85, 105, 0.35);
+}
+
+html.dark-mode .btn-danger {
+  background: rgba(30, 41, 59, 0.96);
+  color: var(--color-text);
+  border-color: rgba(71, 85, 105, 0.5);
 }
 </style>
 

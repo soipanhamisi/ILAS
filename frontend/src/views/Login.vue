@@ -427,5 +427,55 @@ const handleSignup = async () => {
   margin-top: 8px;
   margin-bottom: 4px;
 }
-</style>
 
+html.dark-mode .login-card {
+  background: rgba(15, 23, 42, 0.94);
+  border-color: rgba(71, 85, 105, 0.35);
+}
+
+html.dark-mode .auth-toggle {
+  background: rgba(15, 23, 42, 0.72);
+  border-color: rgba(71, 85, 105, 0.35);
+}
+
+html.dark-mode .toggle-btn {
+  color: var(--color-text-soft);
+}
+
+html.dark-mode .toggle-btn.active {
+  background: rgba(30, 41, 59, 0.96);
+  color: var(--color-text);
+}
+
+html.dark-mode .form-group label {
+  color: var(--color-text);
+}
+
+html.dark-mode .form-group input,
+html.dark-mode .form-group select {
+  background: rgba(30, 41, 59, 0.92);
+  border-color: rgba(71, 85, 105, 0.55);
+  color: var(--color-text);
+}
+
+html.dark-mode .form-group input::placeholder,
+html.dark-mode .form-group select::placeholder {
+  color: var(--color-text-soft);
+}
+
+html.dark-mode .btn-login {
+  color: #f8fafc;
+}
+
+html.dark-mode .error-message,
+html.dark-mode .success-message,
+html.dark-mode .demo-info {
+  background: rgba(15, 23, 42, 0.8);
+  border-color: rgba(71, 85, 105, 0.35);
+  color: var(--color-text);
+}
+
+html.dark-mode .demo-info strong {
+  color: var(--color-text);
+}
+</style>
