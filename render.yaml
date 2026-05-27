@@ -1,0 +1,59 @@
+services:
+  - type: web
+    name: ilas-backend
+    env: docker
+    plan: starter
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /actuator/health
+    autoDeploy: true
+    disk:
+      name: ilas-upload-disk
+      mountPath: /data/ilas/uploads
+      sizeGB: 1
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: PORT
+        value: 8081
+      - key: FILE_STORAGE_UPLOAD_DIR
+        value: /data/ilas/uploads
+      - key: DB_URL
+        value: jdbc:mysql://ilas-mysql:3306/ilas_db
+      - key: DB_USERNAME
+        value: ilas_user
+      - key: DB_PASSWORD
+        sync: false
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://ilas-frontend.onrender.com
+
+  - type: web
+    name: ilas-frontend
+    env: docker
+    plan: starter
+    dockerfilePath: ./frontend/Dockerfile
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://ilas-backend.onrender.com/api
+
+  - type: pserv
+    name: ilas-mysql
+    env: docker
+    plan: starter
+    dockerfilePath: ./mysql/Dockerfile
+    autoDeploy: true
+    disk:
+      name: ilas-mysql-disk
+      mountPath: /var/lib/mysql
+      sizeGB: 10
+    envVars:
+      - key: MYSQL_ROOT_PASSWORD
+        sync: false
+      - key: MYSQL_DATABASE
+        value: ilas_db
+      - key: MYSQL_USER
+        value: ilas_user
+      - key: MYSQL_PASSWORD
+        sync: false
+

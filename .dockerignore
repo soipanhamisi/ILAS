@@ -1,0 +1,26 @@
+# Build outputs
+target
+**/target
+frontend/dist
+
+# Node dependencies
+frontend/node_modules
+**/node_modules
+
+# VCS / IDE
+.git
+.idea
+*.iml
+
+# Local environment files
+.env
+.env.*
+!.env.production.example
+
+# Runtime storage and logs
+storage/exam-assessments/*
+*.log
+
+
+
+
