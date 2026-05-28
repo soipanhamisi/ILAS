@@ -53,7 +53,7 @@ services:
       - key: MYSQL_DATABASE
         value: ilas_db
       - key: MYSQL_USER
-        value: ilas_user
+        value: root
       - key: MYSQL_PASSWORD
         sync: false
 
