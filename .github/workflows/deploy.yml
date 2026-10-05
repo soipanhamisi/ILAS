@@ -3,7 +3,7 @@ name: Deploy to GCP VM
 on:
   push:
     branches:
-      - gcp-vm-deployment
+      - gcp-deployment
 
 jobs:
   deploy:
