@@ -1,4 +1,4 @@
-# 🎓 ILAS - Integrated Learning Assessment System
+#  ILAS - Integrated Learning Assessment System
 
 [![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)]()
 [![Backend](https://img.shields.io/badge/Backend-Spring%20Boot-green)]()
@@ -11,7 +11,7 @@ A complete, modern full-stack Learning Management System for exam creation, subm
 
 ## 🌟 Features
 
-### 👨‍🏫 For Instructors
+###  For Instructors
 - ✅ Create exams with CSV templates
 - ✅ View all student submissions
 - ✅ Grade submissions with detailed feedback
@@ -19,7 +19,7 @@ A complete, modern full-stack Learning Management System for exam creation, subm
 - ✅ Filter submissions (graded/ungraded)
 - ✅ Update grades and feedback
 
-### 👨‍🎓 For Students
+###  For Students
 - ✅ View available exams from enrolled courses
 - ✅ Submit exam responses via CSV upload
 - ✅ View grades with percentages
@@ -29,7 +29,7 @@ A complete, modern full-stack Learning Management System for exam creation, subm
 
 ---
 
-## 🏗️ Architecture
+##  Architecture
 
 ```
 ┌─────────────────────────────────────┐
@@ -55,7 +55,7 @@ A complete, modern full-stack Learning Management System for exam creation, subm
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 - Java JDK 17+
@@ -104,25 +104,25 @@ npm run dev
 ## 📖 Documentation
 
 ### Getting Started
-- 📘 **[Setup & Run Guide](SETUP_AND_RUN_GUIDE.md)** - Complete setup instructions
-- 📋 **[Project Structure](PROJECT_STRUCTURE.md)** - File organization
+-  **[Setup & Run Guide](SETUP_AND_RUN_GUIDE.md)** - Complete setup instructions
+-  **[Project Structure](PROJECT_STRUCTURE.md)** - File organization
 
 ### Backend Documentation
-- 🔗 **[API Documentation](API_DOCUMENTATION.md)** - REST API reference
-- 💼 **[Service Layer Docs](SERVICE_LAYER_DOCUMENTATION.md)** - Business logic
-- 🎮 **[Controller Guide](CONTROLLER_IMPLEMENTATION_GUIDE.md)** - API controllers
+- **[API Documentation](API_DOCUMENTATION.md)** - REST API reference
+- **[Service Layer Docs](SERVICE_LAYER_DOCUMENTATION.md)** - Business logic
+- **[Controller Guide](CONTROLLER_IMPLEMENTATION_GUIDE.md)** - API controllers
 
 ### Frontend Documentation
-- 🎨 **[Frontend README](frontend/README.md)** - Vue.js application guide
-- 📊 **[Frontend Summary](FRONTEND_COMPLETE_SUMMARY.md)** - Complete overview
+- **[Frontend README](frontend/README.md)** - Vue.js application guide
+- **[Frontend Summary](FRONTEND_COMPLETE_SUMMARY.md)** - Complete overview
 
 ### Quick References
-- ⚡ **[Quick Reference](SERVICES_QUICK_REFERENCE.md)** - Fast lookup
-- 📑 **[Documentation Index](DOCUMENTATION_INDEX.md)** - All docs indexed
+- **[Quick Reference](SERVICES_QUICK_REFERENCE.md)** - Fast lookup
+- **[Documentation Index](DOCUMENTATION_INDEX.md)** - All docs indexed
 
 ---
 
-## 🎯 Demo Credentials
+## Demo Credentials
 
 ### Admin
 ```
@@ -234,7 +234,7 @@ GET    /api/student/exams/{examId}/submitted
 
 ---
 
-## 🧪 Testing
+## Testing
 
 ### Manual Testing
 1. Start backend and frontend
@@ -256,7 +256,7 @@ Import Postman collection: `ILAS_Exam_System.postman_collection.json`
 
 ---
 
-## 📝 CSV File Format
+## CSV File Format
 
 ### Exam Template
 ```csv
@@ -274,7 +274,7 @@ Define OOP?,Object-oriented programming...,[20],
 
 ---
 
-## 🎨 Screenshots
+## Screenshots
 
 ### Landing Page
 Beautiful gradient design with feature cards
@@ -325,7 +325,7 @@ npm run build
 
 ---
 
-## 📦 Deployment
+## Deployment
 
 ### Backend Deployment
 1. Build JAR: `.\mvnw.cmd clean package`
@@ -341,7 +341,7 @@ npm run build
 
 ---
 
-## 🔐 Security
+## Security
 
 ### Current Implementation
 - Simple ID-based authentication
@@ -360,7 +360,7 @@ npm run build
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 This is a complete educational project. To extend:
 
