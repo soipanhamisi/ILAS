@@ -1,0 +1,15 @@
+<svg width="800" height="480" viewBox="0 0 800 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="800" y2="480" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#303853"/>
+      <stop offset="1" stop-color="#202638"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="480" rx="24" fill="url(#bg)"/>
+  <rect x="58" y="102" width="430" height="244" rx="18" fill="#C5B1FF" fill-opacity="0.2" stroke="#A7AEC6" stroke-opacity="0.24" stroke-width="3"/>
+  <rect x="540" y="126" width="202" height="288" rx="26" fill="#1A2031" stroke="#A7AEC6" stroke-opacity="0.24" stroke-width="6"/>
+  <rect x="566" y="162" width="150" height="192" rx="14" fill="#C5B1FF" fill-opacity="0.3"/>
+  <rect x="112" y="368" width="322" height="18" rx="9" fill="#A7AEC6" fill-opacity="0.24"/>
+  <text x="58" y="82" fill="#EEF1F8" font-size="42" font-family="Segoe UI, Arial, sans-serif" font-weight="700">Cross-Platform UX</text>
+</svg>
+

@@ -509,6 +509,10 @@ const handleSubmit = async () => {
   margin-bottom: 32px;
 }
 
+.container {
+  padding: 18px 4px;
+}
+
 .page-title {
   font-size: 32px;
   font-weight: 700;
@@ -520,7 +524,7 @@ const handleSubmit = async () => {
   margin: 0 auto;
   background: var(--glass-bg-strong);
   border: 1px solid var(--glass-border);
-  backdrop-filter: blur(16px);
+  border-radius: 22px;
 }
 
 .form-group {
@@ -539,9 +543,11 @@ const handleSubmit = async () => {
 .form-group textarea {
   width: 100%;
   padding: 12px;
-  border: 2px solid rgba(112, 113, 77, 0.3);
-  border-radius: 8px;
+  border: 1px solid rgba(130, 142, 181, 0.28);
+  border-radius: 12px;
   font-size: 16px;
+  background: rgba(29, 34, 46, 0.9);
+  color: var(--color-text);
 }
 
 .form-group textarea {
@@ -567,9 +573,9 @@ const handleSubmit = async () => {
 }
 
 .manual-question-card {
-  background: rgba(255, 255, 255, 0.42);
-  border: 1px solid rgba(255, 255, 255, 0.48);
-  border-radius: 8px;
+  background: rgba(45, 50, 66, 0.84);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
   padding: 16px;
   margin-bottom: 16px;
   backdrop-filter: blur(10px);
@@ -588,9 +594,9 @@ const handleSubmit = async () => {
 }
 
 .btn-danger {
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  background: rgba(255, 255, 255, 0.58);
-  color: var(--color-text);
+  border: 1px solid rgba(187, 90, 99, 0.45);
+  background: rgba(187, 90, 99, 0.2);
+  color: #ffd7dc;
   border-radius: 8px;
   padding: 8px 12px;
   cursor: pointer;
@@ -613,18 +619,18 @@ const handleSubmit = async () => {
 .file-label {
   display: block;
   padding: 16px;
-  border: 2px dashed rgba(255, 255, 255, 0.62);
-  border-radius: 8px;
+  border: 1px dashed rgba(130, 142, 181, 0.62);
+  border-radius: 12px;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.42);
+  background: rgba(45, 50, 66, 0.84);
   color: var(--color-text);
 }
 
 .file-label:hover {
-  border-color: var(--color-accent);
-  background: rgba(182, 223, 217, 0.3);
+  border-color: rgba(197, 177, 255, 0.55);
+  background: rgba(58, 64, 85, 0.9);
 }
 
 .help-text {
@@ -635,12 +641,12 @@ const handleSubmit = async () => {
 }
 
 .csv-format-info {
-  background: rgba(255, 255, 255, 0.48);
+  background: rgba(45, 50, 66, 0.84);
   padding: 16px;
   border-radius: 8px;
   margin-bottom: 24px;
   border: 1px solid var(--glass-border);
-  backdrop-filter: blur(10px);
+  border-radius: 14px;
 }
 
 .csv-format-info h4 {
@@ -649,7 +655,7 @@ const handleSubmit = async () => {
 }
 
 .csv-format-info pre {
-  background: rgba(246, 245, 230, 0.72);
+  background: rgba(29, 34, 46, 0.92);
   padding: 12px;
   border-radius: 4px;
   overflow-x: auto;
@@ -658,12 +664,12 @@ const handleSubmit = async () => {
 }
 
 .csv-preview-info {
-  background: rgba(255, 255, 255, 0.48);
+  background: rgba(45, 50, 66, 0.84);
   padding: 16px;
   border-radius: 8px;
   margin-bottom: 24px;
   border: 1px solid var(--glass-border);
-  backdrop-filter: blur(10px);
+  border-radius: 14px;
 }
 
 .csv-preview-info h4 {
@@ -672,7 +678,7 @@ const handleSubmit = async () => {
 }
 
 .csv-preview-info pre {
-  background: rgba(246, 245, 230, 0.72);
+  background: rgba(29, 34, 46, 0.92);
   padding: 12px;
   border-radius: 4px;
   overflow-x: auto;
@@ -682,8 +688,8 @@ const handleSubmit = async () => {
 }
 
 .preview-error-message {
-  background: rgba(255, 255, 255, 0.56);
-  color: var(--color-primary);
+  background: rgba(187, 90, 99, 0.2);
+  color: #ffd7dc;
   padding: 12px;
   border-radius: 6px;
   border: 1px solid var(--glass-border);
@@ -701,8 +707,8 @@ const handleSubmit = async () => {
 }
 
 .success-message {
-  background: rgba(255, 255, 255, 0.56);
-  color: var(--color-primary);
+  background: rgba(147, 213, 176, 0.18);
+  color: #b9f2ce;
   padding: 16px;
   border-radius: 8px;
   text-align: center;
@@ -712,8 +718,8 @@ const handleSubmit = async () => {
 }
 
 .error-message {
-  background: rgba(255, 255, 255, 0.56);
-  color: var(--color-primary);
+  background: rgba(187, 90, 99, 0.2);
+  color: #ffd7dc;
   padding: 16px;
   border-radius: 8px;
   text-align: center;

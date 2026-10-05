@@ -1,0 +1,17 @@
+<svg width="800" height="480" viewBox="0 0 800 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="480" x2="800" y2="0" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#202637"/>
+      <stop offset="1" stop-color="#3A435E"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="480" rx="24" fill="url(#bg)"/>
+  <rect x="98" y="84" width="210" height="324" rx="28" fill="#111624" stroke="#A7AEC6" stroke-opacity="0.26" stroke-width="8"/>
+  <rect x="122" y="124" width="162" height="214" rx="16" fill="#C5B1FF" fill-opacity="0.28"/>
+  <circle cx="203" cy="370" r="12" fill="#A7AEC6" fill-opacity="0.45"/>
+  <rect x="360" y="106" width="378" height="28" rx="14" fill="#A7AEC6" fill-opacity="0.22"/>
+  <rect x="360" y="152" width="320" height="18" rx="9" fill="#A7AEC6" fill-opacity="0.2"/>
+  <rect x="360" y="186" width="280" height="18" rx="9" fill="#A7AEC6" fill-opacity="0.14"/>
+  <text x="360" y="288" fill="#EEF1F8" font-size="44" font-family="Segoe UI, Arial, sans-serif" font-weight="700">Mobile First Design</text>
+</svg>
+

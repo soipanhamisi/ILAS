@@ -1,0 +1,17 @@
+<svg width="800" height="480" viewBox="0 0 800 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="800" y1="0" x2="0" y2="480" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#39425B"/>
+      <stop offset="1" stop-color="#202637"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="480" rx="24" fill="url(#bg)"/>
+  <rect x="64" y="320" width="88" height="88" rx="12" fill="#C5B1FF" fill-opacity="0.25"/>
+  <rect x="176" y="274" width="88" height="134" rx="12" fill="#C5B1FF" fill-opacity="0.35"/>
+  <rect x="288" y="230" width="88" height="178" rx="12" fill="#C5B1FF" fill-opacity="0.5"/>
+  <rect x="400" y="184" width="88" height="224" rx="12" fill="#C5B1FF" fill-opacity="0.62"/>
+  <rect x="522" y="88" width="214" height="26" rx="13" fill="#A7AEC6" fill-opacity="0.22"/>
+  <rect x="522" y="130" width="180" height="20" rx="10" fill="#A7AEC6" fill-opacity="0.18"/>
+  <text x="64" y="142" fill="#EEF1F8" font-size="44" font-family="Segoe UI, Arial, sans-serif" font-weight="700">Product Analytics</text>
+</svg>
+

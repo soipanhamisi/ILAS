@@ -162,9 +162,9 @@ const progressPercent = computed(() => {
 
 <style scoped>
 .rubric-panel {
-  background: rgba(255, 255, 255, 0.48);
-  border: 1px solid rgba(255, 255, 255, 0.62);
-  border-radius: 8px;
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--glass-border);
+  border-radius: 18px;
   padding: 20px;
   margin-bottom: 24px;
   backdrop-filter: blur(10px);
@@ -210,9 +210,9 @@ const progressPercent = computed(() => {
 }
 
 .rubric-card {
-  background: rgba(255, 255, 255, 0.56);
-  border: 1px solid rgba(255, 255, 255, 0.62);
-  border-radius: 8px;
+  background: rgba(45, 50, 66, 0.84);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
   padding: 16px;
   display: flex;
   flex-direction: column;
@@ -244,11 +244,11 @@ const progressPercent = computed(() => {
 .rubric-textarea {
   width: 100%;
   padding: 8px;
-  border: 1px solid rgba(112, 113, 77, 0.3);
-  border-radius: 4px;
+  border: 1px solid rgba(130, 142, 181, 0.28);
+  border-radius: 10px;
   font-family: inherit;
   font-size: 14px;
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(29, 34, 46, 0.9);
   color: var(--color-text);
 }
 
@@ -260,8 +260,8 @@ const progressPercent = computed(() => {
 .rubric-textarea:focus,
 .score-input:focus {
   outline: none;
-  border-color: var(--color-primary);
-  background: rgba(255, 255, 255, 0.9);
+  border-color: #bca6ff;
+  box-shadow: 0 0 0 3px rgba(197, 177, 255, 0.2);
 }
 
 .rubric-status {
@@ -281,21 +281,21 @@ const progressPercent = computed(() => {
 }
 
 .status-dot.filled {
-  background: #16a34a;
+  background: #b9f2ce;
 }
 
 .status-dot.empty {
-  background: #cbd5e1;
+  background: #6a728d;
 }
 
 .status-text {
   font-size: 12px;
-  color: #16a34a;
+  color: #b9f2ce;
   font-weight: 600;
 }
 
 .status-text.empty {
-  color: #64748b;
+  color: #9ca5bf;
 }
 
 .progress-indicator {
@@ -314,14 +314,14 @@ const progressPercent = computed(() => {
 .progress-bar {
   width: 100%;
   height: 6px;
-  background: rgba(112, 113, 77, 0.2);
+  background: rgba(64, 71, 94, 0.8);
   border-radius: 3px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  background: linear-gradient(90deg, #d8ccff, #bca6ff);
   transition: width 0.3s ease;
   border-radius: 3px;
 }
@@ -339,8 +339,8 @@ const progressPercent = computed(() => {
 .loading-spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid rgba(112, 113, 77, 0.2);
-  border-top-color: var(--color-primary);
+  border: 4px solid rgba(130, 142, 181, 0.2);
+  border-top-color: #d8ccff;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
   margin-bottom: 16px;

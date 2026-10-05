@@ -1,10 +1,24 @@
 <template>
   <div class="login-container">
+    <div class="login-aside">
+      <p class="aside-eyebrow">Welcome to</p>
+      <h1>ILAS</h1>
+      <p>
+        Unified workspace for course delivery, intelligent assessments, and feedback loops.
+      </p>
+      <img
+        :src="loginAsideImage"
+        alt="Students learning together"
+        class="aside-placeholder"
+        @error="onAsideImageError"
+      />
+    </div>
+
     <div class="login-card">
       <div class="auth-header">
-        <h1 class="login-title">🎓 ILAS</h1>
+        <h2 class="login-title">ILAS Access</h2>
         <p class="login-subtitle">
-          {{ isSignup ? 'Join the learning platform' : 'Welcome back! 👋' }}
+          {{ isSignup ? 'Create your account' : 'Sign in to continue' }}
         </p>
       </div>
 
@@ -144,8 +158,6 @@
       <!-- Demo Credentials -->
       <div class="demo-info">
         <p><strong>Demo Credentials:</strong></p>
-        <p><strong>Admin:</strong></p>
-        <p>🛡️ admin / password123</p>
         <p><strong>Instructors:</strong></p>
         <p>📧 smith_instructor / password123</p>
         <p>📧 johnson_instructor / password123</p>
@@ -166,6 +178,16 @@ import { getDashboardRoute } from '../utils/roleRedirect'
 
 const router = useRouter()
 const authStore = useAuthStore()
+
+const loginAsideImage = new URL('../assets/ui-images/studentlearning-illustration.jpg', import.meta.url).href
+const loginFallbackImage = new URL('../assets/ui-images/course-covers/cross-platform.svg', import.meta.url).href
+
+const onAsideImageError = (event) => {
+  const image = event.target
+  if (image && image.src !== loginFallbackImage) {
+    image.src = loginFallbackImage
+  }
+}
 
 const isSignup = ref(false)
 const userType = ref('')
@@ -263,21 +285,60 @@ const handleSignup = async () => {
 <style scoped>
 .login-container {
   min-height: 100vh;
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: minmax(300px, 420px) minmax(340px, 460px);
   justify-content: center;
-  padding: 20px;
+  align-items: center;
+  gap: 28px;
+  padding: 28px;
+}
+
+.login-aside {
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--glass-border);
+  border-radius: 28px;
+  padding: 30px;
+  box-shadow: var(--shadow-soft);
+}
+
+.aside-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-muted);
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.login-aside h1 {
+  font-size: 52px;
+  line-height: 0.95;
+  margin-bottom: 12px;
+}
+
+.login-aside p {
+  color: var(--color-text-soft);
+  margin-bottom: 18px;
+}
+
+.aside-placeholder {
+  display: block;
+  width: 100%;
+  min-height: 200px;
+  max-height: 260px;
+  border-radius: 18px;
+  border: 1px solid var(--glass-border);
+  background: linear-gradient(145deg, #2e3446 0%, #252a38 100%);
+  object-fit: cover;
 }
 
 .login-card {
   background: var(--glass-bg-strong);
-  border-radius: 24px;
-  padding: 48px;
+  border-radius: 28px;
+  padding: 36px;
   box-shadow: var(--shadow-strong);
-  max-width: 450px;
+  max-width: 460px;
   width: 100%;
   border: 1px solid var(--glass-border);
-  backdrop-filter: blur(16px);
 }
 
 .auth-header {
@@ -286,7 +347,7 @@ const handleSignup = async () => {
 }
 
 .login-title {
-  font-size: 40px;
+  font-size: 34px;
   font-weight: 800;
   color: var(--color-primary);
   margin-bottom: 8px;
@@ -301,10 +362,10 @@ const handleSignup = async () => {
   display: flex;
   gap: 12px;
   margin-bottom: 32px;
-  background: rgba(255, 255, 255, 0.42);
+  background: rgba(55, 61, 81, 0.55);
   padding: 6px;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(130, 142, 181, 0.25);
 }
 
 .toggle-btn {
@@ -320,8 +381,8 @@ const handleSignup = async () => {
 }
 
 .toggle-btn.active {
-  background: rgba(255, 255, 255, 0.7);
-  color: var(--color-primary);
+  background: rgba(197, 177, 255, 0.26);
+  color: #e4d9ff;
 }
 
 .login-form {
@@ -345,24 +406,23 @@ const handleSignup = async () => {
 .form-group input,
 .form-group select {
   padding: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(130, 142, 181, 0.3);
   border-radius: 12px;
   font-size: 16px;
-  background: rgba(255, 255, 255, 0.66);
-  backdrop-filter: blur(10px);
+  background: rgba(29, 34, 46, 0.9);
   color: var(--color-text);
 }
 
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 4px rgba(182, 223, 217, 0.35);
+  border-color: #bca6ff;
+  box-shadow: 0 0 0 4px rgba(197, 177, 255, 0.22);
 }
 
 .btn-login {
-  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-accent) 100%);
-  color: #224139;
+  background: linear-gradient(135deg, #d8ccff 0%, #bca6ff 100%);
+  color: #17181f;
   padding: 16px;
   border-radius: 999px;
   font-size: 18px;
@@ -384,8 +444,8 @@ const handleSignup = async () => {
 }
 
 .error-message {
-  background: rgba(255, 255, 255, 0.55);
-  color: var(--color-primary);
+  background: rgba(187, 90, 99, 0.2);
+  color: #ffd7dc;
   padding: 12px;
   border-radius: 8px;
   text-align: center;
@@ -395,8 +455,8 @@ const handleSignup = async () => {
 }
 
 .success-message {
-  background: rgba(255, 255, 255, 0.56);
-  color: var(--color-primary);
+  background: rgba(147, 213, 176, 0.18);
+  color: #b9f2ce;
   padding: 12px;
   border-radius: 8px;
   text-align: center;
@@ -409,7 +469,7 @@ const handleSignup = async () => {
 .demo-info {
   margin-top: 24px;
   padding: 16px;
-  background: rgba(255, 255, 255, 0.48);
+  background: rgba(55, 61, 81, 0.45);
   border-radius: 8px;
   font-size: 13px;
   color: var(--color-text-soft);
@@ -426,6 +486,16 @@ const handleSignup = async () => {
   display: block;
   margin-top: 8px;
   margin-bottom: 4px;
+}
+
+@media (max-width: 980px) {
+  .login-container {
+    grid-template-columns: 1fr;
+  }
+
+  .login-aside {
+    display: none;
+  }
 }
 </style>
 

@@ -7,18 +7,16 @@
         <header class="top-utility-bar">
           <div class="utility-left">
             <button @click="toggleMobileMenu" class="btn-menu-toggle">
-              <span class="menu-icon">☰</span>
+              <span class="menu-icon">|||</span>
             </button>
             <div>
-              <p class="top-utility-label">Learning Management</p>
+              <p class="top-utility-label">ILAS Learning Workspace</p>
               <h1 class="top-utility-title">{{ currentSectionTitle }}</h1>
             </div>
           </div>
 
           <div class="top-utility-user">
-            <button @click="toggleTheme" class="btn-theme-toggle" :title="isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
-              <span class="theme-icon">{{ isDarkMode ? '☀️' : '🌙' }}</span>
-            </button>
+            <span class="header-chip">Dark Baseline</span>
             <span class="user-pill">{{ authStore.user?.name }}</span>
             <span class="role-pill">{{ authStore.userType }}</span>
           </div>
@@ -59,15 +57,10 @@ const routeTitleMap = {
 
 const useLmsShell = computed(() => authStore.isAuthenticated && route.meta.requiresAuth)
 const currentSectionTitle = computed(() => routeTitleMap[route.name] || 'Course Workspace')
-const isDarkMode = computed(() => themeStore.isDarkMode)
 let heartbeatTimer = null
 
 const toggleMobileMenu = () => {
   navBarRef.value?.toggleDrawer()
-}
-
-const toggleTheme = () => {
-  themeStore.toggleDarkMode()
 }
 
 const sendHeartbeat = async () => {
@@ -93,7 +86,8 @@ const stopHeartbeat = () => {
 }
 
 onMounted(() => {
-  themeStore.initializeTheme()
+  themeStore.isDarkMode = true
+  themeStore.applyTheme()
   authStore.checkAuth()
   if (authStore.isAuthenticated) {
     startHeartbeat()
@@ -115,42 +109,38 @@ onBeforeUnmount(() => {
 
 <style>
 :root {
-  /* Light mode colors (default) */
-  --color-primary: #111827;
-  --color-surface: #e5e7eb;
-  --color-surface-strong: #f3f4f6;
-  --color-muted: #6b7280;
-  --color-accent: #2563eb;
-  --color-bg: #f8fafc;
-  --color-text: #111827;
-  --color-text-soft: #4b5563;
-  --color-white: #ffffff;
-  --glass-bg: rgba(248, 250, 252, 0.72);
-  --glass-bg-strong: rgba(255, 255, 255, 0.9);
-  --glass-border: rgba(148, 163, 184, 0.28);
-  --shadow-soft: 0 8px 20px rgba(15, 23, 42, 0.08);
-  --shadow-strong: 0 20px 40px rgba(15, 23, 42, 0.16);
-
-  /* Theme transition */
+  --color-primary: #f4f6fd;
+  --color-surface: #2a2f3d;
+  --color-surface-strong: #1f232f;
+  --color-muted: #a7aec6;
+  --color-accent: #c5b1ff;
+  --color-bg: #13161f;
+  --color-text: #eef1f8;
+  --color-text-soft: #b4bad0;
+  --color-white: #2b3141;
+  --glass-bg: rgba(31, 35, 47, 0.88);
+  --glass-bg-strong: rgba(38, 43, 57, 0.96);
+  --glass-border: rgba(130, 142, 181, 0.24);
+  --shadow-soft: 0 12px 32px rgba(0, 0, 0, 0.35);
+  --shadow-strong: 0 22px 48px rgba(0, 0, 0, 0.52);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Dark mode colors */
 html.dark-mode {
-  --color-primary: #f1f5f9;
-  --color-surface: #1f293a;
-  --color-surface-strong: #0f172a;
-  --color-muted: #cbd5e1;
-  --color-accent: #3b82f6;
-  --color-bg: #0f172a;
-  --color-text: #f1f5f9;
-  --color-text-soft: #cbd5e1;
-  --color-white: #1e293b;
-  --glass-bg: rgba(15, 23, 42, 0.72);
-  --glass-bg-strong: rgba(30, 41, 59, 0.9);
-  --glass-border: rgba(71, 85, 105, 0.28);
-  --shadow-soft: 0 8px 20px rgba(0, 0, 0, 0.4);
-  --shadow-strong: 0 20px 40px rgba(0, 0, 0, 0.6);
+  --color-primary: #f4f6fd;
+  --color-surface: #2a2f3d;
+  --color-surface-strong: #1f232f;
+  --color-muted: #a7aec6;
+  --color-accent: #c5b1ff;
+  --color-bg: #13161f;
+  --color-text: #eef1f8;
+  --color-text-soft: #b4bad0;
+  --color-white: #2b3141;
+  --glass-bg: rgba(31, 35, 47, 0.88);
+  --glass-bg-strong: rgba(38, 43, 57, 0.96);
+  --glass-border: rgba(130, 142, 181, 0.24);
+  --shadow-soft: 0 12px 32px rgba(0, 0, 0, 0.35);
+  --shadow-strong: 0 22px 48px rgba(0, 0, 0, 0.52);
 }
 
 #app {
@@ -166,22 +156,22 @@ html.dark-mode {
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+  background: radial-gradient(circle at top right, #1f2330 0%, #13161f 60%);
   color: var(--color-text);
   line-height: 1.55;
   transition: background 0.3s ease, color 0.3s ease;
 }
 
 html.dark-mode body {
-  background: linear-gradient(180deg, #0f172a 0%, #1f293a 100%);
+  background: radial-gradient(circle at top right, #1f2330 0%, #13161f 60%);
 }
 
 button {
   cursor: pointer;
-  border: none;
-  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
   padding: 10px 20px;
-  font-size: 16px;
+  font-size: 15px;
   transition: all 0.3s ease;
 }
 
@@ -198,56 +188,48 @@ button:disabled {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #0f172a 0%, #1f2937 100%);
-  color: #f8fafc;
+  background: linear-gradient(135deg, #d8ccff 0%, #bca6ff 100%);
+  color: #17181f;
+  font-weight: 700;
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.96);
+  background: rgba(64, 71, 94, 0.65);
   color: var(--color-text);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(10px);
 }
 
 .btn-success {
-  background: linear-gradient(135deg, #1d4ed8 0%, var(--color-accent) 100%);
-  color: #f8fafc;
+  background: linear-gradient(135deg, #d8ccff 0%, #bca6ff 100%);
+  color: #17181f;
+  font-weight: 700;
 }
 
 .btn-danger {
-  background: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%);
-  color: #fff5f5;
+  background: rgba(187, 90, 99, 0.3);
+  color: #ffd2d7;
 }
 
 input, textarea, select {
   width: 100%;
   padding: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(130, 142, 181, 0.28);
   border-radius: 12px;
   font-size: 16px;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  background: rgba(255, 255, 255, 0.66);
+  background: rgba(29, 34, 46, 0.9);
   backdrop-filter: blur(10px);
-  color: var(--color-text);
-}
-
-html.dark-mode input,
-html.dark-mode textarea,
-html.dark-mode select {
-  background: rgba(30, 41, 59, 0.8);
-  border-color: rgba(71, 85, 105, 0.55);
   color: var(--color-text);
 }
 
 input:focus, textarea:focus, select:focus {
   outline: none;
-  border-color: #60a5fa;
-  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.18);
+  border-color: #bca6ff;
+  box-shadow: 0 0 0 4px rgba(197, 177, 255, 0.2);
 }
 
 .card {
   background: var(--glass-bg-strong);
-  border-radius: 20px;
+  border-radius: 22px;
   padding: 24px;
   box-shadow: var(--shadow-soft);
   margin-bottom: 20px;
@@ -272,7 +254,7 @@ input:focus, textarea:focus, select:focus {
 .lms-layout {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 280px minmax(0, 1fr);
+  grid-template-columns: 270px minmax(0, 1fr);
   overflow: hidden;
 }
 
@@ -285,18 +267,14 @@ input:focus, textarea:focus, select:focus {
 }
 
 .top-utility-bar {
-  padding: 18px 28px;
-  background: rgba(255, 255, 255, 0.96);
+  padding: 18px 28px 14px;
+  background: rgba(19, 22, 31, 0.85);
   border-bottom: 1px solid var(--glass-border);
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 16px;
   transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-html.dark-mode .top-utility-bar {
-  background: rgba(15, 23, 42, 0.96);
 }
 
 .utility-left {
@@ -310,7 +288,7 @@ html.dark-mode .top-utility-bar {
 .btn-menu-toggle {
   display: none;
   background: none;
-  color: var(--color-primary);
+  color: var(--color-text);
   border: none;
   padding: 8px;
   cursor: pointer;
@@ -320,48 +298,17 @@ html.dark-mode .top-utility-bar {
 }
 
 .btn-menu-toggle:hover {
-  background: rgba(148, 163, 184, 0.15);
+  background: rgba(130, 142, 181, 0.2);
   border-radius: 8px;
 }
 
-.btn-theme-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  background: rgba(226, 232, 240, 0.5);
+.header-chip {
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(64, 71, 94, 0.65);
+  color: var(--color-text-soft);
+  font-size: 12px;
   border: 1px solid var(--glass-border);
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 20px;
-}
-
-.btn-theme-toggle:hover {
-  background: rgba(226, 232, 240, 0.8);
-  box-shadow: var(--shadow-soft);
-  transform: translateY(-2px);
-}
-
-html.dark-mode .btn-theme-toggle {
-  background: rgba(71, 85, 105, 0.5);
-}
-
-html.dark-mode .btn-theme-toggle:hover {
-  background: rgba(71, 85, 105, 0.8);
-}
-
-.theme-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-  transition: transform 0.3s ease;
-}
-
-.btn-theme-toggle:active .theme-icon {
-  transform: scale(1.1) rotate(20deg);
 }
 
 .menu-icon {
@@ -373,11 +320,11 @@ html.dark-mode .btn-theme-toggle:hover {
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--color-muted);
+  color: #979eb7;
 }
 
 .top-utility-title {
-  font-size: 22px;
+  font-size: 28px;
   color: var(--color-primary);
   white-space: nowrap;
   overflow: hidden;
@@ -395,27 +342,17 @@ html.dark-mode .btn-theme-toggle:hover {
 .role-pill {
   padding: 6px 12px;
   border-radius: 999px;
-  background: #e2e8f0;
+  background: rgba(64, 71, 94, 0.7);
   font-size: 12px;
   font-weight: 700;
-  color: #0f172a;
+  color: #f2f4fb;
   transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-html.dark-mode .user-pill {
-  background: #334155;
-  color: #f1f5f9;
 }
 
 .role-pill {
   text-transform: uppercase;
-  background: #dbeafe;
-  color: #1e3a8a;
-}
-
-html.dark-mode .role-pill {
-  background: #1e3a8a;
-  color: #bfdbfe;
+  background: rgba(197, 177, 255, 0.25);
+  color: #d9ccff;
 }
 
 .lms-workspace {
@@ -423,6 +360,7 @@ html.dark-mode .role-pill {
   overflow: auto;
   display: flex;
   flex-direction: column;
+  padding: 12px 24px 24px;
 }
 
 .lms-workspace .container {
@@ -450,7 +388,7 @@ html.dark-mode .role-pill {
   }
 
   .top-utility-title {
-    font-size: 18px;
+    font-size: 22px;
   }
 
   .user-pill,
