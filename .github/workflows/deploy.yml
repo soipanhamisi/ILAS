@@ -23,18 +23,18 @@ jobs:
             git pull --branch gcp-deployment --single-branch https://github.com/soipanhamisi/ILAS.git
             
             cd..
-            echo "DB_URL=${{ vars.DB_URL }}" > .env
-            echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
-            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-            echo "" >> .env
-            echo "FILE_STORAGE_PROVIDER=${{ vars.FILE_STORAGE_PROVIDER }}" >> .env
-            echo "FILE_STORAGE_UPLOAD_DIR=${{ vars.FILE_STORAGE_UPLOAD_DIR }}" >> .env
-            echo "" >> .env
-            echo "ILAS_SERVER_PORT=${{ secrets.ILAS_SERVER_PORT }}" >> .env
-            echo "GRADING_LLM_PROVIDER=${{ vars.GRADING_LLM_PROVIDER }}" >> .env
-            echo "GEMINI_STUDIO_ENDPOINT_URL=${{ vars.GEMINI_STUDIO_ENDPOINT_URL }}" >> .env
-            echo "GEMINI_STUDIO_MODEL=${{ vars.GEMINI_STUDIO_MODEL }}" >> .env
-            echo "GEMINI_STUDIO_API_KEY=${{ secrets.GEMINI_STUDIO_API_KEY }}" >> .env
+            echo "DB_URL=${{ vars.DB_URL }}" > env
+            echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> env
+            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> env
+            echo "" >> env
+            echo "FILE_STORAGE_PROVIDER=${{ vars.FILE_STORAGE_PROVIDER }}" >> env
+            echo "FILE_STORAGE_UPLOAD_DIR=${{ vars.FILE_STORAGE_UPLOAD_DIR }}" >> env
+            echo "" >> env
+            echo "ILAS_SERVER_PORT=${{ secrets.ILAS_SERVER_PORT }}" >> env
+            echo "GRADING_LLM_PROVIDER=${{ vars.GRADING_LLM_PROVIDER }}" >> env
+            echo "GEMINI_STUDIO_ENDPOINT_URL=${{ vars.GEMINI_STUDIO_ENDPOINT_URL }}" >> env
+            echo "GEMINI_STUDIO_MODEL=${{ vars.GEMINI_STUDIO_MODEL }}" >> env
+            echo "GEMINI_STUDIO_API_KEY=${{ secrets.GEMINI_STUDIO_API_KEY }}" >> env
 
             sudo -n docker compose build backend
             sudo -n docker compose up -d --no-deps --force-recreate backend
