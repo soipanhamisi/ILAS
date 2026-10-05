@@ -1,4 +1,4 @@
-#  ILAS - Integrated Learning Assessment System
+# ILAS - Integrated Learning Assessment System
 
 [![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)]()
 [![Backend](https://img.shields.io/badge/Backend-Spring%20Boot-green)]()
@@ -9,27 +9,27 @@ A complete, modern full-stack Learning Management System for exam creation, subm
 
 ---
 
-## 🌟 Features
+## Features
 
-###  For Instructors
-- ✅ Create exams with CSV templates
-- ✅ View all student submissions
-- ✅ Grade submissions with detailed feedback
-- ✅ Provide grade justifications
-- ✅ Filter submissions (graded/ungraded)
-- ✅ Update grades and feedback
+### For Instructors
+-  Create exams with CSV templates
+-  View all student submissions
+-  Grade submissions with detailed feedback
+-  Provide grade justifications
+-  Filter submissions (graded/ungraded)
+-  Update grades and feedback
 
-###  For Students
-- ✅ View available exams from enrolled courses
-- ✅ Submit exam responses via CSV upload
-- ✅ View grades with percentages
-- ✅ Read instructor feedback
-- ✅ See detailed grade justifications
-- ✅ Track submission history
+### For Students
+-  View available exams from enrolled courses
+-  Submit exam responses via CSV upload
+-  View grades with percentages
+-  Read instructor feedback
+-  See detailed grade justifications
+-  Track submission history
 
 ---
 
-##  Architecture
+## Architecture
 
 ```
 ┌─────────────────────────────────────┐
@@ -55,7 +55,7 @@ A complete, modern full-stack Learning Management System for exam creation, subm
 
 ---
 
-##  Quick Start
+## Quick Start
 
 ### Prerequisites
 - Java JDK 17+
@@ -101,7 +101,7 @@ npm run dev
 
 ---
 
-## 📖 Documentation
+## Documentation
 
 ### Getting Started
 -  **[Setup & Run Guide](SETUP_AND_RUN_GUIDE.md)** - Complete setup instructions
@@ -148,7 +148,7 @@ Name: John Doe
 
 ---
 
-## 💻 Technology Stack
+## Technology Stack
 
 ### Backend
 - **Framework:** Spring Boot 3.x
@@ -168,7 +168,7 @@ Name: John Doe
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 ILAS/
@@ -197,7 +197,7 @@ ILAS/
 
 ---
 
-## 🔌 API Endpoints
+## API Endpoints
 
 ### Instructor Endpoints
 ```
@@ -222,7 +222,7 @@ GET    /api/student/exams/{examId}/submitted
 
 ---
 
-## 📊 Database Schema
+## Database Schema
 
 ### Tables
 - `students_tbl` - Student information
@@ -301,7 +301,7 @@ Beautiful gradient design with feature cards
 
 ---
 
-## 🛠️ Development
+## Development
 
 ### Run in Development Mode
 ```bash
@@ -372,7 +372,7 @@ This is a complete educational project. To extend:
 
 ---
 
-## 📈 Future Enhancements
+## Future Enhancements
 
 - [ ] Real-time notifications
 - [ ] Email integration
@@ -387,7 +387,7 @@ This is a complete educational project. To extend:
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -410,19 +410,19 @@ See [Setup Guide](SETUP_AND_RUN_GUIDE.md) for detailed troubleshooting.
 
 ---
 
-## 📄 License
+## License
 
 This project is for educational purposes.
 
 ---
 
-## 👥 Authors
+## Authors
 
 Built as a complete full-stack LMS demonstration project.
 
 ---
 
-## 📞 Support
+## Support
 
 ### Documentation
 - Complete documentation in `/docs` directory
@@ -434,41 +434,41 @@ Check console logs and documentation files for solutions.
 
 ---
 
-## ✅ Project Status
+## Project Status
 
 ```
 ╔════════════════════════════════════════════════╗
 ║                                                ║
-║     ✅ COMPLETE FULL-STACK APPLICATION        ║
+║      COMPLETE FULL-STACK APPLICATION        ║
 ║                                                ║
-║  Backend:  ✅ 100% Complete                   ║
-║  Frontend: ✅ 100% Complete                   ║
-║  API:      ✅ 13 Endpoints Ready              ║
-║  Docs:     ✅ 200+ KB Documentation           ║
+║  Backend:   100% Complete                   ║
+║  Frontend:  100% Complete                   ║
+║  API:       13 Endpoints Ready              ║
+║  Docs:      200+ KB Documentation           ║
 ║                                                ║
-║        STATUS: PRODUCTION READY! 🚀            ║
+║        STATUS: PRODUCTION READY!             ║
 ║                                                ║
 ╚════════════════════════════════════════════════╝
 ```
 
 ---
 
-## 🎉 Features at a Glance
+## Features at a Glance
 
 | Feature | Backend | Frontend | Status |
 |---------|---------|----------|--------|
-| Exam Creation | ✅ | ✅ | Complete |
-| File Upload | ✅ | ✅ | Complete |
-| Submission | ✅ | ✅ | Complete |
-| Grading | ✅ | ✅ | Complete |
-| Feedback | ✅ | ✅ | Complete |
-| Authentication | ✅ | ✅ | Complete |
-| Responsive UI | - | ✅ | Complete |
-| API Documentation | ✅ | - | Complete |
+| Exam Creation |  |  | Complete |
+| File Upload |  |  | Complete |
+| Submission |  |  | Complete |
+| Grading |  |  | Complete |
+| Feedback |  |  | Complete |
+| Authentication |  |  | Complete |
+| Responsive UI | - |  | Complete |
+| API Documentation |  | - | Complete |
 
 ---
 
-## 📊 Statistics
+## Statistics
 
 - **Total Files:** 55+
 - **Lines of Code:** 5,700+
@@ -480,23 +480,23 @@ Check console logs and documentation files for solutions.
 
 ---
 
-## 🌟 Highlights
+## Highlights
 
-✨ **Modern Tech Stack** - Latest versions of Vue 3 and Spring Boot  
-✨ **Clean Architecture** - Proper separation of concerns  
-✨ **RESTful API** - Well-designed HTTP endpoints  
-✨ **Responsive Design** - Works on all devices  
-✨ **File Upload** - CSV-based exam system  
-✨ **Complete Documentation** - Comprehensive guides  
-✨ **Production Ready** - Can be deployed immediately  
+ **Modern Tech Stack** - Latest versions of Vue 3 and Spring Boot  
+ **Clean Architecture** - Proper separation of concerns  
+ **RESTful API** - Well-designed HTTP endpoints  
+ **Responsive Design** - Works on all devices  
+ **File Upload** - CSV-based exam system  
+ **Complete Documentation** - Comprehensive guides  
+ **Production Ready** - Can be deployed immediately  
 
 ---
 
-**Made with ❤️ for Education**
+**Made with for Education**
 
 **Version:** 1.0.0  
 **Last Updated:** March 10, 2026  
-**Status:** ✅ Production Ready
+**Status:**  Production Ready
 
-🎓 **Happy Learning!** 🚀
+ **Happy Learning!** 
 
