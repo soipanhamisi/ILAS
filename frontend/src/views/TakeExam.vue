@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="page-header">
-      <h1 class="page-title">📝 Take Exam</h1>
+      <h1 class="page-title">Take Exam</h1>
       <router-link to="/student" class="btn-secondary">← Back</router-link>
     </div>
 
@@ -10,6 +10,9 @@
     <div v-else-if="exam" class="exam-container">
       <div class="exam-info-card">
         <h2>{{ exam.examTitle }}</h2>
+        <div class="exam-hero">
+          <img :src="examWorkspaceImage" alt="Assessment workspace" @error="onHeroImageError" />
+        </div>
         <div class="exam-meta">
           <div class="meta-item">
             <strong>Course:</strong> {{ exam.courseTitle }}
@@ -104,6 +107,8 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import { studentAPI } from '../services/api'
+const examWorkspaceImage = new URL('../assets/ui-images/dashboard/exam-workspace.svg', import.meta.url).href
+const fallbackWorkspaceImage = new URL('../assets/ui-images/course-covers/mobile-first.svg', import.meta.url).href
 
 const route = useRoute()
 const router = useRouter()
@@ -245,12 +250,24 @@ const handleSubmit = async () => {
   }
 }
 
+const onHeroImageError = (event) => {
+  if (!event?.target) {
+    return
+  }
+
+  event.target.src = fallbackWorkspaceImage
+}
+
 onMounted(() => {
   loadExamDetails()
 })
 </script>
 
 <style scoped>
+.container {
+  padding: 18px 4px;
+}
+
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -282,22 +299,20 @@ onMounted(() => {
 
 .exam-info-card {
   background: var(--glass-bg-strong);
-  border-radius: 16px;
+  border-radius: 22px;
   padding: 32px;
   margin-bottom: 24px;
   box-shadow: var(--shadow-soft);
   border: 1px solid var(--glass-border);
-  backdrop-filter: blur(14px);
 }
 
 .questions-card {
   background: var(--glass-bg-strong);
-  border-radius: 16px;
+  border-radius: 22px;
   padding: 24px 28px;
   margin-bottom: 24px;
   box-shadow: var(--shadow-soft);
   border: 1px solid var(--glass-border);
-  backdrop-filter: blur(14px);
 }
 
 .questions-card h3 {
@@ -320,8 +335,8 @@ onMounted(() => {
 .question-empty,
 .question-error {
   color: var(--color-text-soft);
-  background: rgba(255, 255, 255, 0.42);
-  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: rgba(45, 50, 66, 0.84);
+  border: 1px solid var(--glass-border);
   border-radius: 10px;
   padding: 12px;
 }
@@ -329,7 +344,21 @@ onMounted(() => {
 .exam-info-card h2 {
   font-size: 28px;
   color: var(--color-primary);
+  margin-bottom: 14px;
+}
+
+.exam-hero {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
   margin-bottom: 20px;
+}
+
+.exam-hero img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
 }
 
 .exam-meta {
@@ -348,8 +377,8 @@ onMounted(() => {
 }
 
 .info-message {
-  background: rgba(255, 255, 255, 0.56);
-  color: var(--color-primary);
+  background: rgba(45, 50, 66, 0.84);
+  color: var(--color-text);
   padding: 16px;
   border-radius: 12px;
   margin-bottom: 24px;
@@ -364,11 +393,10 @@ onMounted(() => {
 
 .submission-card {
   background: var(--glass-bg-strong);
-  border-radius: 16px;
+  border-radius: 22px;
   padding: 32px;
   box-shadow: var(--shadow-soft);
   border: 1px solid var(--glass-border);
-  backdrop-filter: blur(14px);
 }
 
 .submission-card h3 {
@@ -403,9 +431,9 @@ onMounted(() => {
 .answer-input {
   width: 100%;
   padding: 14px;
-  border: 2px solid rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(130, 142, 181, 0.3);
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.42);
+  background: rgba(29, 34, 46, 0.9);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   font-size: 15px;
   line-height: 1.6;
@@ -415,8 +443,8 @@ onMounted(() => {
 
 .answer-input:focus {
   outline: none;
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(182, 223, 217, 0.35);
+  border-color: #bca6ff;
+  box-shadow: 0 0 0 3px rgba(197, 177, 255, 0.22);
 }
 
 .help-text {
@@ -434,8 +462,8 @@ onMounted(() => {
 }
 
 .success-message {
-  background: rgba(255, 255, 255, 0.56);
-  color: var(--color-primary);
+  background: rgba(147, 213, 176, 0.18);
+  color: #b9f2ce;
   padding: 16px;
   border-radius: 12px;
   text-align: center;
@@ -446,8 +474,8 @@ onMounted(() => {
 }
 
 .error-message {
-  background: rgba(255, 255, 255, 0.56);
-  color: var(--color-primary);
+  background: rgba(187, 90, 99, 0.2);
+  color: #ffd7dc;
   padding: 16px;
   border-radius: 12px;
   text-align: center;

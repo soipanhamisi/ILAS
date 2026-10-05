@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="page-header">
-      <h1 class="page-title">📊 Exam Results</h1>
+      <h1 class="page-title">Exam Results</h1>
       <router-link to="/student" class="btn-secondary">← Back</router-link>
     </div>
 
@@ -177,6 +177,10 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.container {
+  padding: 18px 4px;
+}
+
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -208,12 +212,11 @@ onMounted(() => {
 
 .exam-info-card {
   background: var(--glass-bg-strong);
-  border-radius: 16px;
+  border-radius: 22px;
   padding: 32px;
   margin-bottom: 24px;
   box-shadow: var(--shadow-soft);
   border: 1px solid var(--glass-border);
-  backdrop-filter: blur(14px);
 }
 
 .exam-info-card h2 {
@@ -229,13 +232,12 @@ onMounted(() => {
 
 .grade-card {
   background: var(--glass-bg-strong);
-  border-radius: 16px;
+  border-radius: 22px;
   padding: 40px;
   margin-bottom: 24px;
   box-shadow: var(--shadow-soft);
   text-align: center;
   border: 1px solid var(--glass-border);
-  backdrop-filter: blur(14px);
 }
 
 .graded-content {
@@ -285,7 +287,7 @@ onMounted(() => {
 .grade-bar {
   width: 100%;
   height: 20px;
-  background: rgba(255, 255, 255, 0.62);
+  background: rgba(64, 71, 94, 0.8);
   border-radius: 10px;
   overflow: hidden;
   margin-bottom: 24px;
@@ -293,17 +295,17 @@ onMounted(() => {
 
 .grade-bar-fill {
   height: 100%;
-  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-accent) 100%);
+  background: linear-gradient(135deg, #d8ccff 0%, #bca6ff 100%);
   transition: width 1s ease;
 }
 
 .grading-info {
   width: 100%;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(29, 34, 46, 0.9);
   padding: 16px;
   border-radius: 12px;
   text-align: left;
-  border: 1px solid rgba(255, 255, 255, 0.45);
+  border: 1px solid var(--glass-border);
 }
 
 .grading-info p {
@@ -340,11 +342,10 @@ onMounted(() => {
 .feedback-card,
 .justification-card {
   background: var(--glass-bg-strong);
-  border-radius: 16px;
+  border-radius: 22px;
   padding: 32px;
   box-shadow: var(--shadow-soft);
   border: 1px solid var(--glass-border);
-  backdrop-filter: blur(14px);
 }
 
 .feedback-card h3,
@@ -364,12 +365,11 @@ onMounted(() => {
 
 .performance-card {
   background: var(--glass-bg-strong);
-  border-radius: 16px;
+  border-radius: 22px;
   padding: 32px;
   box-shadow: var(--shadow-soft);
   text-align: center;
   border: 1px solid var(--glass-border);
-  backdrop-filter: blur(14px);
 }
 
 .performance-card h3 {
@@ -387,28 +387,28 @@ onMounted(() => {
 }
 
 .performance-badge.excellent {
-  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-accent) 100%);
-  color: #27423a;
+  background: linear-gradient(135deg, #d8ccff 0%, #bca6ff 100%);
+  color: #1a1d24;
 }
 
 .performance-badge.good {
-  background: linear-gradient(135deg, #c7e8b7 0%, #b6dfd9 100%);
-  color: #27423a;
+  background: rgba(147, 213, 176, 0.2);
+  color: #b9f2ce;
 }
 
 .performance-badge.average {
-  background: linear-gradient(135deg, #ebeeb9 0%, #d0e4a1 100%);
-  color: #425335;
+  background: rgba(234, 201, 128, 0.2);
+  color: #ffe3aa;
 }
 
 .performance-badge.needs-work {
-  background: linear-gradient(135deg, #f6f5e6 0%, #d7e6c0 100%);
-  color: var(--color-text);
+  background: rgba(187, 90, 99, 0.26);
+  color: #ffd7dc;
 }
 
 .error-message {
-  background: rgba(255, 255, 255, 0.56);
-  color: var(--color-primary);
+  background: rgba(187, 90, 99, 0.2);
+  color: #ffd7dc;
   padding: 16px;
   border-radius: 12px;
   text-align: center;

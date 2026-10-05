@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="page-header">
-      <h1 class="page-title">📝 Exam Submissions</h1>
+      <h1 class="page-title">Exam Submissions</h1>
       <router-link to="/instructor" class="btn-secondary">← Back</router-link>
     </div>
 
@@ -524,6 +524,10 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.container {
+  padding: 18px 4px;
+}
+
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -545,7 +549,6 @@ onMounted(() => {
   border-radius: 16px;
   box-shadow: var(--shadow-soft);
   border: 1px solid var(--glass-border);
-  backdrop-filter: blur(14px);
 }
 
 .empty-icon {
@@ -564,11 +567,10 @@ onMounted(() => {
 
 .submissions-container {
   background: var(--glass-bg-strong);
-  border-radius: 16px;
+  border-radius: 22px;
   padding: 24px;
   box-shadow: var(--shadow-soft);
   border: 1px solid var(--glass-border);
-  backdrop-filter: blur(14px);
 }
 
 .filters {
@@ -576,7 +578,7 @@ onMounted(() => {
   gap: 12px;
   margin-bottom: 24px;
   padding-bottom: 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.45);
+  border-bottom: 1px solid var(--glass-border);
 }
 
 .rubric-panel {
@@ -639,17 +641,17 @@ onMounted(() => {
 }
 
 .filter-btn {
-  background: rgba(255, 255, 255, 0.55);
+  background: rgba(64, 71, 94, 0.7);
   color: var(--color-text);
   padding: 10px 20px;
   border-radius: 999px;
   font-weight: 500;
-  border: 1px solid rgba(255, 255, 255, 0.45);
+  border: 1px solid var(--glass-border);
 }
 
 .filter-btn.active {
-  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-accent) 100%);
-  color: #27423a;
+  background: linear-gradient(135deg, #d8ccff 0%, #bca6ff 100%);
+  color: #1a1d24;
 }
 
 .submissions-grid {
@@ -658,11 +660,10 @@ onMounted(() => {
 }
 
 .submission-card {
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
   padding: 20px;
-  background: rgba(255, 255, 255, 0.42);
-  backdrop-filter: blur(10px);
+  background: rgba(45, 50, 66, 0.84);
 }
 
 .submission-header {
@@ -691,21 +692,21 @@ onMounted(() => {
 }
 
 .status-badge.graded {
-  background: rgba(182, 223, 217, 0.48);
-  color: var(--color-primary);
+  background: rgba(147, 213, 176, 0.18);
+  color: #b9f2ce;
 }
 
 .status-badge.pending {
-  background: rgba(255, 255, 255, 0.62);
-  color: var(--color-muted);
+  background: rgba(64, 71, 94, 0.75);
+  color: #c4cbe0;
 }
 
 .grade-display {
-  background: rgba(246, 245, 230, 0.62);
+  background: rgba(29, 34, 46, 0.9);
   padding: 16px;
   border-radius: 8px;
   margin-bottom: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.45);
+  border: 1px solid var(--glass-border);
 }
 
 .grade-value {
@@ -726,11 +727,11 @@ onMounted(() => {
 }
 
 .answer-preview {
-  background: rgba(246, 245, 230, 0.62);
+  background: rgba(29, 34, 46, 0.9);
   padding: 14px;
   border-radius: 8px;
   margin-bottom: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.45);
+  border: 1px solid var(--glass-border);
 }
 
 .answer-preview strong {
@@ -750,7 +751,7 @@ onMounted(() => {
 }
 
 .student-answer-item {
-  background: rgba(255, 255, 255, 0.42);
+  background: rgba(45, 50, 66, 0.72);
   border-radius: 8px;
   padding: 10px;
 }
@@ -778,7 +779,7 @@ onMounted(() => {
 
 .grading-form {
   padding-top: 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.45);
+  border-top: 1px solid var(--glass-border);
 }
 
 .form-group {
@@ -796,9 +797,11 @@ onMounted(() => {
 .form-group textarea {
   width: 100%;
   padding: 10px;
-  border: 2px solid rgba(112, 113, 77, 0.3);
-  border-radius: 8px;
+  border: 1px solid rgba(130, 142, 181, 0.3);
+  border-radius: 10px;
   font-size: 14px;
+  background: rgba(29, 34, 46, 0.9);
+  color: var(--color-text);
 }
 
 .grade-limit-hint {
@@ -809,8 +812,8 @@ onMounted(() => {
 }
 
 .aggregate-grade {
-  background: rgba(246, 245, 230, 0.62);
-  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: rgba(29, 34, 46, 0.9);
+  border: 1px solid var(--glass-border);
   border-radius: 8px;
   padding: 12px;
   color: var(--color-primary);
@@ -824,8 +827,8 @@ onMounted(() => {
 }
 
 .error-message {
-  background: rgba(255, 255, 255, 0.56);
-  color: var(--color-primary);
+  background: rgba(187, 90, 99, 0.2);
+  color: #ffd7dc;
   padding: 16px;
   border-radius: 12px;
   text-align: center;

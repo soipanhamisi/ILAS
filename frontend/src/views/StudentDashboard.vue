@@ -1,6 +1,6 @@
 <template>
   <div class="container dashboard">
-    <h1 class="page-title">👨‍🎓 Student Dashboard</h1>
+    <h1 class="page-title">Student Dashboard</h1>
     <p class="welcome-text">Welcome, {{ authStore.user?.name }}!</p>
 
     <div v-if="loading" class="loading">Loading exams...</div>
@@ -41,6 +41,7 @@
             :key="`enrolled-${course.courseId}`"
             class="course-card"
           >
+            <img class="thumb-image" :src="getCourseCover(course.courseId)" :alt="`${course.courseTitle} cover`" @error="onCardImageError" />
             <h3>{{ course.courseTitle }}</h3>
             <p class="course-meta">Instructor: {{ course.instructorName || 'TBA' }}</p>
             <span class="status-badge enrolled">Enrolled</span>
@@ -64,6 +65,7 @@
             :key="`pending-${exam.examId}`"
             class="exam-card"
           >
+            <img class="thumb-image exam-thumb" :src="getExamCover(exam.examId)" :alt="`${exam.examTitle} cover`" @error="onCardImageError" />
             <div class="exam-header">
               <h3>{{ exam.examTitle }}</h3>
               <span class="exam-score">{{ exam.maxScore }} pts</span>
@@ -99,6 +101,7 @@
             :key="course.courseId"
             class="course-card"
           >
+            <img class="thumb-image" :src="getCourseCover(course.courseId)" :alt="`${course.courseTitle} cover`" @error="onCardImageError" />
             <h3>{{ course.courseTitle }}</h3>
             <p class="course-meta">Instructor: {{ course.instructorName || 'TBA' }}</p>
 
@@ -132,6 +135,7 @@
             :key="exam.examId"
             class="exam-card"
           >
+            <img class="thumb-image exam-thumb" :src="getExamCover(exam.examId)" :alt="`${exam.examTitle} cover`" @error="onCardImageError" />
             <div class="exam-header">
               <h3>{{ exam.examTitle }}</h3>
               <span class="exam-score">{{ exam.maxScore }} pts</span>
@@ -216,6 +220,10 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import { studentAPI } from '../services/api'
+const designSystemsCover = new URL('../assets/ui-images/course-covers/design-systems.svg', import.meta.url).href
+const productAnalyticsCover = new URL('../assets/ui-images/course-covers/product-analytics.svg', import.meta.url).href
+const mobileFirstCover = new URL('../assets/ui-images/course-covers/mobile-first.svg', import.meta.url).href
+const crossPlatformCover = new URL('../assets/ui-images/course-covers/cross-platform.svg', import.meta.url).href
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -230,6 +238,30 @@ const enrollingCourseId = ref(null)
 const loading = ref(false)
 const error = ref('')
 const successMessage = ref('')
+
+const coverPool = [designSystemsCover, productAnalyticsCover, mobileFirstCover, crossPlatformCover]
+
+const resolveCoverIndex = (seed) => {
+  const numeric = Number(seed)
+  if (!Number.isNaN(numeric)) {
+    return Math.abs(numeric) % coverPool.length
+  }
+
+  return String(seed || '')
+    .split('')
+    .reduce((hash, char) => hash + char.charCodeAt(0), 0) % coverPool.length
+}
+
+const getCourseCover = (courseId) => coverPool[resolveCoverIndex(courseId)]
+const getExamCover = (examId) => coverPool[resolveCoverIndex(examId)]
+
+const onCardImageError = (event) => {
+  if (!event?.target) {
+    return
+  }
+
+  event.target.src = designSystemsCover
+}
 
 const pendingAssessments = computed(() => {
   return availableExams.value.filter(exam => !submittedExamIds.value.has(exam.examId))
@@ -331,7 +363,7 @@ onMounted(() => {
 
 <style scoped>
 .dashboard {
-  padding: 40px 20px;
+  padding: 18px 4px;
 }
 
 .page-title {
@@ -343,8 +375,8 @@ onMounted(() => {
 
 .welcome-text {
   color: var(--color-text-soft);
-  font-size: 18px;
-  margin-bottom: 32px;
+  font-size: 16px;
+  margin-bottom: 24px;
 }
 
 .loading {
@@ -370,11 +402,10 @@ onMounted(() => {
 }
 
 .overview-card {
-  background: rgba(255, 255, 255, 0.42);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(45, 50, 66, 0.84);
+  border-radius: 16px;
+  border: 1px solid var(--glass-border);
   padding: 16px;
-  backdrop-filter: blur(10px);
 }
 
 .overview-label {
@@ -390,17 +421,22 @@ onMounted(() => {
   color: var(--color-primary);
 }
 
+.overview-grid .overview-card:first-child {
+  background: rgba(197, 177, 255, 0.18);
+  border-color: rgba(197, 177, 255, 0.35);
+}
+
 .section {
   background: var(--glass-bg-strong);
-  border-radius: 16px;
-  padding: 32px;
+  border-radius: 22px;
+  padding: 24px;
   box-shadow: var(--shadow-soft);
   border: 1px solid var(--glass-border);
   backdrop-filter: blur(14px);
 }
 
 .section-title {
-  font-size: 24px;
+  font-size: 25px;
   font-weight: 700;
   color: var(--color-primary);
   margin-bottom: 24px;
@@ -416,8 +452,8 @@ onMounted(() => {
 .pill {
   padding: 6px 12px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.56);
-  color: var(--color-primary);
+  background: rgba(64, 71, 94, 0.75);
+  color: var(--color-text-soft);
   font-size: 13px;
   font-weight: 700;
   border: 1px solid var(--glass-border);
@@ -430,13 +466,25 @@ onMounted(() => {
 }
 
 .course-card {
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
   padding: 18px;
-  background: rgba(255, 255, 255, 0.42);
-  backdrop-filter: blur(10px);
+  background: rgba(45, 50, 66, 0.84);
   display: grid;
   gap: 10px;
+}
+
+.thumb-image {
+  width: 100%;
+  height: 120px;
+  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  object-fit: cover;
+  display: block;
+}
+
+.exam-thumb {
+  height: 140px;
 }
 
 .course-card h3 {
@@ -462,17 +510,16 @@ onMounted(() => {
 }
 
 .exam-card {
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
   padding: 20px;
   transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.42);
-  backdrop-filter: blur(10px);
+  background: rgba(45, 50, 66, 0.84);
 }
 
 .exam-card:hover {
-  border-color: var(--color-accent);
-  box-shadow: 0 4px 12px rgba(56, 101, 71, 0.18);
+  border-color: rgba(197, 177, 255, 0.45);
+  transform: translateY(-2px);
 }
 
 .exam-header {
@@ -489,8 +536,8 @@ onMounted(() => {
 }
 
 .exam-score {
-  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-accent) 100%);
-  color: #27423a;
+  background: linear-gradient(135deg, #d8ccff 0%, #bca6ff 100%);
+  color: #1a1d24;
   padding: 4px 12px;
   border-radius: 12px;
   font-size: 14px;
@@ -518,10 +565,10 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
   background: rgba(255, 255, 255, 0.42);
-  backdrop-filter: blur(10px);
+  background: rgba(45, 50, 66, 0.84);
 }
 
 .submission-info h4 {
@@ -549,8 +596,8 @@ onMounted(() => {
 }
 
 .grade-badge {
-  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-accent) 100%);
-  color: #27423a;
+  background: linear-gradient(135deg, #d8ccff 0%, #bca6ff 100%);
+  color: #1a1d24;
   padding: 8px 16px;
   border-radius: 12px;
   font-weight: 600;
@@ -565,13 +612,13 @@ onMounted(() => {
 }
 
 .status-badge.pending {
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(64, 71, 94, 0.75);
   color: var(--color-muted);
 }
 
 .status-badge.enrolled {
-  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-accent) 100%);
-  color: #27423a;
+  background: rgba(197, 177, 255, 0.24);
+  color: #d8ccff;
   width: fit-content;
 }
 
@@ -581,8 +628,8 @@ onMounted(() => {
 }
 
 .error-message {
-  background: rgba(255, 255, 255, 0.56);
-  color: var(--color-primary);
+  background: rgba(187, 90, 99, 0.2);
+  color: #ffd7dc;
   padding: 16px;
   border-radius: 12px;
   text-align: center;
@@ -591,8 +638,8 @@ onMounted(() => {
 }
 
 .success-message {
-  background: rgba(255, 255, 255, 0.56);
-  color: #2f6e5c;
+  background: rgba(147, 213, 176, 0.18);
+  color: #b9f2ce;
   padding: 16px;
   border-radius: 12px;
   text-align: center;

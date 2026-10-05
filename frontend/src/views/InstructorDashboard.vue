@@ -187,7 +187,7 @@ onMounted(() => {
 
 <style scoped>
 .dashboard {
-  padding: 40px 20px;
+  padding: 18px 4px;
 }
 
 .page-title {
@@ -207,7 +207,7 @@ onMounted(() => {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .action-card {
@@ -219,7 +219,7 @@ onMounted(() => {
   transition: all 0.3s ease;
   box-shadow: var(--shadow-soft);
   border: 1px solid var(--glass-border);
-  backdrop-filter: blur(14px);
+  color: var(--color-text);
 }
 
 .action-card:hover {
@@ -228,9 +228,17 @@ onMounted(() => {
 }
 
 .action-icon {
-  font-size: 42px;
+  font-size: 32px;
   margin-bottom: 10px;
   font-weight: 700;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: rgba(197, 177, 255, 0.2);
+  color: #dccfff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .action-card h3 {
@@ -266,8 +274,8 @@ onMounted(() => {
 }
 
 .stat-card {
-  background: var(--glass-bg-strong);
-  border-radius: 14px;
+  background: rgba(45, 50, 66, 0.84);
+  border-radius: 16px;
   padding: 20px;
   border: 1px solid var(--glass-border);
   box-shadow: var(--shadow-soft);
@@ -287,11 +295,10 @@ onMounted(() => {
 
 .section {
   background: var(--glass-bg-strong);
-  border-radius: 16px;
+  border-radius: 22px;
   padding: 28px;
   box-shadow: var(--shadow-soft);
   border: 1px solid var(--glass-border);
-  backdrop-filter: blur(14px);
 }
 
 .section-title {
@@ -315,8 +322,9 @@ onMounted(() => {
 .sparkline {
   width: 100%;
   height: 130px;
-  background: rgba(248, 250, 252, 0.8);
+  background: rgba(29, 34, 46, 0.8);
   border-radius: 10px;
+  border: 1px solid var(--glass-border);
 }
 
 .empty-state {
@@ -332,10 +340,10 @@ onMounted(() => {
 }
 
 .course-card {
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
   padding: 18px;
-  background: rgba(255, 255, 255, 0.42);
+  background: rgba(45, 50, 66, 0.84);
   display: grid;
   gap: 6px;
 }
@@ -354,9 +362,10 @@ onMounted(() => {
 .course-sparkline {
   width: 100%;
   height: 90px;
-  background: rgba(248, 250, 252, 0.82);
+  background: rgba(29, 34, 46, 0.8);
   border-radius: 10px;
   margin-top: 6px;
+  border: 1px solid var(--glass-border);
 }
 
 .queue-list {
@@ -365,10 +374,10 @@ onMounted(() => {
 }
 
 .queue-item {
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
   padding: 16px;
-  background: rgba(255, 255, 255, 0.42);
+  background: rgba(45, 50, 66, 0.84);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -383,8 +392,8 @@ onMounted(() => {
 
 .error-message {
   margin-top: 20px;
-  background: rgba(255, 255, 255, 0.55);
-  color: var(--color-primary);
+  background: rgba(187, 90, 99, 0.2);
+  color: #ffd7dc;
   padding: 16px;
   border-radius: 12px;
   text-align: center;
