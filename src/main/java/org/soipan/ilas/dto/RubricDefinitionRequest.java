@@ -13,7 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RubricDefinitionRequest {
-    private Integer instructorId;
     private List<QuestionRubricDTO> rubrics;
 }
 

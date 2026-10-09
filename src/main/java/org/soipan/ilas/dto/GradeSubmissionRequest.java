@@ -13,7 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GradeSubmissionRequest {
-    private Integer instructorId;
     private List<QuestionGradeRequest> questionGrades;
 }
 

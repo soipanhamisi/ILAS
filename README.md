@@ -1,4 +1,4 @@
-# 🎓 ILAS - Integrated Learning Assessment System
+# 🎓 markrr - Learning and Assessment
 
 [![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)]()
 [![Backend](https://img.shields.io/badge/Backend-Spring%20Boot-green)]()
@@ -42,7 +42,7 @@ A complete, modern full-stack Learning Management System for exam creation, subm
 ┌─────────────▼───────────────────────┐
 │  Spring Boot Backend (Port 8081)   │
 │  • 13 REST endpoints                │
-│  • JWT-ready architecture           │
+│  • JWT authentication               │
 │  • File storage service             │
 └─────────────┬───────────────────────┘
               │ JPA/Hibernate
@@ -81,6 +81,7 @@ Create `.env` file in project root:
 DB_URL=jdbc:mysql://localhost:3306/ilas_db
 DB_USERNAME=root
 DB_PASSWORD=your_password
+# For production, also supply a Base64-encoded JWT_SECRET (at least 32 random bytes).
 ```
 
 #### 4. Start Backend
@@ -122,36 +123,16 @@ npm run dev
 
 ---
 
-## 🎯 Demo Credentials
+## 🔐 Authentication
 
-### Admin
-```
-Type: Admin
-Username: admin
-Password: password123
-Name: System Administrator
-```
-
-### Instructor
-```
-Type: Instructor
-ID: 1
-Name: Dr. Smith
-```
-
-### Student
-```
-Type: Student
-ID: 5
-Name: John Doe
-```
+Login issues a signed JWT; protected API requests use its bearer token. Students and instructors can sign up. A fixed admin account is created only when the `dev` profile is active; production requires a separately configured `JWT_SECRET`.
 
 ---
 
 ## 💻 Technology Stack
 
 ### Backend
-- **Framework:** Spring Boot 3.x
+- **Framework:** Spring Boot 4.x
 - **Language:** Java 17+
 - **Database:** MySQL/PostgreSQL
 - **ORM:** Spring Data JPA (Hibernate)
@@ -329,7 +310,7 @@ npm run build
 
 ### Backend Deployment
 1. Build JAR: `.\mvnw.cmd clean package`
-2. Deploy to server: `java -jar target/ILAS-0.0.1-SNAPSHOT.jar`
+2. Deploy to server: `java -jar target/markrr-0.0.1-SNAPSHOT.jar`
 3. Configure production database
 4. Set environment variables
 
@@ -344,17 +325,16 @@ npm run build
 ## 🔐 Security
 
 ### Current Implementation
-- Simple ID-based authentication
+- Stateless JWT bearer authentication and role authorization
+- BCrypt password hashing for new users and existing database accounts
 - Role-based route guards
 - CORS configuration
 - File type validation
 - Input validation
 
 ### Production Recommendations
-- Implement JWT authentication
-- Add Spring Security
 - Use HTTPS
-- Hash passwords
+- Configure a unique, protected JWT signing secret
 - Add rate limiting
 - Implement CSRF protection
 

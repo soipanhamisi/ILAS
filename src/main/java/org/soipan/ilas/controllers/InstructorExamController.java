@@ -1,6 +1,7 @@
 package org.soipan.ilas.controllers;
 
 import org.soipan.ilas.dto.*;
+import org.soipan.ilas.auth.AuthenticatedUser;
 import org.soipan.ilas.models.Exam;
 import org.soipan.ilas.models.ExamSubmission;
 import org.soipan.ilas.services.AutoGradingService;
@@ -8,6 +9,7 @@ import org.soipan.ilas.services.InstructorExamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,14 +40,14 @@ public class InstructorExamController {
      */
     @PostMapping("/create")
     public ResponseEntity<ApiResponse<ExamDTO>> createExam(
-            @RequestParam("instructorId") Integer instructorId,
+            @AuthenticationPrincipal AuthenticatedUser user,
             @RequestParam("courseId") Integer courseId,
             @RequestParam("examTitle") String examTitle,
             @RequestParam("maxScore") Integer maxScore,
             @RequestParam("file") MultipartFile file) {
 
         Exam exam = examService.createAssessment(
-                instructorId,
+                user.userId(),
                 courseId,
                 examTitle,
                 maxScore,
@@ -65,9 +67,9 @@ public class InstructorExamController {
     @GetMapping("/{examId}")
     public ResponseEntity<ApiResponse<ExamDTO>> getExamDetails(
             @PathVariable Long examId,
-            @RequestParam Integer instructorId) {
+            @AuthenticationPrincipal AuthenticatedUser user) {
 
-        Exam exam = examService.getExamDetails(instructorId, examId);
+        Exam exam = examService.getExamDetails(user.userId(), examId);
         return ResponseEntity.ok(ApiResponse.success(examMapper.toDTO(exam)));
     }
 
@@ -78,13 +80,10 @@ public class InstructorExamController {
     @PostMapping("/submissions/{submissionId}/grade")
     public ResponseEntity<ApiResponse<ExamSubmissionDTO>> gradeSubmission(
             @PathVariable Long submissionId,
+            @AuthenticationPrincipal AuthenticatedUser user,
             @RequestBody GradeSubmissionRequest request) {
 
-        if (request == null || request.getInstructorId() == null) {
-            throw new IllegalArgumentException("instructorId is required");
-        }
-
-        if (request.getQuestionGrades() == null || request.getQuestionGrades().isEmpty()) {
+        if (request == null || request.getQuestionGrades() == null || request.getQuestionGrades().isEmpty()) {
             throw new IllegalArgumentException("questionGrades is required");
         }
 
@@ -138,7 +137,7 @@ public class InstructorExamController {
         }
 
         ExamSubmission graded = examService.issueGrade(
-                request.getInstructorId(),
+                user.userId(),
                 submissionId,
                 totalGrade,
                 feedbackBuilder.toString(),
@@ -156,13 +155,14 @@ public class InstructorExamController {
     @PutMapping("/{examId}/rubrics")
     public ResponseEntity<ApiResponse<ExamDTO>> saveRubrics(
             @PathVariable Long examId,
+            @AuthenticationPrincipal AuthenticatedUser user,
             @RequestBody RubricDefinitionRequest request) {
 
-        if (request == null || request.getInstructorId() == null) {
-            throw new IllegalArgumentException("instructorId is required");
+        if (request == null) {
+            throw new IllegalArgumentException("rubrics are required");
         }
 
-        Exam exam = autoGradingService.saveRubrics(request.getInstructorId(), examId, request.getRubrics());
+        Exam exam = autoGradingService.saveRubrics(user.userId(), examId, request.getRubrics());
         return ResponseEntity.ok(ApiResponse.success("Rubrics saved successfully", examMapper.toDTO(exam)));
     }
 
@@ -173,13 +173,9 @@ public class InstructorExamController {
     @PostMapping("/submissions/{submissionId}/auto-grade")
     public ResponseEntity<ApiResponse<ExamSubmissionDTO>> autoGradeSubmission(
             @PathVariable Long submissionId,
-            @RequestBody AutoGradeSubmissionRequest request) {
+            @AuthenticationPrincipal AuthenticatedUser user) {
 
-        if (request == null || request.getInstructorId() == null) {
-            throw new IllegalArgumentException("instructorId is required");
-        }
-
-        ExamSubmission graded = autoGradingService.autoGradeSubmission(request.getInstructorId(), submissionId);
+        ExamSubmission graded = autoGradingService.autoGradeSubmission(user.userId(), submissionId);
         return ResponseEntity.ok(ApiResponse.success("Submission auto-graded successfully", examMapper.toDTO(graded)));
     }
 
@@ -190,10 +186,11 @@ public class InstructorExamController {
     @PutMapping("/submissions/{submissionId}/feedback")
     public ResponseEntity<ApiResponse<ExamSubmissionDTO>> updateFeedback(
             @PathVariable Long submissionId,
+            @AuthenticationPrincipal AuthenticatedUser user,
             @RequestBody UpdateFeedbackRequest request) {
 
         ExamSubmission updated = examService.updateFeedback(
-                request.getInstructorId(),
+                user.userId(),
                 submissionId,
                 request.getFeedback(),
                 request.getGradeJustification()
@@ -210,9 +207,9 @@ public class InstructorExamController {
     @GetMapping("/{examId}/submissions")
     public ResponseEntity<ApiResponse<List<ExamSubmissionDTO>>> getSubmissionsForExam(
             @PathVariable Long examId,
-            @RequestParam Integer instructorId) {
+            @AuthenticationPrincipal AuthenticatedUser user) {
 
-        List<ExamSubmission> submissions = examService.getSubmissionsForExam(instructorId, examId);
+        List<ExamSubmission> submissions = examService.getSubmissionsForExam(user.userId(), examId);
 
         List<ExamSubmissionDTO> dtos = submissions.stream()
                 .map(examMapper::toDTO)
@@ -228,9 +225,9 @@ public class InstructorExamController {
     @GetMapping("/{examId}/submissions/ungraded")
     public ResponseEntity<ApiResponse<List<ExamSubmissionDTO>>> getUngradedSubmissions(
             @PathVariable Long examId,
-            @RequestParam Integer instructorId) {
+            @AuthenticationPrincipal AuthenticatedUser user) {
 
-        List<ExamSubmission> submissions = examService.getUngradedSubmissions(instructorId, examId);
+        List<ExamSubmission> submissions = examService.getUngradedSubmissions(user.userId(), examId);
 
         List<ExamSubmissionDTO> dtos = submissions.stream()
                 .map(examMapper::toDTO)
@@ -246,9 +243,9 @@ public class InstructorExamController {
     @GetMapping("/courses/{courseId}")
     public ResponseEntity<ApiResponse<List<ExamDTO>>> getExamsForCourse(
             @PathVariable Integer courseId,
-            @RequestParam Integer instructorId) {
+            @AuthenticationPrincipal AuthenticatedUser user) {
 
-        List<Exam> exams = examService.getExamsForCourse(instructorId, courseId);
+        List<Exam> exams = examService.getExamsForCourse(user.userId(), courseId);
 
         List<ExamDTO> dtos = exams.stream()
                 .map(examMapper::toDTO)
@@ -263,9 +260,9 @@ public class InstructorExamController {
      */
     @GetMapping("/dashboard/summary")
     public ResponseEntity<ApiResponse<InstructorDashboardSummaryDTO>> getDashboardSummary(
-            @RequestParam Integer instructorId) {
+            @AuthenticationPrincipal AuthenticatedUser user) {
 
-        InstructorDashboardSummaryDTO summary = examService.getDashboardSummary(instructorId);
+        InstructorDashboardSummaryDTO summary = examService.getDashboardSummary(user.userId());
         return ResponseEntity.ok(ApiResponse.success(summary));
     }
 
@@ -276,9 +273,9 @@ public class InstructorExamController {
     @GetMapping("/{examId}/questions")
     public ResponseEntity<ApiResponse<List<String>>> getExamQuestions(
             @PathVariable Long examId,
-            @RequestParam Integer instructorId) {
+            @AuthenticationPrincipal AuthenticatedUser user) {
 
-        List<String> questions = examService.getExamQuestions(instructorId, examId);
+        List<String> questions = examService.getExamQuestions(user.userId(), examId);
         return ResponseEntity.ok(ApiResponse.success(questions));
     }
 
@@ -289,9 +286,9 @@ public class InstructorExamController {
     @GetMapping("/{examId}/questions/details")
     public ResponseEntity<ApiResponse<List<ExamQuestionDTO>>> getExamQuestionDetails(
             @PathVariable Long examId,
-            @RequestParam Integer instructorId) {
+            @AuthenticationPrincipal AuthenticatedUser user) {
 
-        List<ExamQuestionDTO> questions = examService.getExamQuestionDetails(instructorId, examId);
+        List<ExamQuestionDTO> questions = examService.getExamQuestionDetails(user.userId(), examId);
         return ResponseEntity.ok(ApiResponse.success(questions));
     }
 }

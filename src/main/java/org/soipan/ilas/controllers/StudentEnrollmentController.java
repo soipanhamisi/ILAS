@@ -1,5 +1,6 @@
 package org.soipan.ilas.controllers;
 
+import org.soipan.ilas.auth.AuthenticatedUser;
 import org.soipan.ilas.dto.ApiResponse;
 import org.soipan.ilas.dto.CourseEnrollmentDTO;
 import org.soipan.ilas.models.Course;
@@ -8,6 +9,7 @@ import org.soipan.ilas.services.StudentExamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,9 +26,9 @@ public class StudentEnrollmentController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<CourseEnrollmentDTO>>> getAllCourses(
-            @RequestParam Integer studentId) {
+            @AuthenticationPrincipal AuthenticatedUser user) {
 
-        List<CourseEnrollmentDTO> courses = studentExamService.getAllCoursesForStudent(studentId)
+        List<CourseEnrollmentDTO> courses = studentExamService.getAllCoursesForStudent(user.userId())
                 .stream()
                 .map(course -> toCourseEnrollmentDTO(course, false))
                 .toList();
@@ -36,9 +38,9 @@ public class StudentEnrollmentController {
 
     @GetMapping("/enrolled")
     public ResponseEntity<ApiResponse<List<CourseEnrollmentDTO>>> getEnrolledCourses(
-            @RequestParam Integer studentId) {
+            @AuthenticationPrincipal AuthenticatedUser user) {
 
-        List<CourseEnrollmentDTO> enrolledCourses = studentExamService.getEnrolledCourses(studentId)
+        List<CourseEnrollmentDTO> enrolledCourses = studentExamService.getEnrolledCourses(user.userId())
                 .stream()
                 .map(course -> toCourseEnrollmentDTO(course, true))
                 .toList();
@@ -49,9 +51,9 @@ public class StudentEnrollmentController {
     @PostMapping("/{courseId}/enroll")
     public ResponseEntity<ApiResponse<CourseEnrollmentDTO>> enrollInCourse(
             @PathVariable Integer courseId,
-            @RequestParam Integer studentId) {
+            @AuthenticationPrincipal AuthenticatedUser user) {
 
-        Enrollment enrollment = studentExamService.enrollStudentInCourse(studentId, courseId);
+        Enrollment enrollment = studentExamService.enrollStudentInCourse(user.userId(), courseId);
 
         CourseEnrollmentDTO dto = toCourseEnrollmentDTO(enrollment.getCourse(), true);
         return ResponseEntity

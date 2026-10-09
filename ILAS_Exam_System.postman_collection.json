@@ -1,6 +1,6 @@
 {
   "info": {
-    "name": "LMS Exam Assessment System",
+    "name": "markrr Exam Assessment System",
     "description": "Complete API collection for Instructor and Student exam operations",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
@@ -648,6 +648,10 @@
       ]
     }
   ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+  },
   "variable": [
     {
       "key": "baseUrl",
@@ -655,14 +659,18 @@
     },
     {
       "key": "adminUsername",
-      "value": "admin"
+      "value": ""
     },
     {
       "key": "adminPassword",
-      "value": "password123"
+      "value": ""
     },
     {
       "key": "adminId",
+      "value": ""
+    },
+    {
+      "key": "token",
       "value": ""
     }
   ]

@@ -1,12 +1,9 @@
-package org.soipan.ilas.dto;
+package org.soipan.ilas.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * Auth response DTO
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,7 +12,6 @@ public class AuthResponse {
     private String name;
     private String username;
     private String email;
-    private String userType; // 'instructor' or 'student'
-    private String token; // JWT or simple token
+    private String userType;
+    private String token;
 }
-

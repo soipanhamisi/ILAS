@@ -1,8 +1,8 @@
 {
   "info": {
-    "name": "ILAS Client Traffic Simulation",
+    "name": "markrr Client Traffic Simulation",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": "Generates repeated client-facing request traffic to simulate user load for admin monitoring."
+    "description": "Generates authenticated client-facing request traffic. Set token to a JWT matching the request role."
   },
   "item": [
     {
@@ -350,10 +350,18 @@
       }
     }
   ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+  },
   "variable": [
     {
       "key": "baseUrl",
       "value": "http://localhost:8080/api"
+    },
+    {
+      "key": "token",
+      "value": ""
     },
     {
       "key": "studentIds",
