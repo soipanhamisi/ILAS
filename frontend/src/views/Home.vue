@@ -6,43 +6,58 @@
         <strong>Markrr</strong>
       </div>
       <nav class="nav-links">
-        <a href="#how-it-works">How it works</a>
-        <a href="#features">Features</a>
-        <a href="#for-students">For students</a>
+        <a href="#how-it-works" @click.prevent="scrollToSection('how-it-works')">How it works</a>
+        <a href="#features" @click.prevent="scrollToSection('features')">Features</a>
+        <a href="#for-students" @click.prevent="scrollToSection('for-students')">For students</a>
       </nav>
       <div class="nav-actions">
         <router-link to="/login" class="btn-link">Log in</router-link>
-        <router-link to="/login" class="btn-primary cta">Start for free</router-link>
+        <router-link to="/login" class="btn-primary cta">
+          <span>Start for free</span>
+          <span aria-hidden="true" class="cta-arrow">→</span>
+        </router-link>
       </div>
     </header>
 
     <section class="hero text-enter">
-      <div class="hero-pill">
-        <span>NEW</span>
-        Thoughtful feedback, not just a score
-      </div>
-      <h1>Mark less. <span class="hero-underline">Teach more.</span></h1>
-      <p>
-        Markrr uses AI to assess every answer against your rubric
-        and gives each student clear, personal feedback in seconds.
-      </p>
-      <div class="hero-actions">
-        <router-link to="/login" class="btn-primary hero-btn px-6 py-4">Mark your first exam <span aria-hidden="true">→</span></router-link>
-        <a href="#how-it-works" class="btn-secondary hero-btn px-6 py-4">See how it works</a>
-      </div>
-      <div class="hero-meta">
-        <span>Free to try</span>
-        <span>No credit card</span>
-        <span>Built for educators</span>
+      <div class="hero-glow" aria-hidden="true"></div>
+      <div class="hero-content">
+        <div class="hero-pill">
+          <span>NEW</span>
+          Thoughtful feedback, not just a score
+        </div>
+
+        <h1 class="hero-heading">
+          <span>Mark less.</span>
+          <span class="hero-heading-secondary">Teach more.</span>
+        </h1>
+
+        <p>
+          Markrr uses AI to assess every answer against your rubric and gives each student clear, personal feedback in seconds.
+        </p>
+
+        <div class="hero-actions">
+          <router-link to="/login" class="btn-primary hero-btn">Mark your first exam <span aria-hidden="true">→</span></router-link>
+          <a href="#how-it-works" class="btn-secondary hero-btn" @click.prevent="scrollToSection('how-it-works')">See how it works</a>
+        </div>
+
+        <div class="hero-meta">
+          <span>Free to try</span>
+          <span>No credit card</span>
+          <span>Built for educators</span>
+        </div>
       </div>
 
-      <div class="hero-card">
+      <div class="hero-card" aria-label="Mock assessment result preview">
         <img
-          :src="landingHeroImage"
-          alt="Assessment feedback preview"
-          @error="onPreviewImageError($event, fallbackPreviewImage)"
+          class="hero-preview-image"
+          :src="resultPreviewUrl"
+          alt="Markrr assessment result preview with Biology paper marks, AI feedback, and result badges"
+          width="812"
+          height="447"
+          fetchpriority="high"
+          decoding="async"
         />
-        <div class="hero-card-badge">Feedback ready</div>
       </div>
     </section>
 
@@ -51,14 +66,17 @@
       <h2>Every student deserves feedback they can use.</h2>
       <div class="feature-grid">
         <article class="feature-card">
+          <span class="feature-icon" aria-hidden="true">✓</span>
           <h3>Rubric-aligned marks</h3>
           <p>Set your criteria once. Responses are assessed consistently against what matters.</p>
         </article>
         <article class="feature-card feature-card-dark">
+          <span class="feature-icon" aria-hidden="true">✦</span>
           <h3>Feedback per question</h3>
           <p>Students see what they did well, what they missed, and one clear way to improve.</p>
         </article>
         <article class="feature-card">
+          <span class="feature-icon" aria-hidden="true">↗</span>
           <h3>Hours back each week</h3>
           <p>Upload completed papers and receive a structured, editable first pass in moments.</p>
         </article>
@@ -88,11 +106,13 @@
     </section>
 
     <section class="cta-strip">
-      <div>
-        <h2>Ready to make feedback feel useful?</h2>
-        <p>Give your students more than a grade. Your first exam is on us.</p>
+      <div class="cta-strip-inner">
+        <div>
+          <h2>Ready to make feedback feel useful?</h2>
+          <p>Give your students more than a grade. Your first exam is on us.</p>
+        </div>
+        <router-link to="/login" class="btn-primary cta">Get started free</router-link>
       </div>
-      <router-link to="/login" class="btn-primary cta">Get started free</router-link>
     </section>
 
     <footer class="home-footer">
@@ -109,20 +129,15 @@
 <script setup>
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import resultPreviewUrl from '../../ResultPreview.svg'
 import { useAuthStore } from '../stores/auth'
 import { getDashboardRoute } from '../utils/roleRedirect'
 
 const router = useRouter()
 const authStore = useAuthStore()
 
-const landingHeroImage = new URL('../assets/ui-images/download (7).jpg', import.meta.url).href
-const fallbackPreviewImage = new URL('../assets/ui-images/course-covers/mobile-first.svg', import.meta.url).href
-
-const onPreviewImageError = (event, fallbackSrc) => {
-  const image = event.target
-  if (image && image.src !== fallbackSrc) {
-    image.src = fallbackSrc
-  }
+const scrollToSection = (id) => {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 
 onMounted(() => {
@@ -134,24 +149,26 @@ onMounted(() => {
 
 <style scoped>
 .home-container {
+  width: 100%;
   min-height: 100vh;
-  padding: 20px clamp(18px, 4vw, 42px) 64px;
-  max-width: 1280px;
-  margin: 0 auto;
+  background: #f7f0e1;
+  color: #3b1212;
+  font-family: 'Manrope', 'Segoe UI', sans-serif;
+  overflow-x: clip;
 }
 
 .public-nav {
-  position: sticky;
-  top: 14px;
-  z-index: 20;
+  position: relative;
+  z-index: 50;
+  max-width: 1178.4px;
+  height: 88px;
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 18px;
-  background: rgba(255, 250, 240, 0.88);
-  border: 1px solid rgba(116, 83, 64, 0.16);
-  border-radius: 16px;
-  padding: 12px 16px;
+  padding: 20px 32px;
+  background: rgba(247, 240, 225, 0.7);
   backdrop-filter: blur(8px);
 }
 
@@ -159,333 +176,690 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #2f1711;
-  font-size: 22px;
+  color: #3b1212;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.56px;
 }
 
 .brand-logo {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   display: block;
 }
 
 .nav-links {
   display: flex;
-  gap: 24px;
+  align-items: center;
+  gap: 32px;
 }
 
 .nav-links a,
 .btn-link {
-  color: #684d3e;
+  color: #755e55;
   text-decoration: none;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
 }
 
 .nav-links a:hover,
 .btn-link:hover {
-  color: #c36400;
+  color: #3b1212;
 }
 
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 8px;
+}
+
+.btn-link {
+  width: 81px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: #755e55;
+  font-weight: 700;
 }
 
 .cta {
   text-decoration: none;
   border-radius: 12px;
-  min-height: 44px;
-  padding: 11px 18px;
+  min-height: 48px;
+  padding: 0 20px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
+  background: #3b1212;
+  color: #ffffff;
+  box-shadow: 0 6px 0 #b85b0a;
+  border: none;
 }
 
 .nav-actions .cta {
-  width: 124px;
-  min-height: 44px;
-  padding: 10px 14px;
+  width: 152px;
   white-space: nowrap;
 }
 
+.cta-arrow {
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  line-height: 1;
+  color: #ffffff;
+}
+
 .hero {
-  margin-top: 74px;
+  position: relative;
+  max-width: 1178.4px;
+  min-height: 885px;
+  margin: 0 auto;
+  padding-top: 0;
   text-align: center;
+  overflow: hidden;
+}
+
+.hero-glow {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 384px;
+  height: 384px;
+  transform: translateX(-50%);
+  border-radius: 9999px;
+  background: rgba(222, 202, 160, 0.5);
+  filter: blur(64px);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  width: min(896px, calc(100% - 24px));
+  margin: 0 auto;
+  padding-top: 96px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .hero-pill {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  border: 1px solid rgba(116, 83, 64, 0.22);
-  padding: 7px 14px;
-  border-radius: 999px;
-  background: #fffef9;
-  color: #4f3024;
-  font-size: 14px;
+  justify-content: center;
+  width: min(100%, 298.6px);
+  height: 41.6px;
+  padding: 8px 12px;
+  gap: 8px;
+  border: 0.8px solid #ddccb0;
+  border-radius: 9999px;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  color: #3b1212;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 16px;
 }
 
 .hero-pill span {
-  background: #f0d69b;
-  color: #5c351f;
-  border-radius: 999px;
-  padding: 2px 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 24px;
+  padding: 4px 8px;
+  border-radius: 9999px;
+  background: #deca9f;
+  color: #3b1212;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 800;
+  line-height: 16px;
 }
 
 .hero h1 {
-  margin-top: 22px;
-  font-size: clamp(48px, 8vw, 88px);
+  margin-top: 18px;
+  width: 896px;
+  max-width: 100%;
+  font-size: clamp(56px, 6vw, 86px);
   font-weight: 800;
   line-height: 0.96;
-  color: #471815;
+  letter-spacing: -4.4px;
+  color: #3b1212;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0;
 }
 
-.hero-underline {
-  position: relative;
+.hero h1 span {
   display: inline-block;
 }
 
-.hero-underline::after {
+.hero-heading-secondary {
+  position: relative;
+  display: inline-block;
+  margin-left: 0.12em;
+}
+
+.hero-heading-secondary::after {
   content: '';
   position: absolute;
-  left: 2%;
-  right: -1%;
+  left: 3%;
+  right: 1%;
   bottom: -8px;
-  height: 7px;
+  height: 8px;
   border-radius: 999px;
-  background: #c36400;
+  background: #b85b0a;
   transform: rotate(-1deg);
 }
 
 .hero p {
   margin: 22px auto 0;
-  max-width: 620px;
-  font-size: clamp(18px, 2vw, 25px);
-  color: #6a4f41;
+  width: 720px;
+  max-width: calc(100% - 40px);
+  font-size: 20px;
+  line-height: 32.5px;
+  color: #755e55;
+  font-weight: 400;
+  text-align: center;
 }
 
 .hero-actions {
-  margin-top: 28px;
+  margin-top: 30px;
   display: flex;
   justify-content: center;
-  gap: 10px;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .hero-btn {
-  min-width: 0;
-  min-height: 50px;
-  padding: 12px 18px;
+  min-height: 56px;
+  padding: 0 28px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
+  letter-spacing: 0;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
   justify-content: center;
-  font-size: 16px;
-  font-weight: 700;
+  gap: 8px;
 }
 
 .hero-actions .btn-primary {
-  width: auto;
-  min-width: 238px;
+  width: 221px;
+  background: #3b1212;
+  color: #ffffff;
+  box-shadow: 0 6px 0 #b85b0a;
 }
 
 .hero-actions .btn-secondary {
-  width: auto;
-  min-width: 198px;
+  width: 170.6px;
+  background: #ffffff;
+  border: 0.8px solid #ddccb0;
+  color: #3b1212;
+  box-shadow: none;
 }
 
 .hero-meta {
-  margin-top: 16px;
+  margin-top: 24px;
   display: flex;
   justify-content: center;
-  gap: 18px;
-  color: #7c5f51;
-  font-size: 14px;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  color: #755e55;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.hero-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hero-meta span::before {
+  content: '';
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  border: 1.2px solid #164541;
+  background: rgba(22, 69, 65, 0.08);
 }
 
 .hero-card {
-  margin: 46px auto 0;
-  max-width: 620px;
-  border: 6px solid #4c1a18;
-  border-radius: 28px;
-  background: #f9edd4;
-  padding: 10px;
-  box-shadow: 0 36px 64px rgba(75, 29, 18, 0.16);
   position: relative;
+  z-index: 2;
+  width: min(812px, calc(100% - 24px));
+  margin: 18px auto 0;
+  padding: 0;
 }
 
-.hero-card img {
+.hero-preview-image {
+  display: block;
   width: 100%;
   height: auto;
-  object-fit: contain;
-  display: block;
-  border-radius: 16px;
-}
-
-.hero-card-badge {
-  position: absolute;
-  right: -26px;
-  bottom: -20px;
-  background: #e6c98c;
-  color: #492116;
-  border-radius: 14px;
-  padding: 12px 16px;
-  font-weight: 700;
-  border: 1px solid rgba(116, 83, 64, 0.28);
 }
 
 .section-block {
-  margin-top: 72px;
-  background: #fffefb;
-  border: 1px solid rgba(116, 83, 64, 0.14);
-  border-radius: 30px;
-  padding: clamp(28px, 5vw, 56px);
+  width: 100%;
+  padding: 72px max(32px, calc((100% - 1114px) / 2)) 72px;
+  background: #ffffff;
 }
 
-.section-eyebrow {
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: #bd680a;
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.section-block h2 {
-  margin-top: 14px;
-  font-size: clamp(34px, 5vw, 58px);
-  color: #3a1713;
-  line-height: 1.04;
-}
-
-.feature-grid {
-  margin-top: 24px;
-  display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-}
-
-.feature-card {
-  background: #f7ecd3;
-  border: 1px solid rgba(116, 83, 64, 0.14);
-  border-radius: 20px;
-  padding: 22px;
-}
-
-.feature-card h3 {
-  font-size: 22px;
-  color: #351610;
-}
-
-.feature-card p {
-  margin-top: 10px;
-  color: #6a4e40;
-}
-
-.feature-card-dark {
-  background: #1f5a54;
-}
-
-.feature-card-dark h3,
-.feature-card-dark p {
-  color: #f6f8ea;
+.section-block > * {
+  width: 100%;
+  max-width: 1114px;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 .section-alt {
-  background: #f8edd6;
+  background: #f7f0e1;
 }
 
+.section-eyebrow {
+  margin: 0 0 16px;
+  color: #b85b0a;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 800;
+  letter-spacing: 2.24px;
+  text-transform: uppercase;
+}
+
+.section-block h2 {
+  margin: 0;
+  max-width: 672px;
+  color: #3b1212;
+  font-size: 42px;
+  line-height: 48px;
+  letter-spacing: -2px;
+  font-weight: 800;
+}
+
+.feature-grid,
 .steps-grid {
-  margin-top: 26px;
   display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.feature-card,
+.steps-grid article {
+  min-width: 0;
+}
+
+.feature-card {
+  min-height: 239px;
+  padding: 24px;
+  border: 1px solid #ddccb0;
+  border-radius: 24px;
+  background: #f7f0e1;
+  color: #3b1212;
+}
+
+.feature-card-dark {
+  border-color: #164541;
+  background: #164541;
+  color: #ffffff;
+}
+
+.feature-icon {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #b85b0a;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.feature-card-dark .feature-icon {
+  background: #deca9f;
+  color: #164541;
+}
+
+.feature-card h3,
+.steps-grid article h3 {
+  margin: 16px 0 0;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 800;
+}
+
+.feature-card p,
+.steps-grid article p {
+  margin: 8px 0 0;
+  color: #755e55;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.feature-card-dark p {
+  color: rgba(255, 255, 255, 0.82);
 }
 
 .steps-grid article {
-  border-top: 1px solid rgba(116, 83, 64, 0.24);
-  padding-top: 16px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #3b1212;
 }
 
-.steps-grid span {
-  background: rgba(224, 194, 133, 0.55);
-  border-radius: 999px;
+.steps-grid article span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 10px;
+  background: #deca9f;
   font-size: 12px;
-  font-weight: 700;
-  padding: 4px 10px;
-  color: #503126;
+  line-height: 1;
+  font-weight: 800;
+  color: #3b1212;
 }
 
-.steps-grid h3 {
-  margin-top: 12px;
-  color: #3a1913;
+.steps-grid article:nth-child(2) span {
+  background: #164541;
+  color: #ffffff;
 }
 
-.steps-grid p {
-  margin-top: 8px;
-  color: #715548;
+.steps-grid article:nth-child(3) span {
+  background: #ffffff;
+  border: 1px solid #ddccb0;
 }
 
 .cta-strip {
-  margin-top: 54px;
-  border-radius: 24px;
-  padding: clamp(22px, 4vw, 38px);
-  background: #1c5a54;
-  color: #f2f4e7;
+  width: 100%;
+  padding: 0 max(32px, calc((100% - 1114px) / 2)) 52px;
+}
+
+.cta-strip-inner {
+  width: 100%;
+  max-width: 1114px;
+  margin: 0 auto;
   display: flex;
-  justify-content: space-between;
-  gap: 18px;
   align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 40px 48px;
+  background: #164541;
+  border-radius: 32px;
 }
 
 .cta-strip h2 {
-  font-size: clamp(28px, 4vw, 42px);
+  margin: 0;
+  color: #ffffff;
+  font-size: 36px;
+  line-height: 40px;
+  letter-spacing: -1.62px;
+  font-weight: 800;
 }
 
 .cta-strip p {
-  color: #d6decf;
-  margin-top: 8px;
+  margin: 12px 0 0;
+  color: #decaa0;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.cta-strip .btn-primary {
+  width: 176px;
+  min-height: 48px;
+  padding: 0 20px;
+  background: #3b1212;
+  color: #ffffff;
+  box-shadow: 0 6px 0 #b85b0a;
 }
 
 .home-footer {
-  margin-top: 24px;
+  max-width: 1178.4px;
+  margin: 0 auto;
+  padding: 30px 32px 24px;
+  border-top: 0.8px solid #ddccb0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 14px;
-  color: #715548;
-  font-size: 14px;
-  border-top: 1px solid rgba(116, 83, 64, 0.16);
-  padding: 18px 6px 4px;
+  gap: 16px;
 }
 
 .home-footer .brand {
   font-size: 20px;
 }
 
+.home-footer p {
+  margin: 0;
+  color: #755e55;
+  font-size: 14px;
+  line-height: 20px;
+}
+
 @media (max-width: 980px) {
+  .public-nav {
+    padding: 12px 16px;
+    height: auto;
+  }
+
   .nav-links {
     display: none;
   }
 
-  .cta-strip,
-  .hero-actions,
-  .hero-meta,
-  .home-footer {
-    flex-direction: column;
-    align-items: stretch;
+  .hero {
+    min-height: auto;
+  }
+
+  .hero-content {
+    padding-top: 72px;
+  }
+
+  .hero h1 {
+    letter-spacing: -2px;
+  }
+
+  .hero-meta {
+    flex-wrap: wrap;
+    row-gap: 10px;
+  }
+
+  .hero-actions {
+    align-items: center;
+  }
+
+  .cta-strip-inner {
+    padding: 32px 24px;
   }
 
   .hero-actions .hero-btn {
-    width: 100%;
+    width: min(100%, 360px);
+    min-width: 0;
   }
 
-  .hero-card-badge {
-    position: static;
-    margin: 12px auto 0;
-    width: fit-content;
+  .hero-card {
+    width: min(812px, calc(100% - 32px));
+    margin-top: 28px;
+  }
+
+  .feature-grid,
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .cta-strip-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .public-nav {
+    gap: 10px;
+    padding: 10px 16px;
+  }
+
+  .brand {
+    gap: 7px;
+    font-size: 17px;
+  }
+
+  .brand-logo {
+    width: 30px;
+    height: 30px;
+  }
+
+  .nav-actions {
+    gap: 4px;
+  }
+
+  .btn-link {
+    width: auto;
+    padding: 0 8px;
+  }
+
+  .nav-actions .cta {
+    width: auto;
+    min-height: 42px;
+    padding: 0 12px;
+    font-size: 12px;
+  }
+
+  .hero-content {
+    width: calc(100% - 32px);
+    padding-top: 56px;
+  }
+
+  .hero-pill {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    min-height: 38px;
+    font-size: 11px;
+  }
+
+  .hero h1 {
+    font-size: clamp(42px, 11vw, 56px);
+    line-height: 1;
+    letter-spacing: -2.4px;
+  }
+
+  .hero-heading-secondary::after {
+    bottom: -5px;
+    height: 5px;
+  }
+
+  .hero p {
+    width: 100%;
+    max-width: 440px;
+    font-size: 16px;
+    line-height: 25px;
+  }
+
+  .hero-actions {
+    width: 100%;
+    gap: 10px;
+  }
+
+  .hero-actions .hero-btn {
+    width: min(100%, 340px);
+    min-height: 50px;
+  }
+
+  .hero-meta {
+    gap: 8px 14px;
+    font-size: 11px;
+  }
+
+  .hero-card {
+    width: calc(100% - 24px);
+    margin-top: 24px;
+  }
+
+
+  .section-block {
+    padding: 56px 20px;
+  }
+
+  .section-block h2 {
+    font-size: 32px;
+    line-height: 38px;
+    letter-spacing: -1.2px;
+  }
+
+  .feature-grid,
+  .steps-grid {
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  .feature-card {
+    min-height: 0;
+    padding: 20px;
+  }
+
+  .steps-grid article {
+    padding: 4px 0 8px;
+  }
+
+  .cta-strip {
+    padding: 0 20px 36px;
+  }
+
+  .cta-strip-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 28px 24px;
+    border-radius: 24px;
+  }
+
+  .cta-strip h2 {
+    font-size: 26px;
+    line-height: 32px;
+    letter-spacing: -1px;
+  }
+
+  .cta-strip p {
+    font-size: 14px;
+    line-height: 21px;
+  }
+
+  .home-footer {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding: 24px 20px;
+  }
+
+  .home-footer p {
+    font-size: 12px;
   }
 }
 </style>

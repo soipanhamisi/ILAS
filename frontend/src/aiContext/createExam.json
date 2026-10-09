@@ -1,0 +1,1782 @@
+{
+  "$comment": "This is structural design data exported by the Figma Raw plugin. It is formatted to help LLMs (Large Language Models) understand design structures and components from Figma designs.",
+  "name": "Examination Platform UI Design",
+  "type": "FRAME",
+  "width": 1160,
+  "height": 1306,
+  "layoutMode": "VERTICAL",
+  "primaryAxisSizingMode": "FIXED",
+  "counterAxisSizingMode": "FIXED",
+  "primaryAxisAlignItems": "MIN",
+  "counterAxisAlignItems": "MIN",
+  "fills": [
+    {
+      "type": "SOLID",
+      "opacity": 1,
+      "color": {
+        "r": 0.9686274528503418,
+        "g": 0.9411764740943909,
+        "b": 0.8823529481887817,
+        "a": 1,
+        "hex": "#f7f0e1"
+      }
+    }
+  ],
+  "strokeWeight": 1,
+  "strokeAlign": "INSIDE",
+  "strokeCap": "NONE",
+  "strokeJoin": "MITER",
+  "children": [
+    {
+      "name": "Dashboard",
+      "type": "FRAME",
+      "width": 1160,
+      "height": 1305.550048828125,
+      "layoutMode": "VERTICAL",
+      "primaryAxisSizingMode": "AUTO",
+      "counterAxisSizingMode": "FIXED",
+      "primaryAxisAlignItems": "MIN",
+      "counterAxisAlignItems": "MIN",
+      "paddingLeft": 256,
+      "fills": [
+        {
+          "type": "SOLID",
+          "opacity": 1,
+          "color": {
+            "r": 0.9686274528503418,
+            "g": 0.9411764740943909,
+            "b": 0.8823529481887817,
+            "a": 1,
+            "hex": "#f7f0e1"
+          }
+        }
+      ],
+      "strokeWeight": 1,
+      "strokeAlign": "INSIDE",
+      "strokeCap": "NONE",
+      "strokeJoin": "MITER",
+      "children": [
+        {
+          "name": "Header",
+          "type": "FRAME",
+          "width": 904,
+          "height": 72,
+          "layoutMode": "HORIZONTAL",
+          "primaryAxisSizingMode": "FIXED",
+          "counterAxisSizingMode": "FIXED",
+          "primaryAxisAlignItems": "SPACE_BETWEEN",
+          "counterAxisAlignItems": "CENTER",
+          "paddingLeft": 32,
+          "paddingRight": 32,
+          "fills": [
+            {
+              "type": "SOLID",
+              "opacity": 0.8999999761581421,
+              "color": {
+                "r": 0.9686274528503418,
+                "g": 0.9411764740943909,
+                "b": 0.8823529481887817,
+                "a": 0.8999999761581421,
+                "hex": "#f7f0e1e5"
+              }
+            }
+          ],
+          "strokes": [
+            {
+              "type": "SOLID",
+              "opacity": 1,
+              "color": {
+                "r": 0.8666666746139526,
+                "g": 0.800000011920929,
+                "b": 0.6901960968971252,
+                "a": 1,
+                "hex": "#ddccb0"
+              }
+            }
+          ],
+          "strokeWeight": "Symbol(figma.mixed)",
+          "strokeAlign": "INSIDE",
+          "strokeCap": "NONE",
+          "strokeJoin": "MITER",
+          "effects": [
+            {
+              "type": "BACKGROUND_BLUR",
+              "radius": 24
+            }
+          ],
+          "children": [
+            {
+              "name": "Container",
+              "type": "FRAME",
+              "width": 143,
+              "height": 16,
+              "layoutMode": "VERTICAL",
+              "primaryAxisSizingMode": "AUTO",
+              "counterAxisSizingMode": "AUTO",
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "strokeWeight": 1,
+              "strokeAlign": "INSIDE",
+              "strokeCap": "NONE",
+              "strokeJoin": "MITER",
+              "children": [
+                {
+                  "name": "Teacher workspace",
+                  "type": "TEXT",
+                  "width": 143,
+                  "height": 16,
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "opacity": 1,
+                      "color": {
+                        "r": 0.4588235318660736,
+                        "g": 0.3686274588108063,
+                        "b": 0.3333333432674408,
+                        "a": 1,
+                        "hex": "#755e55"
+                      }
+                    }
+                  ],
+                  "strokeWeight": 1,
+                  "strokeAlign": "OUTSIDE",
+                  "strokeCap": "NONE",
+                  "strokeJoin": "MITER",
+                  "characters": "Teacher workspace",
+                  "fontSize": 10.399999618530273,
+                  "fontName": {
+                    "family": "Manrope",
+                    "style": "ExtraBold",
+                    "variationSettings": {
+                      "wght": 800
+                    }
+                  },
+                  "fontWeight": 800,
+                  "letterSpacing": {
+                    "unit": "PIXELS",
+                    "value": 1.6640000343322754
+                  },
+                  "lineHeight": {
+                    "unit": "PIXELS",
+                    "value": 15.600000381469727
+                  },
+                  "textAlignHorizontal": "LEFT",
+                  "textAlignVertical": "TOP",
+                  "textAutoResize": "WIDTH_AND_HEIGHT",
+                  "textCase": "UPPER",
+                  "textDecoration": "NONE"
+                }
+              ]
+            },
+            {
+              "name": "Container",
+              "type": "FRAME",
+              "width": 201.60000610351562,
+              "height": 45.599998474121094,
+              "layoutMode": "HORIZONTAL",
+              "primaryAxisSizingMode": "AUTO",
+              "counterAxisSizingMode": "AUTO",
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER",
+              "itemSpacing": 8,
+              "strokeWeight": 1,
+              "strokeAlign": "INSIDE",
+              "strokeCap": "NONE",
+              "strokeJoin": "MITER",
+              "children": [
+                {
+                  "name": "Button - Notifications",
+                  "type": "FRAME",
+                  "width": 40,
+                  "height": 40,
+                  "cornerRadius": 12,
+                  "layoutMode": "GRID",
+                  "primaryAxisSizingMode": "FIXED",
+                  "counterAxisSizingMode": "FIXED",
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "opacity": 1,
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1,
+                        "hex": "#ffffff"
+                      }
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "type": "SOLID",
+                      "opacity": 1,
+                      "color": {
+                        "r": 0.8666666746139526,
+                        "g": 0.800000011920929,
+                        "b": 0.6901960968971252,
+                        "a": 1,
+                        "hex": "#ddccb0"
+                      }
+                    }
+                  ],
+                  "strokeWeight": 0.800000011920929,
+                  "strokeAlign": "INSIDE",
+                  "strokeCap": "NONE",
+                  "strokeJoin": "MITER",
+                  "children": [
+                    {
+                      "name": "Icon",
+                      "type": "FRAME",
+                      "width": 16,
+                      "height": 16,
+                      "layoutMode": "NONE",
+                      "primaryAxisSizingMode": "AUTO",
+                      "counterAxisSizingMode": "FIXED",
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "strokeWeight": 1,
+                      "strokeAlign": "INSIDE",
+                      "strokeCap": "NONE",
+                      "strokeJoin": "MITER"
+                    },
+                    {
+                      "name": "Text",
+                      "type": "FRAME",
+                      "width": 8,
+                      "height": 8,
+                      "cornerRadius": 26843500,
+                      "layoutMode": "NONE",
+                      "primaryAxisSizingMode": "AUTO",
+                      "counterAxisSizingMode": "FIXED",
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "opacity": 1,
+                          "color": {
+                            "r": 0.7215686440467834,
+                            "g": 0.35686275362968445,
+                            "b": 0.03921568766236305,
+                            "a": 1,
+                            "hex": "#b85b0a"
+                          }
+                        }
+                      ],
+                      "strokeWeight": 1,
+                      "strokeAlign": "INSIDE",
+                      "strokeCap": "NONE",
+                      "strokeJoin": "MITER"
+                    }
+                  ]
+                },
+                {
+                  "name": "Container",
+                  "type": "FRAME",
+                  "width": 153.60000610351562,
+                  "height": 45.599998474121094,
+                  "cornerRadius": 12,
+                  "layoutMode": "HORIZONTAL",
+                  "primaryAxisSizingMode": "AUTO",
+                  "counterAxisSizingMode": "AUTO",
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "paddingLeft": 12,
+                  "paddingRight": 12,
+                  "paddingTop": 8,
+                  "paddingBottom": 8,
+                  "itemSpacing": 8,
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "opacity": 1,
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1,
+                        "hex": "#ffffff"
+                      }
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "type": "SOLID",
+                      "opacity": 1,
+                      "color": {
+                        "r": 0.8666666746139526,
+                        "g": 0.800000011920929,
+                        "b": 0.6901960968971252,
+                        "a": 1,
+                        "hex": "#ddccb0"
+                      }
+                    }
+                  ],
+                  "strokeWeight": 0.800000011920929,
+                  "strokeAlign": "INSIDE",
+                  "strokeCap": "NONE",
+                  "strokeJoin": "MITER",
+                  "children": [
+                    {
+                      "name": "Text",
+                      "type": "FRAME",
+                      "width": 28,
+                      "height": 28,
+                      "cornerRadius": 26843500,
+                      "layoutMode": "GRID",
+                      "primaryAxisSizingMode": "FIXED",
+                      "counterAxisSizingMode": "FIXED",
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "opacity": 1,
+                          "color": {
+                            "r": 0.8705882430076599,
+                            "g": 0.7921568751335144,
+                            "b": 0.6274510025978088,
+                            "a": 1,
+                            "hex": "#decaa0"
+                          }
+                        }
+                      ],
+                      "strokeWeight": 1,
+                      "strokeAlign": "INSIDE",
+                      "strokeCap": "NONE",
+                      "strokeJoin": "MITER"
+                    },
+                    {
+                      "name": "Text",
+                      "type": "FRAME",
+                      "width": 72,
+                      "height": 16,
+                      "layoutMode": "VERTICAL",
+                      "primaryAxisSizingMode": "AUTO",
+                      "counterAxisSizingMode": "AUTO",
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "strokeWeight": 1,
+                      "strokeAlign": "INSIDE",
+                      "strokeCap": "NONE",
+                      "strokeJoin": "MITER"
+                    },
+                    {
+                      "name": "Icon:transform",
+                      "type": "FRAME",
+                      "width": 12,
+                      "height": 12,
+                      "layoutMode": "VERTICAL",
+                      "primaryAxisSizingMode": "FIXED",
+                      "counterAxisSizingMode": "FIXED",
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "strokeWeight": 1,
+                      "strokeAlign": "INSIDE",
+                      "strokeCap": "NONE",
+                      "strokeJoin": "MITER"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "CreateExamView",
+          "type": "FRAME",
+          "width": 904,
+          "height": 1233.550048828125,
+          "layoutMode": "VERTICAL",
+          "primaryAxisSizingMode": "AUTO",
+          "counterAxisSizingMode": "FIXED",
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "paddingLeft": 32,
+          "paddingRight": 32,
+          "paddingTop": 40,
+          "paddingBottom": 40,
+          "strokeWeight": 1,
+          "strokeAlign": "INSIDE",
+          "strokeCap": "NONE",
+          "strokeJoin": "MITER",
+          "children": [
+            {
+              "name": "Container",
+              "type": "FRAME",
+              "width": 840,
+              "height": 99.5999984741211,
+              "layoutMode": "HORIZONTAL",
+              "primaryAxisSizingMode": "FIXED",
+              "counterAxisSizingMode": "AUTO",
+              "primaryAxisAlignItems": "SPACE_BETWEEN",
+              "counterAxisAlignItems": "MIN",
+              "itemSpacing": 16,
+              "strokeWeight": 1,
+              "strokeAlign": "INSIDE",
+              "strokeCap": "NONE",
+              "strokeJoin": "MITER",
+              "children": [
+                {
+                  "name": "Container",
+                  "type": "FRAME",
+                  "width": 505.6750183105469,
+                  "height": 99.5999984741211,
+                  "layoutMode": "VERTICAL",
+                  "primaryAxisSizingMode": "AUTO",
+                  "counterAxisSizingMode": "FIXED",
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "strokeWeight": 1,
+                  "strokeAlign": "INSIDE",
+                  "strokeCap": "NONE",
+                  "strokeJoin": "MITER",
+                  "children": [
+                    {
+                      "name": "Container",
+                      "type": "FRAME",
+                      "width": 505.6750183105469,
+                      "height": 35.60000228881836,
+                      "layoutMode": "NONE",
+                      "primaryAxisSizingMode": "AUTO",
+                      "counterAxisSizingMode": "FIXED",
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "strokeWeight": 1,
+                      "strokeAlign": "INSIDE",
+                      "strokeCap": "NONE",
+                      "strokeJoin": "MITER"
+                    },
+                    {
+                      "name": "Container",
+                      "type": "FRAME",
+                      "width": 505.6750183105469,
+                      "height": 64,
+                      "layoutMode": "HORIZONTAL",
+                      "primaryAxisSizingMode": "AUTO",
+                      "counterAxisSizingMode": "AUTO",
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "itemSpacing": 12,
+                      "strokeWeight": 1,
+                      "strokeAlign": "INSIDE",
+                      "strokeCap": "NONE",
+                      "strokeJoin": "MITER"
+                    }
+                  ]
+                },
+                {
+                  "name": "Text",
+                  "type": "FRAME",
+                  "width": 118.5999984741211,
+                  "height": 29.600000381469727,
+                  "cornerRadius": 26843500,
+                  "layoutMode": "VERTICAL",
+                  "primaryAxisSizingMode": "AUTO",
+                  "counterAxisSizingMode": "AUTO",
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "paddingLeft": 12,
+                  "paddingRight": 12,
+                  "paddingTop": 6,
+                  "paddingBottom": 6,
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "opacity": 1,
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1,
+                        "hex": "#ffffff"
+                      }
+                    }
+                  ],
+                  "strokes": [
+                    {
+                      "type": "SOLID",
+                      "opacity": 1,
+                      "color": {
+                        "r": 0.8666666746139526,
+                        "g": 0.800000011920929,
+                        "b": 0.6901960968971252,
+                        "a": 1,
+                        "hex": "#ddccb0"
+                      }
+                    }
+                  ],
+                  "strokeWeight": 0.800000011920929,
+                  "strokeAlign": "INSIDE",
+                  "strokeCap": "NONE",
+                  "strokeJoin": "MITER",
+                  "children": [
+                    {
+                      "name": "Draft autosaved",
+                      "type": "TEXT",
+                      "width": 93,
+                      "height": 16,
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "opacity": 1,
+                          "color": {
+                            "r": 0.4588235318660736,
+                            "g": 0.3686274588108063,
+                            "b": 0.3333333432674408,
+                            "a": 1,
+                            "hex": "#755e55"
+                          }
+                        }
+                      ],
+                      "strokeWeight": 1,
+                      "strokeAlign": "OUTSIDE",
+                      "strokeCap": "NONE",
+                      "strokeJoin": "MITER",
+                      "characters": "Draft autosaved",
+                      "fontSize": 12,
+                      "fontName": {
+                        "family": "Manrope",
+                        "style": "Bold",
+                        "variationSettings": {
+                          "wght": 700
+                        }
+                      },
+                      "fontWeight": 700,
+                      "letterSpacing": {
+                        "unit": "PIXELS",
+                        "value": 0
+                      },
+                      "lineHeight": {
+                        "unit": "PIXELS",
+                        "value": 16
+                      },
+                      "textAlignHorizontal": "LEFT",
+                      "textAlignVertical": "TOP",
+                      "textAutoResize": "WIDTH_AND_HEIGHT",
+                      "textCase": "ORIGINAL",
+                      "textDecoration": "NONE"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Form:margin",
+              "type": "FRAME",
+              "width": 840,
+              "height": 1053.949951171875,
+              "layoutMode": "VERTICAL",
+              "primaryAxisSizingMode": "AUTO",
+              "counterAxisSizingMode": "FIXED",
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "paddingTop": 32,
+              "strokeWeight": 1,
+              "strokeAlign": "INSIDE",
+              "strokeCap": "NONE",
+              "strokeJoin": "MITER",
+              "children": [
+                {
+                  "name": "Form",
+                  "type": "FRAME",
+                  "width": 840,
+                  "height": 1021.9500122070312,
+                  "layoutMode": "GRID",
+                  "primaryAxisSizingMode": "AUTO",
+                  "counterAxisSizingMode": "AUTO",
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "strokeWeight": 1,
+                  "strokeAlign": "INSIDE",
+                  "strokeCap": "NONE",
+                  "strokeJoin": "MITER",
+                  "children": [
+                    {
+                      "name": "Container",
+                      "type": "FRAME",
+                      "width": 532,
+                      "height": 1021.9500122070312,
+                      "layoutMode": "VERTICAL",
+                      "primaryAxisSizingMode": "FIXED",
+                      "counterAxisSizingMode": "FIXED",
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "strokeWeight": 1,
+                      "strokeAlign": "INSIDE",
+                      "strokeCap": "NONE",
+                      "strokeJoin": "MITER"
+                    },
+                    {
+                      "name": "Sidebar",
+                      "type": "FRAME",
+                      "width": 288,
+                      "height": 505,
+                      "cornerRadius": 16,
+                      "layoutMode": "VERTICAL",
+                      "primaryAxisSizingMode": "FIXED",
+                      "counterAxisSizingMode": "FIXED",
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "paddingLeft": 20,
+                      "paddingRight": 20,
+                      "paddingTop": 20,
+                      "paddingBottom": 20,
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "opacity": 1,
+                          "color": {
+                            "r": 1,
+                            "g": 1,
+                            "b": 1,
+                            "a": 1,
+                            "hex": "#ffffff"
+                          }
+                        }
+                      ],
+                      "strokes": [
+                        {
+                          "type": "SOLID",
+                          "opacity": 1,
+                          "color": {
+                            "r": 0.8666666746139526,
+                            "g": 0.800000011920929,
+                            "b": 0.6901960968971252,
+                            "a": 1,
+                            "hex": "#ddccb0"
+                          }
+                        }
+                      ],
+                      "strokeWeight": 0.800000011920929,
+                      "strokeAlign": "INSIDE",
+                      "strokeCap": "NONE",
+                      "strokeJoin": "MITER"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "type": "FRAME",
+      "width": 256,
+      "height": 642,
+      "layoutMode": "VERTICAL",
+      "primaryAxisSizingMode": "FIXED",
+      "counterAxisSizingMode": "FIXED",
+      "primaryAxisAlignItems": "MIN",
+      "counterAxisAlignItems": "MIN",
+      "paddingLeft": 20,
+      "paddingRight": 20,
+      "paddingTop": 20,
+      "paddingBottom": 20,
+      "fills": [
+        {
+          "type": "SOLID",
+          "opacity": 1,
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 1,
+            "hex": "#ffffff"
+          }
+        }
+      ],
+      "strokes": [
+        {
+          "type": "SOLID",
+          "opacity": 1,
+          "color": {
+            "r": 0.8666666746139526,
+            "g": 0.800000011920929,
+            "b": 0.6901960968971252,
+            "a": 1,
+            "hex": "#ddccb0"
+          }
+        }
+      ],
+      "strokeWeight": "Symbol(figma.mixed)",
+      "strokeAlign": "INSIDE",
+      "strokeCap": "NONE",
+      "strokeJoin": "MITER",
+      "children": [
+        {
+          "name": "Container",
+          "type": "FRAME",
+          "width": 215.1999969482422,
+          "height": 36,
+          "layoutMode": "HORIZONTAL",
+          "primaryAxisSizingMode": "FIXED",
+          "counterAxisSizingMode": "AUTO",
+          "primaryAxisAlignItems": "SPACE_BETWEEN",
+          "counterAxisAlignItems": "CENTER",
+          "strokeWeight": 1,
+          "strokeAlign": "INSIDE",
+          "strokeCap": "NONE",
+          "strokeJoin": "MITER",
+          "children": [
+            {
+              "name": "Logo",
+              "type": "FRAME",
+              "width": 109,
+              "height": 36,
+              "layoutMode": "HORIZONTAL",
+              "primaryAxisSizingMode": "AUTO",
+              "counterAxisSizingMode": "AUTO",
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "CENTER",
+              "itemSpacing": 10,
+              "strokeWeight": 1,
+              "strokeAlign": "INSIDE",
+              "strokeCap": "NONE",
+              "strokeJoin": "MITER",
+              "children": [
+                {
+                  "name": "Text",
+                  "type": "FRAME",
+                  "width": 36,
+                  "height": 36,
+                  "cornerRadius": 12,
+                  "layoutMode": "GRID",
+                  "primaryAxisSizingMode": "FIXED",
+                  "counterAxisSizingMode": "FIXED",
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "opacity": 1,
+                      "color": {
+                        "r": 0.23137255012989044,
+                        "g": 0.07058823853731155,
+                        "b": 0.07058823853731155,
+                        "a": 1,
+                        "hex": "#3b1212"
+                      }
+                    }
+                  ],
+                  "strokeWeight": 1,
+                  "strokeAlign": "INSIDE",
+                  "strokeCap": "NONE",
+                  "strokeJoin": "MITER",
+                  "effects": [
+                    {
+                      "type": "INNER_SHADOW",
+                      "radius": 0,
+                      "spread": 0,
+                      "offset": {
+                        "x": 0,
+                        "y": -2
+                      },
+                      "color": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 0.11999999731779099,
+                        "hex": "#ffffff1f"
+                      }
+                    }
+                  ],
+                  "children": [
+                    {
+                      "name": "Icon",
+                      "type": "FRAME",
+                      "width": 20,
+                      "height": 20,
+                      "layoutMode": "NONE",
+                      "primaryAxisSizingMode": "AUTO",
+                      "counterAxisSizingMode": "FIXED",
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "strokeWeight": 1,
+                      "strokeAlign": "INSIDE",
+                      "strokeCap": "NONE",
+                      "strokeJoin": "MITER"
+                    }
+                  ]
+                },
+                {
+                  "name": "Text",
+                  "type": "FRAME",
+                  "width": 63,
+                  "height": 28,
+                  "layoutMode": "VERTICAL",
+                  "primaryAxisSizingMode": "AUTO",
+                  "counterAxisSizingMode": "AUTO",
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "strokeWeight": 1,
+                  "strokeAlign": "INSIDE",
+                  "strokeCap": "NONE",
+                  "strokeJoin": "MITER",
+                  "children": [
+                    {
+                      "name": "Markly",
+                      "type": "TEXT",
+                      "width": 63,
+                      "height": 28,
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "opacity": 1,
+                          "color": {
+                            "r": 0.23137255012989044,
+                            "g": 0.07058823853731155,
+                            "b": 0.07058823853731155,
+                            "a": 1,
+                            "hex": "#3b1212"
+                          }
+                        }
+                      ],
+                      "strokeWeight": 1,
+                      "strokeAlign": "OUTSIDE",
+                      "strokeCap": "NONE",
+                      "strokeJoin": "MITER",
+                      "characters": "Markly",
+                      "fontSize": 20,
+                      "fontName": {
+                        "family": "Manrope",
+                        "style": "ExtraBold",
+                        "variationSettings": {
+                          "wght": 800
+                        }
+                      },
+                      "fontWeight": 800,
+                      "letterSpacing": {
+                        "unit": "PIXELS",
+                        "value": -0.6399999856948853
+                      },
+                      "lineHeight": {
+                        "unit": "PIXELS",
+                        "value": 28
+                      },
+                      "textAlignHorizontal": "LEFT",
+                      "textAlignVertical": "TOP",
+                      "textAutoResize": "WIDTH_AND_HEIGHT",
+                      "textCase": "ORIGINAL",
+                      "textDecoration": "NONE"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Container",
+          "type": "FRAME",
+          "width": 215.1999969482422,
+          "height": 56,
+          "layoutMode": "VERTICAL",
+          "primaryAxisSizingMode": "FIXED",
+          "counterAxisSizingMode": "FIXED",
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "paddingTop": 40,
+          "strokeWeight": 1,
+          "strokeAlign": "INSIDE",
+          "strokeCap": "NONE",
+          "strokeJoin": "MITER",
+          "children": [
+            {
+              "name": "Workspace",
+              "type": "TEXT",
+              "width": 80,
+              "height": 16,
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "opacity": 0.6000000238418579,
+                  "color": {
+                    "r": 0.4588235318660736,
+                    "g": 0.3686274588108063,
+                    "b": 0.3333333432674408,
+                    "a": 0.6000000238418579,
+                    "hex": "#755e5599"
+                  }
+                }
+              ],
+              "strokeWeight": 1,
+              "strokeAlign": "OUTSIDE",
+              "strokeCap": "NONE",
+              "strokeJoin": "MITER",
+              "characters": "Workspace",
+              "fontSize": 10.399999618530273,
+              "fontName": {
+                "family": "Manrope",
+                "style": "ExtraBold",
+                "variationSettings": {
+                  "wght": 800
+                }
+              },
+              "fontWeight": 800,
+              "letterSpacing": {
+                "unit": "PIXELS",
+                "value": 1.7680000066757202
+              },
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 15.600000381469727
+              },
+              "textAlignHorizontal": "LEFT",
+              "textAlignVertical": "TOP",
+              "textAutoResize": "WIDTH_AND_HEIGHT",
+              "textCase": "UPPER",
+              "textDecoration": "NONE"
+            }
+          ]
+        },
+        {
+          "name": "Navigation:margin",
+          "type": "FRAME",
+          "width": 215.1999969482422,
+          "height": 206,
+          "layoutMode": "VERTICAL",
+          "primaryAxisSizingMode": "AUTO",
+          "counterAxisSizingMode": "FIXED",
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "paddingTop": 12,
+          "strokeWeight": 1,
+          "strokeAlign": "INSIDE",
+          "strokeCap": "NONE",
+          "strokeJoin": "MITER",
+          "children": [
+            {
+              "name": "Navigation",
+              "type": "FRAME",
+              "width": 215,
+              "height": 194,
+              "layoutMode": "VERTICAL",
+              "primaryAxisSizingMode": "FIXED",
+              "counterAxisSizingMode": "AUTO",
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "strokeWeight": 1,
+              "strokeAlign": "INSIDE",
+              "strokeCap": "NONE",
+              "strokeJoin": "MITER",
+              "children": [
+                {
+                  "name": "Button",
+                  "type": "FRAME",
+                  "width": 215,
+                  "height": 44,
+                  "cornerRadius": 12,
+                  "layoutMode": "HORIZONTAL",
+                  "primaryAxisSizingMode": "FIXED",
+                  "counterAxisSizingMode": "AUTO",
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "paddingLeft": 12,
+                  "paddingRight": 12,
+                  "paddingTop": 12,
+                  "paddingBottom": 12,
+                  "itemSpacing": 12,
+                  "strokeWeight": 1,
+                  "strokeAlign": "INSIDE",
+                  "strokeCap": "NONE",
+                  "strokeJoin": "MITER",
+                  "children": [
+                    {
+                      "name": "Icon",
+                      "type": "FRAME",
+                      "width": 20,
+                      "height": 20,
+                      "layoutMode": "NONE",
+                      "primaryAxisSizingMode": "AUTO",
+                      "counterAxisSizingMode": "FIXED",
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "strokeWeight": 1,
+                      "strokeAlign": "INSIDE",
+                      "strokeCap": "NONE",
+                      "strokeJoin": "MITER"
+                    },
+                    {
+                      "name": "Overview",
+                      "type": "TEXT",
+                      "width": 64,
+                      "height": 20,
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "opacity": 1,
+                          "color": {
+                            "r": 0.4588235318660736,
+                            "g": 0.3686274588108063,
+                            "b": 0.3333333432674408,
+                            "a": 1,
+                            "hex": "#755e55"
+                          }
+                        }
+                      ],
+                      "strokeWeight": 1,
+                      "strokeAlign": "OUTSIDE",
+                      "strokeCap": "NONE",
+                      "strokeJoin": "MITER",
+                      "characters": "Overview",
+                      "fontSize": 14,
+                      "fontName": {
+                        "family": "Manrope",
+                        "style": "Bold",
+                        "variationSettings": {
+                          "wght": 700
+                        }
+                      },
+                      "fontWeight": 700,
+                      "letterSpacing": {
+                        "unit": "PIXELS",
+                        "value": 0
+                      },
+                      "lineHeight": {
+                        "unit": "PIXELS",
+                        "value": 20
+                      },
+                      "textAlignHorizontal": "CENTER",
+                      "textAlignVertical": "TOP",
+                      "textAutoResize": "WIDTH_AND_HEIGHT",
+                      "textCase": "ORIGINAL",
+                      "textDecoration": "NONE"
+                    }
+                  ]
+                },
+                {
+                  "name": "Button:margin",
+                  "type": "FRAME",
+                  "width": 215,
+                  "height": 50,
+                  "layoutMode": "VERTICAL",
+                  "primaryAxisSizingMode": "AUTO",
+                  "counterAxisSizingMode": "FIXED",
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "paddingTop": 6,
+                  "strokeWeight": 1,
+                  "strokeAlign": "INSIDE",
+                  "strokeCap": "NONE",
+                  "strokeJoin": "MITER",
+                  "children": [
+                    {
+                      "name": "Button",
+                      "type": "FRAME",
+                      "width": 215,
+                      "height": 44,
+                      "cornerRadius": 12,
+                      "layoutMode": "HORIZONTAL",
+                      "primaryAxisSizingMode": "FIXED",
+                      "counterAxisSizingMode": "AUTO",
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "paddingLeft": 12,
+                      "paddingRight": 12,
+                      "paddingTop": 12,
+                      "paddingBottom": 12,
+                      "itemSpacing": 12,
+                      "strokeWeight": 1,
+                      "strokeAlign": "INSIDE",
+                      "strokeCap": "NONE",
+                      "strokeJoin": "MITER"
+                    }
+                  ]
+                },
+                {
+                  "name": "Button:margin",
+                  "type": "FRAME",
+                  "width": 215,
+                  "height": 50,
+                  "layoutMode": "VERTICAL",
+                  "primaryAxisSizingMode": "AUTO",
+                  "counterAxisSizingMode": "FIXED",
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "paddingTop": 6,
+                  "strokeWeight": 1,
+                  "strokeAlign": "INSIDE",
+                  "strokeCap": "NONE",
+                  "strokeJoin": "MITER",
+                  "children": [
+                    {
+                      "name": "Button",
+                      "type": "FRAME",
+                      "width": 215,
+                      "height": 44,
+                      "cornerRadius": 12,
+                      "layoutMode": "HORIZONTAL",
+                      "primaryAxisSizingMode": "FIXED",
+                      "counterAxisSizingMode": "AUTO",
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "paddingLeft": 12,
+                      "paddingRight": 12,
+                      "paddingTop": 12,
+                      "paddingBottom": 12,
+                      "itemSpacing": 12,
+                      "strokeWeight": 1,
+                      "strokeAlign": "INSIDE",
+                      "strokeCap": "NONE",
+                      "strokeJoin": "MITER"
+                    }
+                  ]
+                },
+                {
+                  "name": "Button:margin",
+                  "type": "FRAME",
+                  "width": 215,
+                  "height": 50,
+                  "layoutMode": "VERTICAL",
+                  "primaryAxisSizingMode": "AUTO",
+                  "counterAxisSizingMode": "FIXED",
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "paddingTop": 6,
+                  "strokeWeight": 1,
+                  "strokeAlign": "INSIDE",
+                  "strokeCap": "NONE",
+                  "strokeJoin": "MITER",
+                  "children": [
+                    {
+                      "name": "Button",
+                      "type": "FRAME",
+                      "width": 215,
+                      "height": 44,
+                      "cornerRadius": 12,
+                      "layoutMode": "HORIZONTAL",
+                      "primaryAxisSizingMode": "FIXED",
+                      "counterAxisSizingMode": "AUTO",
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "CENTER",
+                      "paddingLeft": 12,
+                      "paddingRight": 12,
+                      "paddingTop": 12,
+                      "paddingBottom": 12,
+                      "itemSpacing": 12,
+                      "strokeWeight": 1,
+                      "strokeAlign": "INSIDE",
+                      "strokeCap": "NONE",
+                      "strokeJoin": "MITER"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Button:margin",
+          "type": "FRAME",
+          "width": 215,
+          "height": 68,
+          "layoutMode": "VERTICAL",
+          "primaryAxisSizingMode": "AUTO",
+          "counterAxisSizingMode": "AUTO",
+          "primaryAxisAlignItems": "MIN",
+          "counterAxisAlignItems": "MIN",
+          "paddingTop": 24,
+          "strokeWeight": 1,
+          "strokeAlign": "INSIDE",
+          "strokeCap": "NONE",
+          "strokeJoin": "MITER",
+          "children": [
+            {
+              "name": "Button",
+              "type": "FRAME",
+              "width": 215,
+              "height": 44,
+              "cornerRadius": 12,
+              "layoutMode": "HORIZONTAL",
+              "primaryAxisSizingMode": "FIXED",
+              "counterAxisSizingMode": "AUTO",
+              "primaryAxisAlignItems": "CENTER",
+              "counterAxisAlignItems": "CENTER",
+              "paddingLeft": 16,
+              "paddingRight": 16,
+              "paddingTop": 12,
+              "paddingBottom": 12,
+              "itemSpacing": 8,
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "opacity": 1,
+                  "color": {
+                    "r": 0.8705882430076599,
+                    "g": 0.7921568751335144,
+                    "b": 0.6274510025978088,
+                    "a": 1,
+                    "hex": "#decaa0"
+                  }
+                }
+              ],
+              "strokeWeight": 1,
+              "strokeAlign": "INSIDE",
+              "strokeCap": "NONE",
+              "strokeJoin": "MITER",
+              "effects": [
+                {
+                  "type": "DROP_SHADOW",
+                  "radius": 0,
+                  "spread": 0,
+                  "offset": {
+                    "x": 0,
+                    "y": 5
+                  },
+                  "color": {
+                    "r": 0.7215686440467834,
+                    "g": 0.35686275362968445,
+                    "b": 0.03921568766236305,
+                    "a": 1,
+                    "hex": "#b85b0a"
+                  }
+                }
+              ],
+              "children": [
+                {
+                  "name": "Icon",
+                  "type": "FRAME",
+                  "width": 16,
+                  "height": 16,
+                  "layoutMode": "NONE",
+                  "primaryAxisSizingMode": "AUTO",
+                  "counterAxisSizingMode": "FIXED",
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "MIN",
+                  "strokeWeight": 1,
+                  "strokeAlign": "INSIDE",
+                  "strokeCap": "NONE",
+                  "strokeJoin": "MITER",
+                  "children": [
+                    {
+                      "name": "Vector",
+                      "type": "VECTOR",
+                      "width": 9.333333969116211,
+                      "height": 9.333333969116211,
+                      "strokes": [
+                        {
+                          "type": "SOLID",
+                          "opacity": 1,
+                          "color": {
+                            "r": 0.23137255012989044,
+                            "g": 0.07058823853731155,
+                            "b": 0.07058823853731155,
+                            "a": 1,
+                            "hex": "#3b1212"
+                          }
+                        }
+                      ],
+                      "strokeWeight": 1.2000000476837158,
+                      "strokeAlign": "CENTER",
+                      "strokeCap": "ROUND",
+                      "strokeJoin": "ROUND"
+                    }
+                  ]
+                },
+                {
+                  "name": "New assessment",
+                  "type": "TEXT",
+                  "width": 115,
+                  "height": 20,
+                  "fills": [
+                    {
+                      "type": "SOLID",
+                      "opacity": 1,
+                      "color": {
+                        "r": 0.23137255012989044,
+                        "g": 0.07058823853731155,
+                        "b": 0.07058823853731155,
+                        "a": 1,
+                        "hex": "#3b1212"
+                      }
+                    }
+                  ],
+                  "strokeWeight": 1,
+                  "strokeAlign": "OUTSIDE",
+                  "strokeCap": "NONE",
+                  "strokeJoin": "MITER",
+                  "characters": "New assessment",
+                  "fontSize": 14,
+                  "fontName": {
+                    "family": "Manrope",
+                    "style": "Bold",
+                    "variationSettings": {
+                      "wght": 700
+                    }
+                  },
+                  "fontWeight": 700,
+                  "letterSpacing": {
+                    "unit": "PIXELS",
+                    "value": 0
+                  },
+                  "lineHeight": {
+                    "unit": "PIXELS",
+                    "value": 20
+                  },
+                  "textAlignHorizontal": "CENTER",
+                  "textAlignVertical": "TOP",
+                  "textAutoResize": "WIDTH_AND_HEIGHT",
+                  "textCase": "ORIGINAL",
+                  "textDecoration": "NONE"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Container:align",
+          "type": "FRAME",
+          "width": 215.1999969482422,
+          "height": 236,
+          "layoutMode": "VERTICAL",
+          "primaryAxisSizingMode": "FIXED",
+          "counterAxisSizingMode": "FIXED",
+          "primaryAxisAlignItems": "MAX",
+          "counterAxisAlignItems": "MIN",
+          "strokeWeight": 1,
+          "strokeAlign": "INSIDE",
+          "strokeCap": "NONE",
+          "strokeJoin": "MITER",
+          "children": [
+            {
+              "name": "Container",
+              "type": "FRAME",
+              "width": 215.1999969482422,
+              "height": 60,
+              "cornerRadius": 16,
+              "layoutMode": "VERTICAL",
+              "primaryAxisSizingMode": "AUTO",
+              "counterAxisSizingMode": "FIXED",
+              "primaryAxisAlignItems": "MIN",
+              "counterAxisAlignItems": "MIN",
+              "paddingLeft": 12,
+              "paddingRight": 12,
+              "paddingTop": 12,
+              "paddingBottom": 12,
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "opacity": 1,
+                  "color": {
+                    "r": 0.9686274528503418,
+                    "g": 0.9411764740943909,
+                    "b": 0.8823529481887817,
+                    "a": 1,
+                    "hex": "#f7f0e1"
+                  }
+                }
+              ],
+              "strokeWeight": 1,
+              "strokeAlign": "INSIDE",
+              "strokeCap": "NONE",
+              "strokeJoin": "MITER",
+              "children": [
+                {
+                  "name": "Container",
+                  "type": "FRAME",
+                  "width": 191,
+                  "height": 36,
+                  "layoutMode": "HORIZONTAL",
+                  "primaryAxisSizingMode": "AUTO",
+                  "counterAxisSizingMode": "AUTO",
+                  "primaryAxisAlignItems": "MIN",
+                  "counterAxisAlignItems": "CENTER",
+                  "itemSpacing": 12,
+                  "strokeWeight": 1,
+                  "strokeAlign": "INSIDE",
+                  "strokeCap": "NONE",
+                  "strokeJoin": "MITER",
+                  "children": [
+                    {
+                      "name": "Text",
+                      "type": "FRAME",
+                      "width": 36,
+                      "height": 36,
+                      "cornerRadius": 26843500,
+                      "layoutMode": "GRID",
+                      "primaryAxisSizingMode": "FIXED",
+                      "counterAxisSizingMode": "FIXED",
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "fills": [
+                        {
+                          "type": "SOLID",
+                          "opacity": 1,
+                          "color": {
+                            "r": 0.8705882430076599,
+                            "g": 0.7921568751335144,
+                            "b": 0.6274510025978088,
+                            "a": 1,
+                            "hex": "#decaa0"
+                          }
+                        }
+                      ],
+                      "strokeWeight": 1,
+                      "strokeAlign": "INSIDE",
+                      "strokeCap": "NONE",
+                      "strokeJoin": "MITER"
+                    },
+                    {
+                      "name": "Container",
+                      "type": "FRAME",
+                      "width": 99,
+                      "height": 36,
+                      "layoutMode": "VERTICAL",
+                      "primaryAxisSizingMode": "AUTO",
+                      "counterAxisSizingMode": "FIXED",
+                      "primaryAxisAlignItems": "MIN",
+                      "counterAxisAlignItems": "MIN",
+                      "strokeWeight": 1,
+                      "strokeAlign": "INSIDE",
+                      "strokeCap": "NONE",
+                      "strokeJoin": "MITER"
+                    },
+                    {
+                      "name": "Button - Log out",
+                      "type": "FRAME",
+                      "width": 32,
+                      "height": 32,
+                      "cornerRadius": 8,
+                      "layoutMode": "VERTICAL",
+                      "primaryAxisSizingMode": "AUTO",
+                      "counterAxisSizingMode": "AUTO",
+                      "primaryAxisAlignItems": "CENTER",
+                      "counterAxisAlignItems": "MIN",
+                      "paddingLeft": 8,
+                      "paddingRight": 8,
+                      "paddingTop": 8,
+                      "paddingBottom": 8,
+                      "strokeWeight": 1,
+                      "strokeAlign": "INSIDE",
+                      "strokeCap": "NONE",
+                      "strokeJoin": "MITER"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "textContent": [
+    {
+      "name": "Teacher workspace",
+      "text": "Teacher workspace",
+      "path": "Examination Platform UI Design/Dashboard/Header/Container/Teacher workspace",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "AM",
+      "text": "AM",
+      "path": "Examination Platform UI Design/Dashboard/Header/Container/Container/Text/AM",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Alex Morgan",
+      "text": "Alex Morgan",
+      "path": "Examination Platform UI Design/Dashboard/Header/Container/Container/Text/Alex Morgan",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Dashboard",
+      "text": "Dashboard",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Container/Container/Container/Button/Dashboard",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Create new exam",
+      "text": "Create new exam",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Container/Container/Container/Container/Heading 1/Create new exam",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Set up the assessment and tell Markly how you want",
+      "text": "Set up the assessment and tell Markly how you want to add questions.",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Container/Container/Container/Container/Paragraph/Set up the assessment and tell Markly how you want",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Draft autosaved",
+      "text": "Draft autosaved",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Container/Text/Draft autosaved",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "1",
+      "text": "1",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Container/Section/Container/Text/1",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Exam details",
+      "text": "Exam details",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Container/Section/Container/Container/Heading 2/Exam details",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "The basics students will see.",
+      "text": "The basics students will see.",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Container/Section/Container/Container/Paragraph/The basics students will see.",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Course",
+      "text": "Course",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Container/Section/Container:margin/Container/Label/Text/Course",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Select a course",
+      "text": "Select a course",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Container/Section/Container:margin/Container/Label/Dropdown/Container/Select a course",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Exam title",
+      "text": "Exam title",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Container/Section/Container:margin/Container/Label/Text/Exam title",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "e.g. Cell Biology Midterm",
+      "text": "e.g. Cell Biology Midterm",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Container/Section/Container:margin/Container/Label/Text Input/e.g. Cell Biology Midterm",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Maximum score",
+      "text": "Maximum score",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Container/Section/Container:margin/Container/Label/Text/Maximum score",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "e.g. 100",
+      "text": "e.g. 100",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Container/Section/Container:margin/Container/Label/Number Input/e.g. 100",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Due date",
+      "text": "Due date",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Container/Section/Container:margin/Container/Label/Text/Due date",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "2",
+      "text": "2",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Container/Section:margin/Section/Container/Text/2",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Add questions",
+      "text": "Add questions",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Container/Section:margin/Section/Container/Container/Heading 2/Add questions",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Upload in bulk or build each question manually.",
+      "text": "Upload in bulk or build each question manually.",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Container/Section:margin/Section/Container/Container/Paragraph/Upload in bulk or build each question manually.",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Upload CSV",
+      "text": "Upload CSV",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Container/Section:margin/Section/Container:margin/Container/Button/Text/Text/Upload CSV",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Best for existing question sets",
+      "text": "Best for existing question sets",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Container/Section:margin/Section/Container:margin/Container/Button/Text/Container/Best for existing question sets",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Build manually",
+      "text": "Build manually",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Container/Section:margin/Section/Container:margin/Container/Button/Text/Text/Build manually",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Create questions one by one",
+      "text": "Create questions one by one",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Container/Section:margin/Section/Container:margin/Container/Button/Text/Container/Create questions one by one",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "CSV template file",
+      "text": "CSV template file",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Container/Section:margin/Section/Container/Label/CSV template file",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Choose CSV file",
+      "text": "Choose CSV file",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Container/Section:margin/Section/Container/Label:margin/Label/Text:margin/Choose CSV file",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "or drag and drop here · up to 10 MB",
+      "text": "or drag and drop here · up to 10 MB",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Container/Section:margin/Section/Container/Label:margin/Label/Text:margin/or drag and drop here · up to 10 MB",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Expected CSV columns",
+      "text": "Expected CSV columns",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Container/Section:margin/Section/Container/Container:margin/Container/Container/Text/Expected CSV columns",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Download template",
+      "text": "Download template",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Container/Section:margin/Section/Container/Container:margin/Container/Container/Button/Download template",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "question, modelAnswer, maxMarks, rubric What is os",
+      "text": "question, modelAnswer, maxMarks, rubric\nWhat is osmosis?, Water movement..., 10, Accuracy...",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Container/Section:margin/Section/Container/Container:margin/Container/Code:margin/Code/question, modelAnswer, maxMarks, rubric What is os",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "What happens next",
+      "text": "What happens next",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Sidebar/Container/What happens next",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Review your rubric",
+      "text": "Review your rubric",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Sidebar/Heading 2/Review your rubric",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Markly will import your questions, identify criter",
+      "text": "Markly will import your questions, identify criteria, and prepare a rubric for your approval before the exam goes live.",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Sidebar/Paragraph/Markly will import your questions, identify criter",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "1",
+      "text": "1",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Sidebar/Container:margin/Container/Container/Text/1",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Import questions",
+      "text": "Import questions",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Sidebar/Container:margin/Container/Container/Import questions",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "2",
+      "text": "2",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Sidebar/Container:margin/Container/Container/Text/2",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Review marking criteria",
+      "text": "Review marking criteria",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Sidebar/Container:margin/Container/Container/Review marking criteria",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "3",
+      "text": "3",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Sidebar/Container:margin/Container/Container/Text/3",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Add student responses",
+      "text": "Add student responses",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Sidebar/Container:margin/Container/Container/Add student responses",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Create exam",
+      "text": "Create exam",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Sidebar/Container/Button/Create exam",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Cancel",
+      "text": "Cancel",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Sidebar/Container/Button/Cancel",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Your exam stays private until you publish it.",
+      "text": "Your exam stays private until you publish it.",
+      "path": "Examination Platform UI Design/Dashboard/CreateExamView/Form:margin/Form/Sidebar/Container:margin/Container/Your exam stays private until you publish it.",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Markly",
+      "text": "Markly",
+      "path": "Examination Platform UI Design/Dashboard/Container/Logo/Text/Markly",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Workspace",
+      "text": "Workspace",
+      "path": "Examination Platform UI Design/Dashboard/Container/Workspace",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Overview",
+      "text": "Overview",
+      "path": "Examination Platform UI Design/Dashboard/Navigation:margin/Navigation/Button/Overview",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Assessments",
+      "text": "Assessments",
+      "path": "Examination Platform UI Design/Dashboard/Navigation:margin/Navigation/Button:margin/Button/Assessments",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Courses",
+      "text": "Courses",
+      "path": "Examination Platform UI Design/Dashboard/Navigation:margin/Navigation/Button:margin/Button/Courses",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Students",
+      "text": "Students",
+      "path": "Examination Platform UI Design/Dashboard/Navigation:margin/Navigation/Button:margin/Button/Students",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "New assessment",
+      "text": "New assessment",
+      "path": "Examination Platform UI Design/Dashboard/Button:margin/Button/New assessment",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "AM",
+      "text": "AM",
+      "path": "Examination Platform UI Design/Dashboard/Container:align/Container/Container/Text/AM",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Alex Morgan",
+      "text": "Alex Morgan",
+      "path": "Examination Platform UI Design/Dashboard/Container:align/Container/Container/Container/Container/Alex Morgan",
+      "nodeType": "TEXT"
+    },
+    {
+      "name": "Instructor",
+      "text": "Instructor",
+      "path": "Examination Platform UI Design/Dashboard/Container:align/Container/Container/Container/Container/Instructor",
+      "nodeType": "TEXT"
+    }
+  ]
+}

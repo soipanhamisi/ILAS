@@ -89,8 +89,7 @@
     <section class="promo-panel">
       <p class="promo-chip">Purpose-built for learning</p>
       <div class="promo-card">
-        <img :src="loginAsideImage" alt="Students learning together" class="aside-placeholder" @error="onAsideImageError" />
-        <div class="promo-badge">Feedback ready</div>
+        <img :src="resultPreviewUrl" alt="Markrr assessment result with student marks and AI feedback" class="result-preview-image" />
       </div>
       <blockquote>
         "The feedback is specific enough to act on, but simple enough that my students actually read it."
@@ -102,21 +101,12 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import resultPreviewUrl from '../../ResultPreview (1).svg'
 import { useAuthStore } from '../stores/auth'
 import { getDashboardRoute } from '../utils/roleRedirect'
 
 const router = useRouter()
 const authStore = useAuthStore()
-
-const loginAsideImage = new URL('../assets/ui-images/studentlearning-illustration.jpg', import.meta.url).href
-const loginFallbackImage = new URL('../assets/ui-images/course-covers/cross-platform.svg', import.meta.url).href
-
-const onAsideImageError = (event) => {
-  const image = event.target
-  if (image && image.src !== loginFallbackImage) {
-    image.src = loginFallbackImage
-  }
-}
 
 const isSignup = ref(false)
 const userType = ref('')
@@ -210,7 +200,7 @@ const handleSignup = async () => {
 .auth-shell {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.9fr);
   background: #f8efdc;
 }
 
@@ -299,11 +289,6 @@ const handleSignup = async () => {
   color: #7d6052;
   font-weight: 700;
   font-size: clamp(14px, 1.5vw, 16px);
-}
-
-.toggle-btn.active {
-  background: #fff;
-  color: #321711;
 }
 
 .login-form {
@@ -422,34 +407,14 @@ const handleSignup = async () => {
 .promo-card {
   position: relative;
   z-index: 1;
-  width: min(100%, 720px);
+  width: min(100%, 649px);
   margin: 0 auto;
-  border: 8px solid #5b1f1d;
-  border-radius: 24px;
-  background: #f7ecd1;
-  padding: 10px;
-  box-shadow: 0 24px 44px rgba(13, 40, 37, 0.35);
 }
 
-.aside-placeholder {
+.result-preview-image {
   display: block;
   width: 100%;
   height: auto;
-  max-height: min(290px, 34vh);
-  object-fit: contain;
-  border-radius: 14px;
-}
-
-.promo-badge {
-  position: absolute;
-  right: clamp(8px, 2vw, 18px);
-  bottom: clamp(-14px, -1.5vw, -8px);
-  padding: 10px 16px;
-  border-radius: 12px;
-  background: #e7cd90;
-  color: #452015;
-  font-weight: 700;
-  white-space: nowrap;
 }
 
 blockquote {
@@ -460,13 +425,6 @@ blockquote {
   font-size: clamp(24px, 2.8vw, 40px);
   line-height: 1.14;
   overflow-wrap: anywhere;
-}
-
-.promo-caption {
-  position: relative;
-  z-index: 1;
-  color: #c8d29f;
-  font-size: clamp(14px, 1.6vw, 16px);
 }
 
 @media (max-width: 1100px) {
@@ -534,9 +492,6 @@ blockquote {
     border-width: 6px;
   }
 
-  .aside-placeholder {
-    max-height: 220px;
-  }
 
   blockquote {
     font-size: clamp(28px, 8vw, 40px);

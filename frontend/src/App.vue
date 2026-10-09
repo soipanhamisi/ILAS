@@ -141,10 +141,6 @@ onBeforeUnmount(() => {
   --brand-card: #decaa0;
 }
 
-html.warm-mode {
-  color-scheme: light;
-}
-
 #app {
   width: 100%;
   min-height: 100vh;
@@ -190,26 +186,6 @@ button:disabled {
   box-shadow: none;
 }
 
-.btn-primary,
-.btn-success {
-  background: linear-gradient(180deg, #61201f 0%, #481614 100%);
-  color: #fff8ef;
-  font-weight: 700;
-  border-color: rgba(78, 26, 24, 0.5);
-}
-
-.btn-secondary {
-  background: rgba(236, 224, 198, 0.65);
-  color: var(--color-text);
-  border-color: rgba(116, 83, 64, 0.25);
-}
-
-.btn-danger {
-  background: rgba(190, 83, 63, 0.12);
-  color: #9a2d1f;
-  border-color: rgba(173, 64, 43, 0.3);
-}
-
 input, textarea, select {
   width: 100%;
   padding: 12px;
@@ -225,28 +201,6 @@ input:focus, textarea:focus, select:focus {
   outline: none;
   border-color: #ca6a07;
   box-shadow: 0 0 0 4px rgba(202, 106, 7, 0.18);
-}
-
-.card {
-  background: var(--glass-bg-strong);
-  border-radius: 22px;
-  padding: 24px;
-  box-shadow: var(--shadow-soft);
-  margin-bottom: 20px;
-  border: 1px solid var(--glass-border);
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 24px;
-}
-
-.glass-panel {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: 20px;
-  box-shadow: var(--shadow-soft);
 }
 
 .lms-layout {
@@ -357,34 +311,8 @@ input:focus, textarea:focus, select:focus {
   padding: 12px 24px 24px;
 }
 
-.lms-workspace .container {
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
-}
-
 .text-enter {
   animation: textLiftIn 0.7s ease-out both;
-}
-
-.page-enter-active,
-.page-leave-active {
-  transition: opacity 0.32s ease, transform 0.32s ease;
-}
-
-.page-enter-from,
-.page-leave-to {
-  opacity: 0;
-  transform: translateY(10px);
-}
-
-.page-header {
-  position: sticky;
-  top: 0;
-  z-index: 12;
-  padding: 10px 0 14px;
-  background: linear-gradient(to bottom, rgba(248, 237, 214, 0.96) 0%, rgba(248, 237, 214, 0.72) 76%, rgba(248, 237, 214, 0) 100%);
-  backdrop-filter: blur(6px);
 }
 
 @keyframes textLiftIn {
@@ -399,12 +327,6 @@ input:focus, textarea:focus, select:focus {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .text-enter,
-  .page-enter-active,
-  .page-leave-active {
-    animation: none !important;
-    transition: none !important;
-  }
 }
 
 @media (max-width: 980px) {
