@@ -1,4 +1,4 @@
-# 🎓 markrr - Learning and Assessment
+# markrr - Learning and Assessment
 
 [![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)]()
 [![Backend](https://img.shields.io/badge/Backend-Spring%20Boot-green)]()
@@ -9,27 +9,27 @@ A complete, modern full-stack Learning Management System for exam creation, subm
 
 ---
 
-## 🌟 Features
+## Features
 
-### 👨‍🏫 For Instructors
-- ✅ Create exams with CSV templates
-- ✅ View all student submissions
-- ✅ Grade submissions with detailed feedback
-- ✅ Provide grade justifications
-- ✅ Filter submissions (graded/ungraded)
-- ✅ Update grades and feedback
+### For Instructors
+- Create exams with CSV templates
+- View all student submissions
+- Grade submissions with detailed feedback
+- Provide grade justifications
+- Filter submissions (graded/ungraded)
+- Update grades and feedback
 
-### 👨‍🎓 For Students
-- ✅ View available exams from enrolled courses
-- ✅ Submit exam responses via CSV upload
-- ✅ View grades with percentages
-- ✅ Read instructor feedback
-- ✅ See detailed grade justifications
-- ✅ Track submission history
+### For Students
+- View available exams from enrolled courses
+- Submit exam responses via CSV upload
+- View grades with percentages
+- Read instructor feedback
+- See detailed grade justifications
+- Track submission history
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 ┌─────────────────────────────────────┐
@@ -55,7 +55,7 @@ A complete, modern full-stack Learning Management System for exam creation, subm
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Java JDK 17+
@@ -102,34 +102,34 @@ npm run dev
 
 ---
 
-## 📖 Documentation
+## Documentation
 
 ### Getting Started
-- 📘 **[Setup & Run Guide](SETUP_AND_RUN_GUIDE.md)** - Complete setup instructions
-- 📋 **[Project Structure](PROJECT_STRUCTURE.md)** - File organization
+- **[Setup & Run Guide](SETUP_AND_RUN_GUIDE.md)** - Complete setup instructions
+- **[Project Structure](PROJECT_STRUCTURE.md)** - File organization
 
 ### Backend Documentation
-- 🔗 **[API Documentation](API_DOCUMENTATION.md)** - REST API reference
-- 💼 **[Service Layer Docs](SERVICE_LAYER_DOCUMENTATION.md)** - Business logic
-- 🎮 **[Controller Guide](CONTROLLER_IMPLEMENTATION_GUIDE.md)** - API controllers
+- **[API Documentation](API_DOCUMENTATION.md)** - REST API reference
+- **[Service Layer Docs](SERVICE_LAYER_DOCUMENTATION.md)** - Business logic
+- **[Controller Guide](CONTROLLER_IMPLEMENTATION_GUIDE.md)** - API controllers
 
 ### Frontend Documentation
-- 🎨 **[Frontend README](frontend/README.md)** - Vue.js application guide
-- 📊 **[Frontend Summary](FRONTEND_COMPLETE_SUMMARY.md)** - Complete overview
+- **[Frontend README](frontend/README.md)** - Vue.js application guide
+- **[Frontend Summary](FRONTEND_COMPLETE_SUMMARY.md)** - Complete overview
 
 ### Quick References
-- ⚡ **[Quick Reference](SERVICES_QUICK_REFERENCE.md)** - Fast lookup
-- 📑 **[Documentation Index](DOCUMENTATION_INDEX.md)** - All docs indexed
+- **[Quick Reference](SERVICES_QUICK_REFERENCE.md)** - Fast lookup
+- **[Documentation Index](DOCUMENTATION_INDEX.md)** - All docs indexed
 
 ---
 
-## 🔐 Authentication
+## Authentication
 
 Login issues a signed JWT; protected API requests use its bearer token. Students and instructors can sign up. A fixed admin account is created only when the `dev` profile is active; production requires a separately configured `JWT_SECRET`.
 
 ---
 
-## 💻 Technology Stack
+## Technology Stack
 
 ### Backend
 - **Framework:** Spring Boot 4.x
@@ -149,7 +149,7 @@ Login issues a signed JWT; protected API requests use its bearer token. Students
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 ILAS/
@@ -178,7 +178,7 @@ ILAS/
 
 ---
 
-## 🔌 API Endpoints
+## API Endpoints
 
 ### Instructor Endpoints
 ```
@@ -203,7 +203,7 @@ GET    /api/student/exams/{examId}/submitted
 
 ---
 
-## 📊 Database Schema
+## Database Schema
 
 ### Tables
 - `students_tbl` - Student information
@@ -215,7 +215,7 @@ GET    /api/student/exams/{examId}/submitted
 
 ---
 
-## 🧪 Testing
+## Testing
 
 ### Manual Testing
 1. Start backend and frontend
@@ -237,7 +237,7 @@ Import Postman collection: `ILAS_Exam_System.postman_collection.json`
 
 ---
 
-## 📝 CSV File Format
+## CSV File Format
 
 ### Exam Template
 ```csv
@@ -255,7 +255,7 @@ Define OOP?,Object-oriented programming...,[20],
 
 ---
 
-## 🎨 Screenshots
+## Screenshots
 
 ### Landing Page
 Beautiful gradient design with feature cards
@@ -282,7 +282,7 @@ Beautiful gradient design with feature cards
 
 ---
 
-## 🛠️ Development
+## Development
 
 ### Run in Development Mode
 ```bash
@@ -306,7 +306,7 @@ npm run build
 
 ---
 
-## 📦 Deployment
+## Deployment
 
 ### Backend Deployment
 1. Build JAR: `.\mvnw.cmd clean package`
@@ -322,7 +322,7 @@ npm run build
 
 ---
 
-## 🔐 Security
+## Security
 
 ### Current Implementation
 - Stateless JWT bearer authentication and role authorization
@@ -340,7 +340,7 @@ npm run build
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 This is a complete educational project. To extend:
 
@@ -352,7 +352,7 @@ This is a complete educational project. To extend:
 
 ---
 
-## 📈 Future Enhancements
+## Future Enhancements
 
 - [ ] Real-time notifications
 - [ ] Email integration
@@ -367,7 +367,7 @@ This is a complete educational project. To extend:
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -390,19 +390,19 @@ See [Setup Guide](SETUP_AND_RUN_GUIDE.md) for detailed troubleshooting.
 
 ---
 
-## 📄 License
+## License
 
 This project is for educational purposes.
 
 ---
 
-## 👥 Authors
+## Authors
 
 Built as a complete full-stack LMS demonstration project.
 
 ---
 
-## 📞 Support
+## Support
 
 ### Documentation
 - Complete documentation in `/docs` directory
@@ -414,41 +414,41 @@ Check console logs and documentation files for solutions.
 
 ---
 
-## ✅ Project Status
+## Project Status
 
 ```
 ╔════════════════════════════════════════════════╗
 ║                                                ║
-║     ✅ COMPLETE FULL-STACK APPLICATION        ║
+║       COMPLETE FULL-STACK APPLICATION          ║
 ║                                                ║
-║  Backend:  ✅ 100% Complete                   ║
-║  Frontend: ✅ 100% Complete                   ║
-║  API:      ✅ 13 Endpoints Ready              ║
-║  Docs:     ✅ 200+ KB Documentation           ║
+║  Backend:  100% Complete                      ║
+║  Frontend: 100% Complete                      ║
+║  API:      13 Endpoints Ready                 ║
+║  Docs:     200+ KB Documentation              ║
 ║                                                ║
-║        STATUS: PRODUCTION READY! 🚀            ║
+║        STATUS: PRODUCTION READY!               ║
 ║                                                ║
 ╚════════════════════════════════════════════════╝
 ```
 
 ---
 
-## 🎉 Features at a Glance
+## Features at a Glance
 
 | Feature | Backend | Frontend | Status |
 |---------|---------|----------|--------|
-| Exam Creation | ✅ | ✅ | Complete |
-| File Upload | ✅ | ✅ | Complete |
-| Submission | ✅ | ✅ | Complete |
-| Grading | ✅ | ✅ | Complete |
-| Feedback | ✅ | ✅ | Complete |
-| Authentication | ✅ | ✅ | Complete |
-| Responsive UI | - | ✅ | Complete |
-| API Documentation | ✅ | - | Complete |
+| Exam Creation | Yes | Yes | Complete |
+| File Upload | Yes | Yes | Complete |
+| Submission | Yes | Yes | Complete |
+| Grading | Yes | Yes | Complete |
+| Feedback | Yes | Yes | Complete |
+| Authentication | Yes | Yes | Complete |
+| Responsive UI | - | Yes | Complete |
+| API Documentation | Yes | - | Complete |
 
 ---
 
-## 📊 Statistics
+## Statistics
 
 - **Total Files:** 55+
 - **Lines of Code:** 5,700+
@@ -460,23 +460,23 @@ Check console logs and documentation files for solutions.
 
 ---
 
-## 🌟 Highlights
+## Highlights
 
-✨ **Modern Tech Stack** - Latest versions of Vue 3 and Spring Boot  
-✨ **Clean Architecture** - Proper separation of concerns  
-✨ **RESTful API** - Well-designed HTTP endpoints  
-✨ **Responsive Design** - Works on all devices  
-✨ **File Upload** - CSV-based exam system  
-✨ **Complete Documentation** - Comprehensive guides  
-✨ **Production Ready** - Can be deployed immediately  
+**Modern Tech Stack** - Latest versions of Vue 3 and Spring Boot  
+**Clean Architecture** - Proper separation of concerns  
+**RESTful API** - Well-designed HTTP endpoints  
+**Responsive Design** - Works on all devices  
+**File Upload** - CSV-based exam system  
+**Complete Documentation** - Comprehensive guides  
+**Production Ready** - Can be deployed immediately  
 
 ---
 
-**Made with ❤️ for Education**
+**Made for Education**
 
 **Version:** 1.0.0  
 **Last Updated:** March 10, 2026  
-**Status:** ✅ Production Ready
+**Status:** Production Ready
 
-🎓 **Happy Learning!** 🚀
+**Happy Learning!**
 
