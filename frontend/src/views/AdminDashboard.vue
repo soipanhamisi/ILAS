@@ -1,6 +1,6 @@
 <template>
   <div class="container dashboard">
-    <h1 class="page-title">Admin Dashboard</h1>
+    <h1 class="page-title text-enter">Admin Dashboard</h1>
     <p class="welcome-text">Live system observability and user activity</p>
 
     <div v-if="loading" class="loading">Loading monitoring data...</div>
@@ -75,10 +75,10 @@
             <span>{{ entry.activeRequests }}</span>
             <span>{{ formatRate(entry.requestsPerSecond) }}</span>
             <span>{{ entry.totalRequests || 0 }}</span>
-            <span>
-              <div class="bar-wrap">
-                <div class="bar-fill" :style="{ width: Math.min(entry.utilization * 100, 100) + '%' }"></div>
-              </div>
+            <span class="utilization-cell">
+              <span class="bar-wrap">
+                <span class="bar-fill" :style="{ width: Math.min(entry.utilization * 100, 100) + '%' }"></span>
+              </span>
               {{ formatPercent(entry.utilization) }}
             </span>
             <span :class="['status-pill', statusClass(entry.status)]">{{ entry.status }}</span>
@@ -265,32 +265,33 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.dashboard { padding: 18px 4px; }
-.page-title { font-size: 34px; color: var(--color-primary); }
-.welcome-text { color: var(--color-text-soft); margin-bottom: 20px; }
-.loading { padding: 32px; text-align: center; background: var(--glass-bg-strong); border-radius: 16px; border: 1px solid var(--glass-border); }
+.dashboard { padding: 10px 2px 16px; }
+.page-title { font-size: clamp(36px, 5vw, 62px); color: #3a1713; }
+.welcome-text { color: #705548; margin-bottom: 20px; }
+.loading { padding: 32px; text-align: center; background: #fffefb; border-radius: 16px; border: 1px solid var(--glass-border); }
 .dashboard-content { display: grid; gap: 18px; }
 .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
-.stat-card { background: rgba(45, 50, 66, 0.84); border: 1px solid var(--glass-border); border-radius: 16px; padding: 16px; }
-.stat-card.emphasis { border-color: rgba(197, 177, 255, 0.36); }
-.stat-label { font-size: 12px; text-transform: uppercase; color: var(--color-muted); }
-.stat-value { font-size: 28px; font-weight: 700; color: var(--color-primary); }
+.stat-card { background: #fffefb; border: 1px solid var(--glass-border); border-radius: 16px; padding: 16px; }
+.stat-card.emphasis { border-color: rgba(31, 97, 91, 0.3); }
+.stat-label { font-size: 12px; text-transform: uppercase; color: #82695b; }
+.stat-value { font-size: 28px; font-weight: 700; color: #3b1712; }
 .chart-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px; }
-.section { background: var(--glass-bg-strong); border: 1px solid var(--glass-border); border-radius: 22px; padding: 20px; }
-.section-title { font-size: 18px; margin-bottom: 10px; color: var(--color-primary); }
-.sparkline { width: 100%; height: 130px; background: rgba(29, 34, 46, 0.8); border-radius: 10px; border: 1px solid var(--glass-border); }
+.section { background: #fffefb; border: 1px solid var(--glass-border); border-radius: 22px; padding: 20px; }
+.section-title { font-size: 18px; margin-bottom: 10px; color: #3b1712; }
+.sparkline { width: 100%; height: 130px; background: #f7edda; border-radius: 10px; border: 1px solid var(--glass-border); }
 .endpoint-table { display: grid; gap: 8px; }
 .endpoint-table { max-height: 380px; overflow-y: auto; }
 .endpoint-row { display: grid; grid-template-columns: 2fr .4fr .6fr .6fr 1fr .6fr; gap: 10px; align-items: center; font-size: 14px; }
-.endpoint-row.header { font-weight: 700; color: var(--color-muted); text-transform: uppercase; font-size: 12px; }
+.endpoint-row.header { font-weight: 700; color: #82695b; text-transform: uppercase; font-size: 12px; }
 .endpoint-name { word-break: break-all; }
-.bar-wrap { width: 100%; height: 8px; border-radius: 20px; background: rgba(64, 71, 94, 0.85); margin-bottom: 4px; }
-.bar-fill { height: 100%; background: linear-gradient(90deg, #d8ccff, #bca6ff); border-radius: 20px; }
+.utilization-cell { display: block; }
+.bar-wrap { display: block; width: 100%; height: 8px; border-radius: 20px; background: rgba(224, 204, 165, 0.8); margin-bottom: 4px; }
+.bar-fill { display: block; height: 100%; background: linear-gradient(90deg, #1f615b, #ca6a07); border-radius: 20px; }
 .status-pill { padding: 4px 10px; border-radius: 20px; font-size: 12px; text-align: center; }
-.status-pill.healthy { background: rgba(147, 213, 176, 0.2); color: #b8f0cd; }
-.status-pill.elevated { background: rgba(234, 201, 128, 0.2); color: #ffe3aa; }
-.status-pill.high { background: rgba(187, 90, 99, 0.28); color: #ffd7dc; }
-.status-line { color: var(--color-text-soft); font-size: 13px; }
-.error-message { margin-top: 14px; background: rgba(187, 90, 99, 0.2); color: #ffd7dc; border: 1px solid var(--glass-border); border-radius: 10px; padding: 12px; }
+.status-pill.healthy { background: rgba(30, 109, 98, 0.16); color: #1f615b; }
+.status-pill.elevated { background: rgba(202, 106, 7, 0.14); color: #8b4e10; }
+.status-pill.high { background: rgba(184, 72, 52, 0.18); color: #8c2316; }
+.status-line { color: #705548; font-size: 13px; }
+.error-message { margin-top: 14px; background: rgba(184, 72, 52, 0.14); color: #8c2316; border: 1px solid rgba(184, 72, 52, 0.24); border-radius: 10px; padding: 12px; }
 </style>
 

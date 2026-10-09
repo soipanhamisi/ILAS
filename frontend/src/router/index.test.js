@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { resolveAuthNavigation } from './index'
+import { resolveAuthNavigation } from '../utils/authNavigation'
 
 describe('resolveAuthNavigation', () => {
   it('redirects authenticated admin away from login page', () => {

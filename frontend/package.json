@@ -1,7 +1,7 @@
 {
-  "name": "ilas-frontend",
+  "name": "markrr-frontend",
   "version": "1.0.0",
-  "description": "LMS Exam Assessment System - Vue.js Frontend",
+  "description": "Markrr learning and assessment platform frontend",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -17,6 +17,9 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.0",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
     "vite": "^5.0.0",
     "vitest": "^2.1.9"
   }

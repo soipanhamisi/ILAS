@@ -1,6 +1,6 @@
 <template>
   <div class="container dashboard">
-    <h1 class="page-title">Student Dashboard</h1>
+    <h1 class="page-title text-enter">Student Dashboard</h1>
     <p class="welcome-text">Welcome, {{ authStore.user?.name }}!</p>
 
     <div v-if="loading" class="loading">Loading exams...</div>
@@ -363,28 +363,28 @@ onMounted(() => {
 
 <style scoped>
 .dashboard {
-  padding: 18px 4px;
+  padding: 10px 2px 16px;
 }
 
 .page-title {
-  font-size: 36px;
-  font-weight: 700;
-  color: var(--color-primary);
+  font-size: clamp(36px, 5vw, 62px);
+  font-weight: 800;
+  color: #3a1713;
   margin-bottom: 8px;
 }
 
 .welcome-text {
-  color: var(--color-text-soft);
+  color: #705548;
   font-size: 16px;
   margin-bottom: 24px;
 }
 
 .loading {
-  background: var(--glass-bg-strong);
+  background: #fffefb;
   padding: 60px 20px;
   text-align: center;
   border-radius: 16px;
-  color: var(--color-text-soft);
+  color: #705548;
   box-shadow: var(--shadow-soft);
   border: 1px solid var(--glass-border);
   backdrop-filter: blur(14px);
@@ -402,7 +402,7 @@ onMounted(() => {
 }
 
 .overview-card {
-  background: rgba(45, 50, 66, 0.84);
+  background: #fffefb;
   border-radius: 16px;
   border: 1px solid var(--glass-border);
   padding: 16px;
@@ -411,23 +411,23 @@ onMounted(() => {
 .overview-label {
   margin: 0;
   font-size: 13px;
-  color: var(--color-text-soft);
+  color: #81685a;
 }
 
 .overview-value {
   margin: 8px 0 0;
   font-size: 28px;
   font-weight: 700;
-  color: var(--color-primary);
+  color: #3a1713;
 }
 
 .overview-grid .overview-card:first-child {
-  background: rgba(197, 177, 255, 0.18);
-  border-color: rgba(197, 177, 255, 0.35);
+  background: rgba(232, 215, 181, 0.52);
+  border-color: rgba(116, 83, 64, 0.2);
 }
 
 .section {
-  background: var(--glass-bg-strong);
+  background: #fffefb;
   border-radius: 22px;
   padding: 24px;
   box-shadow: var(--shadow-soft);
@@ -438,7 +438,7 @@ onMounted(() => {
 .section-title {
   font-size: 25px;
   font-weight: 700;
-  color: var(--color-primary);
+  color: #3a1713;
   margin-bottom: 24px;
 }
 
@@ -452,8 +452,8 @@ onMounted(() => {
 .pill {
   padding: 6px 12px;
   border-radius: 999px;
-  background: rgba(64, 71, 94, 0.75);
-  color: var(--color-text-soft);
+  background: rgba(232, 215, 181, 0.7);
+  color: #705548;
   font-size: 13px;
   font-weight: 700;
   border: 1px solid var(--glass-border);
@@ -469,7 +469,7 @@ onMounted(() => {
   border: 1px solid var(--glass-border);
   border-radius: 16px;
   padding: 18px;
-  background: rgba(45, 50, 66, 0.84);
+  background: #fff;
   display: grid;
   gap: 10px;
 }
@@ -488,12 +488,12 @@ onMounted(() => {
 }
 
 .course-card h3 {
-  color: var(--color-text);
+  color: #3f2118;
   font-size: 17px;
 }
 
 .course-meta {
-  color: var(--color-text-soft);
+  color: #705548;
   font-size: 14px;
 }
 
@@ -514,7 +514,7 @@ onMounted(() => {
   border-radius: 16px;
   padding: 20px;
   transition: all 0.3s ease;
-  background: rgba(45, 50, 66, 0.84);
+  background: #fff;
 }
 
 .exam-card:hover {
@@ -536,8 +536,8 @@ onMounted(() => {
 }
 
 .exam-score {
-  background: linear-gradient(135deg, #d8ccff 0%, #bca6ff 100%);
-  color: #1a1d24;
+  background: rgba(232, 215, 181, 0.72);
+  color: #4e2c20;
   padding: 4px 12px;
   border-radius: 12px;
   font-size: 14px;
@@ -546,7 +546,7 @@ onMounted(() => {
 
 .exam-course,
 .exam-instructor {
-  color: var(--color-text-soft);
+  color: #705548;
   font-size: 14px;
   margin-bottom: 8px;
 }
@@ -567,18 +567,17 @@ onMounted(() => {
   padding: 16px;
   border: 1px solid var(--glass-border);
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.42);
-  background: rgba(45, 50, 66, 0.84);
+  background: #fff;
 }
 
 .submission-info h4 {
-  color: var(--color-text);
+  color: #3f2118;
   font-size: 16px;
   margin-bottom: 4px;
 }
 
 .submission-date {
-  color: var(--color-text-soft);
+  color: #705548;
   font-size: 14px;
 }
 
@@ -596,8 +595,8 @@ onMounted(() => {
 }
 
 .grade-badge {
-  background: linear-gradient(135deg, #d8ccff 0%, #bca6ff 100%);
-  color: #1a1d24;
+  background: rgba(232, 215, 181, 0.72);
+  color: #4e2c20;
   padding: 8px 16px;
   border-radius: 12px;
   font-weight: 600;
@@ -612,13 +611,13 @@ onMounted(() => {
 }
 
 .status-badge.pending {
-  background: rgba(64, 71, 94, 0.75);
-  color: var(--color-muted);
+  background: rgba(232, 215, 181, 0.72);
+  color: #775d4f;
 }
 
 .status-badge.enrolled {
-  background: rgba(197, 177, 255, 0.24);
-  color: #d8ccff;
+  background: rgba(31, 97, 91, 0.12);
+  color: #1f615b;
   width: fit-content;
 }
 
@@ -638,8 +637,8 @@ onMounted(() => {
 }
 
 .success-message {
-  background: rgba(147, 213, 176, 0.18);
-  color: #b9f2ce;
+  background: rgba(30, 109, 98, 0.16);
+  color: #1f615b;
   padding: 16px;
   border-radius: 12px;
   text-align: center;

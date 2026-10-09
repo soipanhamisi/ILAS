@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="page-header">
-      <h1 class="page-title">Exam Submissions</h1>
+      <h1 class="page-title text-enter">Exam Submissions</h1>
       <router-link to="/instructor" class="btn-secondary">← Back</router-link>
     </div>
 
@@ -525,7 +525,7 @@ onMounted(() => {
 
 <style scoped>
 .container {
-  padding: 18px 4px;
+  padding: 10px 2px 16px;
 }
 
 .page-header {
@@ -536,14 +536,14 @@ onMounted(() => {
 }
 
 .page-title {
-  font-size: 32px;
-  font-weight: 700;
-  color: var(--color-primary);
+  font-size: clamp(34px, 5vw, 56px);
+  font-weight: 800;
+  color: #3a1713;
 }
 
 .loading,
 .empty-state {
-  background: var(--glass-bg-strong);
+  background: #fffefb;
   padding: 60px 20px;
   text-align: center;
   border-radius: 16px;
@@ -557,16 +557,16 @@ onMounted(() => {
 }
 
 .empty-state h3 {
-  color: var(--color-primary);
+  color: #3f2118;
   margin-bottom: 8px;
 }
 
 .empty-state p {
-  color: var(--color-text-soft);
+  color: #705548;
 }
 
 .submissions-container {
-  background: var(--glass-bg-strong);
+  background: #fffefb;
   border-radius: 22px;
   padding: 24px;
   box-shadow: var(--shadow-soft);
@@ -641,8 +641,8 @@ onMounted(() => {
 }
 
 .filter-btn {
-  background: rgba(64, 71, 94, 0.7);
-  color: var(--color-text);
+  background: rgba(236, 224, 198, 0.7);
+  color: #4a2a1f;
   padding: 10px 20px;
   border-radius: 999px;
   font-weight: 500;
@@ -650,8 +650,8 @@ onMounted(() => {
 }
 
 .filter-btn.active {
-  background: linear-gradient(135deg, #d8ccff 0%, #bca6ff 100%);
-  color: #1a1d24;
+  background: #efe1bf;
+  color: #3a1713;
 }
 
 .submissions-grid {
@@ -663,7 +663,7 @@ onMounted(() => {
   border: 1px solid var(--glass-border);
   border-radius: 16px;
   padding: 20px;
-  background: rgba(45, 50, 66, 0.84);
+  background: #fff;
 }
 
 .submission-header {
@@ -674,13 +674,13 @@ onMounted(() => {
 }
 
 .submission-header h3 {
-  color: var(--color-text);
+  color: #3f2118;
   font-size: 20px;
   margin-bottom: 4px;
 }
 
 .submission-date {
-  color: var(--color-text-soft);
+  color: #705548;
   font-size: 14px;
 }
 
@@ -692,17 +692,17 @@ onMounted(() => {
 }
 
 .status-badge.graded {
-  background: rgba(147, 213, 176, 0.18);
-  color: #b9f2ce;
+  background: rgba(30, 109, 98, 0.14);
+  color: #1f615b;
 }
 
 .status-badge.pending {
-  background: rgba(64, 71, 94, 0.75);
-  color: #c4cbe0;
+  background: rgba(236, 224, 198, 0.8);
+  color: #705548;
 }
 
 .grade-display {
-  background: rgba(29, 34, 46, 0.9);
+  background: #f8edd8;
   padding: 16px;
   border-radius: 8px;
   margin-bottom: 16px;
@@ -712,12 +712,12 @@ onMounted(() => {
 .grade-value {
   font-size: 24px;
   font-weight: 700;
-  color: var(--color-primary);
+  color: #3f2118;
   margin-bottom: 8px;
 }
 
 .feedback-preview {
-  color: var(--color-text-soft);
+  color: #705548;
   font-size: 14px;
 }
 
@@ -727,7 +727,7 @@ onMounted(() => {
 }
 
 .answer-preview {
-  background: rgba(29, 34, 46, 0.9);
+  background: #f8edd8;
   padding: 14px;
   border-radius: 8px;
   margin-bottom: 16px;
@@ -735,13 +735,13 @@ onMounted(() => {
 }
 
 .answer-preview strong {
-  color: var(--color-primary);
+  color: #3f2118;
 }
 
 .answer-preview p {
   margin-top: 8px;
   white-space: pre-wrap;
-  color: var(--color-text-soft);
+  color: #705548;
 }
 
 .student-answers {
@@ -751,24 +751,24 @@ onMounted(() => {
 }
 
 .student-answer-item {
-  background: rgba(45, 50, 66, 0.72);
+  background: rgba(255, 255, 255, 0.8);
   border-radius: 8px;
   padding: 10px;
 }
 
 .question-title {
-  color: var(--color-primary);
+  color: #3f2118;
   font-weight: 600;
   margin-bottom: 6px;
 }
 
 .question-max {
-  color: var(--color-text-soft);
+  color: #705548;
   font-weight: 500;
 }
 
 .student-answer-inline {
-  color: var(--color-text-soft);
+  color: #705548;
   margin-bottom: 8px;
 }
 
@@ -812,11 +812,11 @@ onMounted(() => {
 }
 
 .aggregate-grade {
-  background: rgba(29, 34, 46, 0.9);
+  background: #f8edd8;
   border: 1px solid var(--glass-border);
   border-radius: 8px;
   padding: 12px;
-  color: var(--color-primary);
+  color: #3f2118;
   font-weight: 700;
   margin-bottom: 14px;
 }
@@ -827,8 +827,8 @@ onMounted(() => {
 }
 
 .error-message {
-  background: rgba(187, 90, 99, 0.2);
-  color: #ffd7dc;
+  background: rgba(184, 72, 52, 0.14);
+  color: #8c2316;
   padding: 16px;
   border-radius: 12px;
   text-align: center;

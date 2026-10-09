@@ -123,7 +123,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['save', 'skip'])
+defineEmits(['save', 'skip'])
 
 const rubricForm = ref([])
 
@@ -162,12 +162,11 @@ const progressPercent = computed(() => {
 
 <style scoped>
 .rubric-panel {
-  background: var(--glass-bg-strong);
+  background: #fffefb;
   border: 1px solid var(--glass-border);
   border-radius: 18px;
   padding: 20px;
   margin-bottom: 24px;
-  backdrop-filter: blur(10px);
 }
 
 .rubric-panel-header {
@@ -181,13 +180,13 @@ const progressPercent = computed(() => {
 .rubric-panel-header h2 {
   margin: 0 0 8px 0;
   font-size: 18px;
-  color: var(--color-primary);
+  color: #3f2118;
 }
 
 .rubric-help {
   margin: 0;
   font-size: 14px;
-  color: var(--color-text-soft);
+  color: #705548;
 }
 
 .rubric-actions {
@@ -210,7 +209,7 @@ const progressPercent = computed(() => {
 }
 
 .rubric-card {
-  background: rgba(45, 50, 66, 0.84);
+  background: #fff;
   border: 1px solid var(--glass-border);
   border-radius: 14px;
   padding: 16px;
@@ -220,13 +219,13 @@ const progressPercent = computed(() => {
 
 .rubric-card h3 {
   margin: 0 0 8px 0;
-  color: var(--color-primary);
+  color: #3f2118;
   font-size: 16px;
 }
 
 .question-title {
   margin: 0 0 12px 0;
-  color: var(--color-text);
+  color: #4a2a1f;
   font-size: 14px;
   font-style: italic;
   line-height: 1.4;
@@ -236,7 +235,7 @@ const progressPercent = computed(() => {
   display: block;
   margin: 12px 0 6px 0;
   font-weight: 600;
-  color: var(--color-text);
+  color: #4a2a1f;
   font-size: 13px;
 }
 
@@ -244,12 +243,12 @@ const progressPercent = computed(() => {
 .rubric-textarea {
   width: 100%;
   padding: 8px;
-  border: 1px solid rgba(130, 142, 181, 0.28);
+  border: 1px solid rgba(116, 83, 64, 0.28);
   border-radius: 10px;
   font-family: inherit;
   font-size: 14px;
-  background: rgba(29, 34, 46, 0.9);
-  color: var(--color-text);
+  background: #fff;
+  color: #3f2118;
 }
 
 .rubric-textarea {
@@ -260,8 +259,8 @@ const progressPercent = computed(() => {
 .rubric-textarea:focus,
 .score-input:focus {
   outline: none;
-  border-color: #bca6ff;
-  box-shadow: 0 0 0 3px rgba(197, 177, 255, 0.2);
+  border-color: #ca6a07;
+  box-shadow: 0 0 0 3px rgba(202, 106, 7, 0.2);
 }
 
 .rubric-status {
@@ -270,7 +269,7 @@ const progressPercent = computed(() => {
   gap: 8px;
   margin-top: 12px;
   padding-top: 12px;
-  border-top: 1px solid rgba(112, 113, 77, 0.2);
+  border-top: 1px solid rgba(116, 83, 64, 0.2);
 }
 
 .status-dot {
@@ -281,47 +280,47 @@ const progressPercent = computed(() => {
 }
 
 .status-dot.filled {
-  background: #b9f2ce;
+  background: #1f615b;
 }
 
 .status-dot.empty {
-  background: #6a728d;
+  background: #b89e8f;
 }
 
 .status-text {
   font-size: 12px;
-  color: #b9f2ce;
+  color: #1f615b;
   font-weight: 600;
 }
 
 .status-text.empty {
-  color: #9ca5bf;
+  color: #8a7163;
 }
 
 .progress-indicator {
   margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px solid rgba(112, 113, 77, 0.2);
+  border-top: 1px solid rgba(116, 83, 64, 0.2);
 }
 
 .progress-indicator p {
   margin: 0 0 8px 0;
   font-size: 14px;
-  color: var(--color-text);
+  color: #4a2a1f;
   font-weight: 600;
 }
 
 .progress-bar {
   width: 100%;
   height: 6px;
-  background: rgba(64, 71, 94, 0.8);
+  background: rgba(224, 204, 165, 0.8);
   border-radius: 3px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #d8ccff, #bca6ff);
+  background: linear-gradient(90deg, #1f615b, #ca6a07);
   transition: width 0.3s ease;
   border-radius: 3px;
 }
@@ -339,8 +338,8 @@ const progressPercent = computed(() => {
 .loading-spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid rgba(130, 142, 181, 0.2);
-  border-top-color: #d8ccff;
+  border: 4px solid rgba(116, 83, 64, 0.16);
+  border-top-color: #ca6a07;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
   margin-bottom: 16px;
@@ -354,12 +353,12 @@ const progressPercent = computed(() => {
 
 .loading-state p {
   margin: 8px 0;
-  color: var(--color-text);
+  color: #4a2a1f;
   font-size: 14px;
 }
 
 .loading-hint {
-  color: var(--color-text-soft);
+  color: #705548;
   font-size: 13px !important;
   margin-top: 12px !important;
 }
