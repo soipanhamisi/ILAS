@@ -4,40 +4,28 @@ import { ref, watch } from 'vue'
 export const useThemeStore = defineStore('theme', () => {
   const isDarkMode = ref(false)
 
-  // Initialize theme from localStorage and system preference
   const initializeTheme = () => {
-    // Check localStorage first
-    const savedTheme = localStorage.getItem('theme-mode')
-    if (savedTheme) {
-      isDarkMode.value = savedTheme === 'dark'
-    } else {
-      // Fall back to system preference
-      isDarkMode.value = window.matchMedia('(prefers-color-scheme: dark)').matches
-    }
+    isDarkMode.value = false
     applyTheme()
   }
 
-  // Apply theme to document
   const applyTheme = () => {
     const htmlElement = document.documentElement
-    if (isDarkMode.value) {
-      htmlElement.setAttribute('data-theme', 'dark')
-      htmlElement.classList.add('dark-mode')
-      localStorage.setItem('theme-mode', 'dark')
-    } else {
-      htmlElement.removeAttribute('data-theme')
-      htmlElement.classList.remove('dark-mode')
-      localStorage.setItem('theme-mode', 'light')
-    }
+    htmlElement.classList.add('warm-mode')
+    htmlElement.classList.remove('dark-mode')
+    htmlElement.removeAttribute('data-theme')
+    localStorage.setItem('theme-mode', 'warm')
   }
 
-  // Toggle dark mode
   const toggleDarkMode = () => {
-    isDarkMode.value = !isDarkMode.value
+    isDarkMode.value = false
+    applyTheme()
   }
 
-  // Watch for changes and apply theme
   watch(isDarkMode, () => {
+    if (isDarkMode.value) {
+      isDarkMode.value = false
+    }
     applyTheme()
   })
 
@@ -48,4 +36,3 @@ export const useThemeStore = defineStore('theme', () => {
     toggleDarkMode
   }
 })
-

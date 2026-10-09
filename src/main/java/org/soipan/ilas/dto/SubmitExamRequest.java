@@ -13,7 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SubmitExamRequest {
-    private Integer studentId;
     private List<String> questionAnswers;
 }
 

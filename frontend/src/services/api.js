@@ -9,6 +9,14 @@ const apiClient = axios.create({
   }
 })
 
+apiClient.interceptors.request.use((config) => {
+  const token = typeof localStorage === 'undefined' ? null : localStorage.getItem('token')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
+})
+
 // Auth API Service
 export const authAPI = {
   // Login with username and password
@@ -35,9 +43,8 @@ export const authAPI = {
 // Instructor API Service
 export const instructorAPI = {
   // Create exam
-  createExam(instructorId, courseId, examTitle, maxScore, file) {
+  createExam(_instructorId, courseId, examTitle, maxScore, file) {
     const formData = new FormData()
-    formData.append('instructorId', instructorId)
     formData.append('courseId', courseId)
     formData.append('examTitle', examTitle)
     formData.append('maxScore', maxScore)
@@ -51,224 +58,168 @@ export const instructorAPI = {
   },
 
   // Get a single exam and its rubric metadata
-  getExamDetails(examId, instructorId) {
-    return apiClient.get(`/instructor/exams/${examId}`, {
-      params: { instructorId }
-    })
+  getExamDetails(examId) {
+    return apiClient.get(`/instructor/exams/${examId}`)
   },
 
   // Save per-question grading rubrics
-  saveExamRubrics(examId, instructorId, rubrics) {
+  saveExamRubrics(examId, _instructorId, rubrics) {
     return apiClient.put(`/instructor/exams/${examId}/rubrics`, {
-      instructorId,
       rubrics
     })
   },
 
   // Grade submission using per-question grades
-  gradeSubmission(submissionId, instructorId, questionGrades) {
+  gradeSubmission(submissionId, _instructorId, questionGrades) {
     return apiClient.post(`/instructor/exams/submissions/${submissionId}/grade`, {
-      instructorId,
       questionGrades
     })
   },
 
   // Update feedback
-  updateFeedback(submissionId, instructorId, feedback, gradeJustification) {
+  updateFeedback(submissionId, _instructorId, feedback, gradeJustification) {
     return apiClient.put(`/instructor/exams/submissions/${submissionId}/feedback`, {
-      instructorId,
       feedback,
       gradeJustification
     })
   },
 
   // Trigger LLM-based grading for a submission
-  autoGradeSubmission(submissionId, instructorId) {
-    return apiClient.post(`/instructor/exams/submissions/${submissionId}/auto-grade`, {
-      instructorId
-    })
+  autoGradeSubmission(submissionId, _instructorId) {
+    return apiClient.post(`/instructor/exams/submissions/${submissionId}/auto-grade`, {})
   },
 
   // Get submissions for exam
-  getSubmissionsForExam(examId, instructorId) {
-    return apiClient.get(`/instructor/exams/${examId}/submissions`, {
-      params: { instructorId }
-    })
+  getSubmissionsForExam(examId) {
+    return apiClient.get(`/instructor/exams/${examId}/submissions`)
   },
 
   // Get ungraded submissions
-  getUngradedSubmissions(examId, instructorId) {
-    return apiClient.get(`/instructor/exams/${examId}/submissions/ungraded`, {
-      params: { instructorId }
-    })
+  getUngradedSubmissions(examId) {
+    return apiClient.get(`/instructor/exams/${examId}/submissions/ungraded`)
   },
 
   // Get exams for course
-  getExamsForCourse(courseId, instructorId) {
-    return apiClient.get(`/instructor/exams/courses/${courseId}`, {
-      params: { instructorId }
-    })
+  getExamsForCourse(courseId) {
+    return apiClient.get(`/instructor/exams/courses/${courseId}`)
   },
 
   // Get exam questions
-  getExamQuestions(examId, instructorId) {
-    return apiClient.get(`/instructor/exams/${examId}/questions`, {
-      params: { instructorId }
-    })
+  getExamQuestions(examId) {
+    return apiClient.get(`/instructor/exams/${examId}/questions`)
   },
 
   // Get exam question details (question text + max grade)
-  getExamQuestionDetails(examId, instructorId) {
-    return apiClient.get(`/instructor/exams/${examId}/questions/details`, {
-      params: { instructorId }
-    })
+  getExamQuestionDetails(examId) {
+    return apiClient.get(`/instructor/exams/${examId}/questions/details`)
   },
 
   // Get instructor dashboard summary metrics
-  getDashboardSummary(instructorId) {
-    return apiClient.get('/instructor/exams/dashboard/summary', {
-      params: { instructorId }
-    })
+  getDashboardSummary() {
+    return apiClient.get('/instructor/exams/dashboard/summary')
   }
 }
 
 // Student API Service
 export const studentAPI = {
   // Submit exam
-  submitExam(examId, studentId, questionAnswers) {
+  submitExam(examId, _studentId, questionAnswers) {
     return apiClient.post(`/student/exams/${examId}/submit`, {
-      studentId,
       questionAnswers
     })
   },
 
   // Get grade and feedback
-  getGradeAndFeedback(examId, studentId) {
-    return apiClient.get(`/student/exams/${examId}/grade`, {
-      params: { studentId }
-    })
+  getGradeAndFeedback(examId) {
+    return apiClient.get(`/student/exams/${examId}/grade`)
   },
 
   // Get all submissions
-  getAllSubmissions(studentId) {
-    return apiClient.get('/student/exams/submissions', {
-      params: { studentId }
-    })
+  getAllSubmissions() {
+    return apiClient.get('/student/exams/submissions')
   },
 
   // Get graded submissions
-  getGradedSubmissions(studentId) {
-    return apiClient.get('/student/exams/submissions/graded', {
-      params: { studentId }
-    })
+  getGradedSubmissions() {
+    return apiClient.get('/student/exams/submissions/graded')
   },
 
   // Get available exams
-  getAvailableExams(studentId) {
-    return apiClient.get('/student/exams/available', {
-      params: { studentId }
-    })
+  getAvailableExams() {
+    return apiClient.get('/student/exams/available')
   },
 
   // Get exam details
-  getExamDetails(examId, studentId) {
-    return apiClient.get(`/student/exams/${examId}`, {
-      params: { studentId }
-    })
+  getExamDetails(examId) {
+    return apiClient.get(`/student/exams/${examId}`)
   },
 
   // Get exam questions
-  getExamQuestions(examId, studentId) {
-    return apiClient.get(`/student/exams/${examId}/questions`, {
-      params: { studentId }
-    })
+  getExamQuestions(examId) {
+    return apiClient.get(`/student/exams/${examId}/questions`)
   },
 
   // Get all courses available for enrollment
-  getAllCourses(studentId) {
-    return apiClient.get('/student/courses', {
-      params: { studentId }
-    })
+  getAllCourses() {
+    return apiClient.get('/student/courses')
   },
 
   // Get enrolled courses
-  getEnrolledCourses(studentId) {
-    return apiClient.get('/student/courses/enrolled', {
-      params: { studentId }
-    })
+  getEnrolledCourses() {
+    return apiClient.get('/student/courses/enrolled')
   },
 
   // Enroll student in a course
-  enrollInCourse(studentId, courseId) {
-    return apiClient.post(`/student/courses/${courseId}/enroll`, null, {
-      params: { studentId }
-    })
+  enrollInCourse(courseId) {
+    return apiClient.post(`/student/courses/${courseId}/enroll`)
   },
 
   // Check if submitted
-  hasSubmitted(examId, studentId) {
-    return apiClient.get(`/student/exams/${examId}/submitted`, {
-      params: { studentId }
-    })
+  hasSubmitted(examId) {
+    return apiClient.get(`/student/exams/${examId}/submitted`)
   }
 }
 
 // Admin API Service
 export const adminAPI = {
   // Get dashboard summary
-  getDashboardSummary(adminId) {
-    return apiClient.get('/admin/dashboard/summary', {
-      params: { adminId }
-    })
+  getDashboardSummary() {
+    return apiClient.get('/admin/dashboard/summary')
   },
 
   // Get system statistics
-  getSystemStats(adminId) {
-    return apiClient.get('/admin/stats', {
-      params: { adminId }
-    })
+  getSystemStats() {
+    return apiClient.get('/admin/stats')
   },
 
   // Get total student count
-  getTotalStudents(adminId) {
-    return apiClient.get('/admin/students/count', {
-      params: { adminId }
-    })
+  getTotalStudents() {
+    return apiClient.get('/admin/students/count')
   },
 
   // Get total instructor count
-  getTotalInstructors(adminId) {
-    return apiClient.get('/admin/instructors/count', {
-      params: { adminId }
-    })
+  getTotalInstructors() {
+    return apiClient.get('/admin/instructors/count')
   },
 
   // Get total course count
-  getTotalCourses(adminId) {
-    return apiClient.get('/admin/courses/count', {
-      params: { adminId }
-    })
+  getTotalCourses() {
+    return apiClient.get('/admin/courses/count')
   },
 
   // Get total exam count
-  getTotalExams(adminId) {
-    return apiClient.get('/admin/exams/count', {
-      params: { adminId }
-    })
+  getTotalExams() {
+    return apiClient.get('/admin/exams/count')
   },
 
   // Get real-time monitoring metrics for admin dashboard
-  getMonitoringSummary(adminId) {
-    return apiClient.get('/admin/dashboard/monitoring', {
-      params: { adminId }
-    })
+  getMonitoringSummary() {
+    return apiClient.get('/admin/dashboard/monitoring')
   },
 
   // Heartbeat for active-user tracking
-  sendHeartbeat(userType, userId) {
-    return apiClient.post('/admin/monitoring/heartbeat', null, {
-      params: { userType, userId }
-    })
+  sendHeartbeat() {
+    return apiClient.post('/monitoring/heartbeat')
   }
 }
 

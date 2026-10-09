@@ -1,8 +1,10 @@
 package org.soipan.ilas.controllers;
 
 import org.soipan.ilas.dto.ApiResponse;
+import org.soipan.ilas.auth.AuthenticatedUser;
 import org.soipan.ilas.services.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -13,7 +15,7 @@ import java.util.Map;
  * 
  * Real-time Monitoring:
  * - Long polling endpoint: /admin/dashboard/monitoring
- * - Heartbeat endpoint: /admin/monitoring/heartbeat
+ * - Heartbeat endpoint: /api/monitoring/heartbeat
  */
 @RestController
 @RequestMapping("/api/admin")
@@ -24,13 +26,12 @@ public class AdminController {
 
     /**
      * Get admin dashboard summary
-     * @param adminId the admin user ID
      * @return dashboard statistics
      */
     @GetMapping("/dashboard/summary")
-    public ApiResponse<Map<String, Object>> getDashboardSummary(@RequestParam int adminId) {
+    public ApiResponse<Map<String, Object>> getDashboardSummary(@AuthenticationPrincipal AuthenticatedUser user) {
         try {
-            Map<String, Object> summary = adminService.getDashboardSummary(adminId);
+            Map<String, Object> summary = adminService.getDashboardSummary(user.userId());
             return new ApiResponse<>(true, "Dashboard summary retrieved successfully", summary);
         } catch (IllegalArgumentException e) {
             return new ApiResponse<>(false, e.getMessage(), null);
@@ -41,13 +42,12 @@ public class AdminController {
 
     /**
      * Get system statistics
-     * @param adminId the admin user ID
      * @return statistics map
      */
     @GetMapping("/stats")
-    public ApiResponse<Map<String, Object>> getSystemStats(@RequestParam int adminId) {
+    public ApiResponse<Map<String, Object>> getSystemStats(@AuthenticationPrincipal AuthenticatedUser user) {
         try {
-            if (!adminService.adminExists(adminId)) {
+            if (!adminService.adminExists(user.userId())) {
                 return new ApiResponse<>(false, "Admin not found", null);
             }
 
@@ -65,13 +65,12 @@ public class AdminController {
 
     /**
      * Get total student count
-     * @param adminId the admin user ID
      * @return total student count
      */
     @GetMapping("/students/count")
-    public ApiResponse<Long> getTotalStudents(@RequestParam int adminId) {
+    public ApiResponse<Long> getTotalStudents(@AuthenticationPrincipal AuthenticatedUser user) {
         try {
-            if (!adminService.adminExists(adminId)) {
+            if (!adminService.adminExists(user.userId())) {
                 return new ApiResponse<>(false, "Admin not found", null);
             }
             long count = adminService.getTotalStudents();
@@ -83,13 +82,12 @@ public class AdminController {
 
     /**
      * Get total instructor count
-     * @param adminId the admin user ID
      * @return total instructor count
      */
     @GetMapping("/instructors/count")
-    public ApiResponse<Long> getTotalInstructors(@RequestParam int adminId) {
+    public ApiResponse<Long> getTotalInstructors(@AuthenticationPrincipal AuthenticatedUser user) {
         try {
-            if (!adminService.adminExists(adminId)) {
+            if (!adminService.adminExists(user.userId())) {
                 return new ApiResponse<>(false, "Admin not found", null);
             }
             long count = adminService.getTotalInstructors();
@@ -101,13 +99,12 @@ public class AdminController {
 
     /**
      * Get total course count
-     * @param adminId the admin user ID
      * @return total course count
      */
     @GetMapping("/courses/count")
-    public ApiResponse<Long> getTotalCourses(@RequestParam int adminId) {
+    public ApiResponse<Long> getTotalCourses(@AuthenticationPrincipal AuthenticatedUser user) {
         try {
-            if (!adminService.adminExists(adminId)) {
+            if (!adminService.adminExists(user.userId())) {
                 return new ApiResponse<>(false, "Admin not found", null);
             }
             long count = adminService.getTotalCourses();
@@ -119,13 +116,12 @@ public class AdminController {
 
     /**
      * Get total exam count
-     * @param adminId the admin user ID
      * @return total exam count
      */
     @GetMapping("/exams/count")
-    public ApiResponse<Long> getTotalExams(@RequestParam int adminId) {
+    public ApiResponse<Long> getTotalExams(@AuthenticationPrincipal AuthenticatedUser user) {
         try {
-            if (!adminService.adminExists(adminId)) {
+            if (!adminService.adminExists(user.userId())) {
                 return new ApiResponse<>(false, "Admin not found", null);
             }
             long count = adminService.getTotalExams();
@@ -136,9 +132,9 @@ public class AdminController {
     }
 
     @GetMapping("/dashboard/monitoring")
-    public ApiResponse<Map<String, Object>> getMonitoringSummary(@RequestParam int adminId) {
+    public ApiResponse<Map<String, Object>> getMonitoringSummary(@AuthenticationPrincipal AuthenticatedUser user) {
         try {
-            Map<String, Object> summary = adminService.getMonitoringSummary(adminId);
+            Map<String, Object> summary = adminService.getMonitoringSummary(user.userId());
             return new ApiResponse<>(true, "Monitoring summary retrieved successfully", summary);
         } catch (IllegalArgumentException e) {
             return new ApiResponse<>(false, e.getMessage(), null);
@@ -147,13 +143,4 @@ public class AdminController {
         }
     }
 
-    @PostMapping("/monitoring/heartbeat")
-    public ApiResponse<Void> heartbeat(@RequestParam String userType, @RequestParam int userId) {
-        try {
-            adminService.heartbeat(userType, userId);
-            return new ApiResponse<>(true, "Heartbeat recorded", null);
-        } catch (Exception e) {
-            return new ApiResponse<>(false, "Error recording heartbeat: " + e.getMessage(), null);
-        }
-    }
 }

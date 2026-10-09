@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateFeedbackRequest {
-    private Integer instructorId;
     private String feedback;
     private String gradeJustification;
 }

@@ -1,13 +1,13 @@
 <template>
   <div class="container dashboard">
-    <h1 class="page-title">Instructor Dashboard</h1>
-    <p class="welcome-text">Welcome, {{ authStore.user?.name }}!</p>
+    <h1 class="page-title text-enter">Good day, {{ authStore.user?.name }}.</h1>
+    <p class="welcome-text">Here is what is happening across your classes today.</p>
 
     <div class="dashboard-actions">
       <router-link to="/instructor/exams/create" class="action-card">
         <div class="action-icon">+</div>
-        <h3>Create New Exam</h3>
-        <p>Upload CSV template and create assessment</p>
+        <h3>Create assessment</h3>
+        <p>Upload a template or build questions manually</p>
       </router-link>
     </div>
 
@@ -16,25 +16,25 @@
     <div v-else class="dashboard-content">
       <div class="stats-grid">
         <div class="stat-card">
-          <p class="stat-label">Courses Taught</p>
+          <p class="stat-label">Courses taught</p>
           <p class="stat-value">{{ dashboard.coursesTaught }}</p>
         </div>
         <div class="stat-card">
-          <p class="stat-label">New Enrollments (7d)</p>
+          <p class="stat-label">New enrollments (7d)</p>
           <p class="stat-value">{{ dashboard.newEnrollments }}</p>
         </div>
         <div class="stat-card">
-          <p class="stat-label">Average Performance</p>
+          <p class="stat-label">Average performance</p>
           <p class="stat-value">{{ formatPercent(dashboard.averagePerformancePct) }}</p>
         </div>
         <div class="stat-card">
-          <p class="stat-label">Tests To Be Graded</p>
+          <p class="stat-label">Tests to be graded</p>
           <p class="stat-value">{{ dashboard.testsToBeGraded }}</p>
         </div>
       </div>
 
       <div class="section">
-        <h2 class="section-title">Active Students Trend (14d)</h2>
+        <h2 class="section-title">Student activity trend (14d)</h2>
         <p class="section-subtitle">
           Unique students submitting course work per day across your courses.
         </p>
@@ -42,12 +42,12 @@
           Latest active students: {{ getLatestTrendCount(dashboard.activeStudentsTrend) }}
         </div>
         <svg class="sparkline" viewBox="0 0 320 120" preserveAspectRatio="none">
-          <polyline :points="overallActiveStudentPoints" fill="none" stroke="#16a34a" stroke-width="3" />
+          <polyline :points="overallActiveStudentPoints" fill="none" stroke="#bd680a" stroke-width="3" />
         </svg>
       </div>
 
       <div class="section">
-        <h2 class="section-title">Courses You Teach</h2>
+        <h2 class="section-title">Courses you teach</h2>
 
         <div v-if="dashboard.courses.length === 0" class="empty-state">
           <p>No courses assigned yet</p>
@@ -70,7 +70,7 @@
               <polyline
                 :points="buildSparklinePoints(course.activeStudentsTrend, null, 100)"
                 fill="none"
-                stroke="#1d4ed8"
+                stroke="#1f615b"
                 stroke-width="3"
               />
             </svg>
@@ -79,7 +79,7 @@
       </div>
 
       <div class="section">
-        <h2 class="section-title">Tests To Be Graded</h2>
+        <h2 class="section-title">Tests to be graded</h2>
 
         <div v-if="dashboard.testsToGrade.length === 0" class="empty-state">
           <p>No tests pending grading</p>
@@ -97,7 +97,7 @@
               <p class="course-meta">Ungraded submissions: {{ test.ungradedCount }}</p>
             </div>
             <router-link :to="`/instructor/exams/${test.examId}`" class="btn-primary">
-              Grade Now
+              Grade now
             </router-link>
           </div>
         </div>
@@ -187,150 +187,141 @@ onMounted(() => {
 
 <style scoped>
 .dashboard {
-  padding: 18px 4px;
+  padding: 10px 2px 16px;
 }
 
 .page-title {
-  font-size: 36px;
-  font-weight: 700;
-  color: var(--color-primary);
-  margin-bottom: 8px;
+  font-size: clamp(38px, 5vw, 68px);
+  font-weight: 800;
+  line-height: 0.95;
+  color: #3b1712;
 }
 
 .welcome-text {
-  color: var(--color-text-soft);
+  color: #705548;
   font-size: 18px;
-  margin-bottom: 32px;
+  margin-top: 10px;
+  margin-bottom: 24px;
 }
 
 .dashboard-actions {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
+  grid-template-columns: minmax(240px, 1fr);
   margin-bottom: 20px;
 }
 
 .action-card {
-  background: var(--glass-bg-strong);
+  background: #1f5a54;
   padding: 28px;
-  border-radius: 16px;
-  text-align: center;
+  border-radius: 22px;
   text-decoration: none;
-  transition: all 0.3s ease;
+  color: #f6f8ea;
+  display: grid;
+  gap: 6px;
+  border: 1px solid rgba(26, 87, 81, 0.6);
   box-shadow: var(--shadow-soft);
-  border: 1px solid var(--glass-border);
-  color: var(--color-text);
-}
-
-.action-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-strong);
-}
-
-.action-icon {
-  font-size: 32px;
-  margin-bottom: 10px;
-  font-weight: 700;
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  background: rgba(197, 177, 255, 0.2);
-  color: #dccfff;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .action-card h3 {
-  font-size: 20px;
-  color: var(--color-primary);
-  margin-bottom: 8px;
+  font-size: 28px;
 }
 
 .action-card p {
-  color: var(--color-text-soft);
-  font-size: 14px;
+  color: #c8d29f;
+}
+
+.action-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(230, 206, 146, 0.24);
+  color: #f4deab;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
 }
 
 .loading {
-  background: var(--glass-bg-strong);
+  background: #fffefb;
   padding: 40px;
   text-align: center;
-  border-radius: 16px;
-  color: var(--color-text-soft);
-  box-shadow: var(--shadow-soft);
-  border: 1px solid var(--glass-border);
+  border-radius: 18px;
+  color: #705548;
+  border: 1px solid rgba(116, 83, 64, 0.16);
 }
 
 .dashboard-content {
   display: grid;
-  gap: 24px;
+  gap: 22px;
 }
 
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
+  gap: 14px;
 }
 
 .stat-card {
-  background: rgba(45, 50, 66, 0.84);
-  border-radius: 16px;
+  background: #fffefb;
+  border-radius: 18px;
   padding: 20px;
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(116, 83, 64, 0.16);
 }
 
 .stat-label {
-  color: var(--color-text-soft);
+  color: #81685a;
   font-size: 14px;
   margin-bottom: 8px;
 }
 
 .stat-value {
-  color: var(--color-primary);
-  font-size: 28px;
-  font-weight: 700;
+  color: #3b1712;
+  font-size: 40px;
+  font-weight: 800;
 }
 
 .section {
-  background: var(--glass-bg-strong);
-  border-radius: 22px;
-  padding: 28px;
-  box-shadow: var(--shadow-soft);
-  border: 1px solid var(--glass-border);
+  background: #fffefb;
+  border-radius: 24px;
+  padding: 24px;
+  border: 1px solid rgba(116, 83, 64, 0.16);
 }
 
 .section-title {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--color-primary);
-  margin-bottom: 20px;
+  font-size: 34px;
+  font-weight: 800;
+  color: #3b1712;
+  margin-bottom: 10px;
 }
 
 .section-subtitle {
-  color: var(--color-text-soft);
+  color: #6f5447;
   margin-bottom: 8px;
 }
 
 .trend-metric {
-  color: var(--color-text);
-  font-weight: 600;
+  color: #4a2a1f;
+  font-weight: 700;
   margin-bottom: 12px;
 }
 
-.sparkline {
+.sparkline,
+.course-sparkline {
   width: 100%;
+  background: #f7edda;
+  border-radius: 12px;
+  border: 1px solid rgba(116, 83, 64, 0.14);
+}
+
+.sparkline {
   height: 130px;
-  background: rgba(29, 34, 46, 0.8);
-  border-radius: 10px;
-  border: 1px solid var(--glass-border);
 }
 
 .empty-state {
   text-align: center;
   padding: 24px;
-  color: var(--color-text-soft);
+  color: #81685a;
 }
 
 .courses-grid {
@@ -340,32 +331,28 @@ onMounted(() => {
 }
 
 .course-card {
-  border: 1px solid var(--glass-border);
+  border: 1px solid rgba(116, 83, 64, 0.15);
   border-radius: 16px;
   padding: 18px;
-  background: rgba(45, 50, 66, 0.84);
+  background: #fff;
   display: grid;
   gap: 6px;
 }
 
 .course-card h3 {
-  color: var(--color-text);
-  font-size: 18px;
-  margin-bottom: 2px;
+  color: #3e2117;
+  font-size: 20px;
+  margin-bottom: 4px;
 }
 
 .course-meta {
-  color: var(--color-text-soft);
+  color: #705548;
   font-size: 14px;
 }
 
 .course-sparkline {
-  width: 100%;
   height: 90px;
-  background: rgba(29, 34, 46, 0.8);
-  border-radius: 10px;
-  margin-top: 6px;
-  border: 1px solid var(--glass-border);
+  margin-top: 8px;
 }
 
 .queue-list {
@@ -374,10 +361,10 @@ onMounted(() => {
 }
 
 .queue-item {
-  border: 1px solid var(--glass-border);
+  border: 1px solid rgba(116, 83, 64, 0.16);
   border-radius: 16px;
   padding: 16px;
-  background: rgba(45, 50, 66, 0.84);
+  background: #fff;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -385,19 +372,19 @@ onMounted(() => {
 }
 
 .queue-item h3 {
-  color: var(--color-text);
-  font-size: 18px;
+  color: #402118;
+  font-size: 19px;
   margin-bottom: 4px;
 }
 
 .error-message {
   margin-top: 20px;
-  background: rgba(187, 90, 99, 0.2);
-  color: #ffd7dc;
+  background: rgba(184, 72, 52, 0.14);
+  color: #8c2316;
   padding: 16px;
   border-radius: 12px;
   text-align: center;
-  border: 1px solid var(--glass-border);
+  border: 1px solid rgba(184, 72, 52, 0.24);
 }
 </style>
 

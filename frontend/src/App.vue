@@ -6,29 +6,37 @@
       <div class="lms-main">
         <header class="top-utility-bar">
           <div class="utility-left">
-            <button @click="toggleMobileMenu" class="btn-menu-toggle">
+            <button @click="toggleMobileMenu" class="btn-menu-toggle" aria-label="Open navigation menu">
               <span class="menu-icon">|||</span>
             </button>
             <div>
-              <p class="top-utility-label">ILAS Learning Workspace</p>
-              <h1 class="top-utility-title">{{ currentSectionTitle }}</h1>
+              <p class="top-utility-label">Teacher Workspace</p>
+              <h1 class="top-utility-title text-enter">{{ currentSectionTitle }}</h1>
             </div>
           </div>
 
           <div class="top-utility-user">
-            <span class="header-chip">Dark Baseline</span>
+            <span class="header-chip">Purpose-built for learning</span>
             <span class="user-pill">{{ authStore.user?.name }}</span>
             <span class="role-pill">{{ authStore.userType }}</span>
           </div>
         </header>
 
         <main class="lms-workspace">
-          <router-view />
+          <router-view v-slot="{ Component, route: currentRoute }">
+            <transition name="page" mode="out-in" appear>
+              <component :is="Component" :key="currentRoute.fullPath" />
+            </transition>
+          </router-view>
         </main>
       </div>
     </div>
 
-    <router-view v-else />
+    <router-view v-else v-slot="{ Component, route: currentRoute }">
+      <transition name="page" mode="out-in" appear>
+        <component :is="Component" :key="currentRoute.fullPath" />
+      </transition>
+    </router-view>
   </div>
 </template>
 
@@ -46,13 +54,15 @@ const route = useRoute()
 const navBarRef = ref(null)
 
 const routeTitleMap = {
+  Home: 'Markrr Platform',
+  Login: 'Welcome',
   AdminDashboard: 'Admin Dashboard',
   InstructorDashboard: 'Instructor Dashboard',
   CreateExam: 'Create Assessment',
   ExamSubmissions: 'Grade Center',
   StudentDashboard: 'Student Dashboard',
   TakeExam: 'Assessment Workspace',
-  ViewResults: 'Results & Feedback'
+  ViewResults: 'Results and Feedback'
 }
 
 const useLmsShell = computed(() => authStore.isAuthenticated && route.meta.requiresAuth)
@@ -86,8 +96,7 @@ const stopHeartbeat = () => {
 }
 
 onMounted(() => {
-  themeStore.isDarkMode = true
-  themeStore.applyTheme()
+  themeStore.initializeTheme()
   authStore.checkAuth()
   if (authStore.isAuthenticated) {
     startHeartbeat()
@@ -108,39 +117,28 @@ onBeforeUnmount(() => {
 </script>
 
 <style>
-:root {
-  --color-primary: #f4f6fd;
-  --color-surface: #2a2f3d;
-  --color-surface-strong: #1f232f;
-  --color-muted: #a7aec6;
-  --color-accent: #c5b1ff;
-  --color-bg: #13161f;
-  --color-text: #eef1f8;
-  --color-text-soft: #b4bad0;
-  --color-white: #2b3141;
-  --glass-bg: rgba(31, 35, 47, 0.88);
-  --glass-bg-strong: rgba(38, 43, 57, 0.96);
-  --glass-border: rgba(130, 142, 181, 0.24);
-  --shadow-soft: 0 12px 32px rgba(0, 0, 0, 0.35);
-  --shadow-strong: 0 22px 48px rgba(0, 0, 0, 0.52);
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
 
-html.dark-mode {
-  --color-primary: #f4f6fd;
-  --color-surface: #2a2f3d;
-  --color-surface-strong: #1f232f;
-  --color-muted: #a7aec6;
-  --color-accent: #c5b1ff;
-  --color-bg: #13161f;
-  --color-text: #eef1f8;
-  --color-text-soft: #b4bad0;
-  --color-white: #2b3141;
-  --glass-bg: rgba(31, 35, 47, 0.88);
-  --glass-bg-strong: rgba(38, 43, 57, 0.96);
-  --glass-border: rgba(130, 142, 181, 0.24);
-  --shadow-soft: 0 12px 32px rgba(0, 0, 0, 0.35);
-  --shadow-strong: 0 22px 48px rgba(0, 0, 0, 0.52);
+:root {
+  --color-primary: #3b1212;
+  --color-surface: #fffefb;
+  --color-surface-strong: #ffffff;
+  --color-muted: #755e55;
+  --color-accent: #b85b0a;
+  --color-bg: #f7f0e1;
+  --color-text: #3b1212;
+  --color-text-soft: #755e55;
+  --color-white: #ffffff;
+  --glass-bg: rgba(255, 255, 255, 0.88);
+  --glass-bg-strong: rgba(255, 255, 255, 0.95);
+  --glass-border: rgba(117, 94, 85, 0.2);
+  --shadow-soft: 0 14px 34px rgba(63, 28, 18, 0.1);
+  --shadow-strong: 0 24px 56px rgba(63, 28, 18, 0.16);
+  --brand-ink: #3b1212;
+  --brand-gold: #b85b0a;
+  --brand-green: #164541;
+  --brand-green-soft: #1f615b;
+  --brand-card: #decaa0;
 }
 
 #app {
@@ -155,15 +153,16 @@ html.dark-mode {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  background: radial-gradient(circle at top right, #1f2330 0%, #13161f 60%);
+  font-family: 'Manrope', 'Segoe UI', Roboto, system-ui, sans-serif;
+  background: var(--color-bg);
   color: var(--color-text);
   line-height: 1.55;
-  transition: background 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
 }
 
-html.dark-mode body {
-  background: radial-gradient(circle at top right, #1f2330 0%, #13161f 60%);
+::selection {
+  background: var(--color-accent);
+  color: var(--color-surface-strong);
 }
 
 button {
@@ -172,11 +171,11 @@ button {
   border-radius: 14px;
   padding: 10px 20px;
   font-size: 15px;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
 }
 
 button:hover {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   box-shadow: var(--shadow-soft);
 }
 
@@ -187,74 +186,27 @@ button:disabled {
   box-shadow: none;
 }
 
-.btn-primary {
-  background: linear-gradient(135deg, #d8ccff 0%, #bca6ff 100%);
-  color: #17181f;
-  font-weight: 700;
-}
-
-.btn-secondary {
-  background: rgba(64, 71, 94, 0.65);
-  color: var(--color-text);
-}
-
-.btn-success {
-  background: linear-gradient(135deg, #d8ccff 0%, #bca6ff 100%);
-  color: #17181f;
-  font-weight: 700;
-}
-
-.btn-danger {
-  background: rgba(187, 90, 99, 0.3);
-  color: #ffd2d7;
-}
-
 input, textarea, select {
   width: 100%;
   padding: 12px;
-  border: 1px solid rgba(130, 142, 181, 0.28);
+  border: 1px solid rgba(116, 83, 64, 0.26);
   border-radius: 12px;
   font-size: 16px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  background: rgba(29, 34, 46, 0.9);
-  backdrop-filter: blur(10px);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  background: rgba(255, 252, 246, 0.95);
   color: var(--color-text);
 }
 
 input:focus, textarea:focus, select:focus {
   outline: none;
-  border-color: #bca6ff;
-  box-shadow: 0 0 0 4px rgba(197, 177, 255, 0.2);
-}
-
-.card {
-  background: var(--glass-bg-strong);
-  border-radius: 22px;
-  padding: 24px;
-  box-shadow: var(--shadow-soft);
-  margin-bottom: 20px;
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(14px);
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 24px;
-}
-
-.glass-panel {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: 20px;
-  box-shadow: var(--shadow-soft);
-  backdrop-filter: blur(16px);
+  border-color: #ca6a07;
+  box-shadow: 0 0 0 4px rgba(202, 106, 7, 0.18);
 }
 
 .lms-layout {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 270px minmax(0, 1fr);
+  grid-template-columns: 290px minmax(0, 1fr);
   overflow: hidden;
 }
 
@@ -267,14 +219,17 @@ input:focus, textarea:focus, select:focus {
 }
 
 .top-utility-bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
   padding: 18px 28px 14px;
-  background: rgba(19, 22, 31, 0.85);
+  background: rgba(248, 237, 214, 0.88);
+  backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--glass-border);
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 16px;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .utility-left {
@@ -287,28 +242,22 @@ input:focus, textarea:focus, select:focus {
 
 .btn-menu-toggle {
   display: none;
-  background: none;
+  background: transparent;
   color: var(--color-text);
-  border: none;
+  border: 1px solid var(--glass-border);
   padding: 8px;
-  cursor: pointer;
-  font-size: 24px;
-  transition: all 0.3s ease;
+  font-size: 20px;
+  line-height: 1;
   flex-shrink: 0;
-}
-
-.btn-menu-toggle:hover {
-  background: rgba(130, 142, 181, 0.2);
-  border-radius: 8px;
 }
 
 .header-chip {
   padding: 7px 12px;
   border-radius: 999px;
-  background: rgba(64, 71, 94, 0.65);
-  color: var(--color-text-soft);
+  background: rgba(222, 203, 161, 0.58);
+  color: #5f4537;
   font-size: 12px;
-  border: 1px solid var(--glass-border);
+  border: 1px solid rgba(116, 83, 64, 0.2);
 }
 
 .menu-icon {
@@ -319,13 +268,13 @@ input:focus, textarea:focus, select:focus {
 .top-utility-label {
   font-size: 12px;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #979eb7;
+  letter-spacing: 0.14em;
+  color: #846453;
 }
 
 .top-utility-title {
-  font-size: 28px;
-  color: var(--color-primary);
+  font-size: 30px;
+  color: var(--brand-ink);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -340,19 +289,18 @@ input:focus, textarea:focus, select:focus {
 
 .user-pill,
 .role-pill {
-  padding: 6px 12px;
+  padding: 8px 12px;
   border-radius: 999px;
-  background: rgba(64, 71, 94, 0.7);
+  background: rgba(232, 215, 181, 0.9);
   font-size: 12px;
   font-weight: 700;
-  color: #f2f4fb;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  color: #3d241a;
 }
 
 .role-pill {
   text-transform: uppercase;
-  background: rgba(197, 177, 255, 0.25);
-  color: #d9ccff;
+  background: rgba(23, 79, 74, 0.14);
+  color: #1f615b;
 }
 
 .lms-workspace {
@@ -363,10 +311,22 @@ input:focus, textarea:focus, select:focus {
   padding: 12px 24px 24px;
 }
 
-.lms-workspace .container {
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
+.text-enter {
+  animation: textLiftIn 0.7s ease-out both;
+}
+
+@keyframes textLiftIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
 }
 
 @media (max-width: 980px) {
@@ -391,6 +351,7 @@ input:focus, textarea:focus, select:focus {
     font-size: 22px;
   }
 
+  .header-chip,
   .user-pill,
   .role-pill {
     display: none;

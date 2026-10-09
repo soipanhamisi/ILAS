@@ -1,8 +1,8 @@
-# ILAS Frontend - Vue.js Application
+# markrr Frontend - Vue.js Application
 
 ## 🎯 Overview
 
-Modern, responsive Vue.js 3 frontend for the Integrated Learning Assessment System (ILAS). Built with Vite, Vue Router, Pinia, and Axios.
+Modern, responsive Vue.js 3 frontend for the markrr learning and assessment platform. Built with Vite, Vue Router, Pinia, and Axios.
 
 ---
 
@@ -183,21 +183,7 @@ server: {
 
 ## 🔐 Authentication
 
-Simple ID-based authentication for demonstration:
-
-**Demo Credentials:**
-
-**Instructor:**
-- User Type: Instructor
-- ID: 1
-- Name: Dr. Smith
-
-**Student:**
-- User Type: Student
-- ID: 5
-- Name: John Doe
-
-Authentication state is managed by Pinia and persisted in localStorage.
+Authentication uses a signed JWT returned by the backend; the Axios client sends it as a bearer token. Authentication state is managed by Pinia and persisted in localStorage.
 
 ---
 

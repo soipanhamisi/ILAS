@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="page-header">
-      <h1 class="page-title">Take Exam</h1>
+      <h1 class="page-title text-enter">Take Exam</h1>
       <router-link to="/student" class="btn-secondary">← Back</router-link>
     </div>
 
@@ -265,7 +265,7 @@ onMounted(() => {
 
 <style scoped>
 .container {
-  padding: 18px 4px;
+  padding: 10px 2px 16px;
 }
 
 .page-header {
@@ -276,17 +276,17 @@ onMounted(() => {
 }
 
 .page-title {
-  font-size: 32px;
-  font-weight: 700;
-  color: var(--color-primary);
+  font-size: clamp(34px, 5vw, 56px);
+  font-weight: 800;
+  color: #3a1713;
 }
 
 .loading {
-  background: var(--glass-bg-strong);
+  background: #fffefb;
   padding: 60px 20px;
   text-align: center;
   border-radius: 16px;
-  color: var(--color-text-soft);
+  color: #705548;
   box-shadow: var(--shadow-soft);
   border: 1px solid var(--glass-border);
   backdrop-filter: blur(14px);
@@ -298,7 +298,7 @@ onMounted(() => {
 }
 
 .exam-info-card {
-  background: var(--glass-bg-strong);
+  background: #fffefb;
   border-radius: 22px;
   padding: 32px;
   margin-bottom: 24px;
@@ -307,7 +307,7 @@ onMounted(() => {
 }
 
 .questions-card {
-  background: var(--glass-bg-strong);
+  background: #fffefb;
   border-radius: 22px;
   padding: 24px 28px;
   margin-bottom: 24px;
@@ -316,7 +316,7 @@ onMounted(() => {
 }
 
 .questions-card h3 {
-  color: var(--color-primary);
+  color: #3f2118;
   margin-bottom: 14px;
 }
 
@@ -328,14 +328,14 @@ onMounted(() => {
 }
 
 .question-item {
-  color: var(--color-text);
+  color: #4a2a1f;
   line-height: 1.55;
 }
 
 .question-empty,
 .question-error {
-  color: var(--color-text-soft);
-  background: rgba(45, 50, 66, 0.84);
+  color: #705548;
+  background: #f8edd8;
   border: 1px solid var(--glass-border);
   border-radius: 10px;
   padding: 12px;
@@ -343,7 +343,7 @@ onMounted(() => {
 
 .exam-info-card h2 {
   font-size: 28px;
-  color: var(--color-primary);
+  color: #3f2118;
   margin-bottom: 14px;
 }
 
@@ -367,18 +367,18 @@ onMounted(() => {
 }
 
 .meta-item {
-  color: var(--color-text-soft);
+  color: #705548;
   font-size: 16px;
 }
 
 .meta-item strong {
-  color: var(--color-text);
+  color: #3f2118;
   margin-right: 8px;
 }
 
 .info-message {
-  background: rgba(45, 50, 66, 0.84);
-  color: var(--color-text);
+  background: #fffefb;
+  color: #3f2118;
   padding: 16px;
   border-radius: 12px;
   margin-bottom: 24px;
@@ -387,12 +387,12 @@ onMounted(() => {
 }
 
 .info-message a {
-  color: var(--color-accent);
+  color: #bd680a;
   font-weight: 700;
 }
 
 .submission-card {
-  background: var(--glass-bg-strong);
+  background: #fffefb;
   border-radius: 22px;
   padding: 32px;
   box-shadow: var(--shadow-soft);
@@ -401,12 +401,12 @@ onMounted(() => {
 
 .submission-card h3 {
   font-size: 24px;
-  color: var(--color-primary);
+  color: #3f2118;
   margin-bottom: 12px;
 }
 
 .instructions {
-  color: var(--color-text-soft);
+  color: #705548;
   margin-bottom: 24px;
   line-height: 1.6;
 }
@@ -418,12 +418,12 @@ onMounted(() => {
 .form-group label {
   display: block;
   font-weight: 600;
-  color: var(--color-text);
+  color: #3f2118;
   margin-bottom: 8px;
 }
 
 .question-caption {
-  color: var(--color-text-soft);
+  color: #705548;
   margin-bottom: 10px;
   line-height: 1.45;
 }
@@ -433,24 +433,24 @@ onMounted(() => {
   padding: 14px;
   border: 1px solid rgba(130, 142, 181, 0.3);
   border-radius: 12px;
-  background: rgba(29, 34, 46, 0.9);
+  background: #fff;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   font-size: 15px;
   line-height: 1.6;
-  color: var(--color-text);
+  color: #3f2118;
   resize: vertical;
 }
 
 .answer-input:focus {
   outline: none;
-  border-color: #bca6ff;
-  box-shadow: 0 0 0 3px rgba(197, 177, 255, 0.22);
+  border-color: #ca6a07;
+  box-shadow: 0 0 0 3px rgba(202, 106, 7, 0.22);
 }
 
 .help-text {
   display: block;
   margin-top: 8px;
-  color: var(--color-text-soft);
+  color: #705548;
   font-size: 14px;
 }
 
@@ -462,8 +462,8 @@ onMounted(() => {
 }
 
 .success-message {
-  background: rgba(147, 213, 176, 0.18);
-  color: #b9f2ce;
+  background: rgba(30, 109, 98, 0.16);
+  color: #1f615b;
   padding: 16px;
   border-radius: 12px;
   text-align: center;
@@ -474,8 +474,8 @@ onMounted(() => {
 }
 
 .error-message {
-  background: rgba(187, 90, 99, 0.2);
-  color: #ffd7dc;
+  background: rgba(184, 72, 52, 0.14);
+  color: #8c2316;
   padding: 16px;
   border-radius: 12px;
   text-align: center;

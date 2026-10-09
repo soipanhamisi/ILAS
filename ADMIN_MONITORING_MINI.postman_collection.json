@@ -1,12 +1,12 @@
 {
   "info": {
-    "name": "ILAS Admin Monitoring Mini",
+    "name": "markrr Admin Monitoring Mini",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "description": "Minimal collection to verify admin long-poll monitoring APIs."
   },
   "item": [
     {
-      "name": "1) Admin Login (capture adminId)",
+      "name": "1) Admin Login (capture JWT)",
       "request": {
         "method": "POST",
         "header": [
@@ -47,7 +47,7 @@
               "  pm.expect(json.data.userType).to.eql('admin');",
               "});",
               "",
-              "pm.collectionVariables.set('adminId', String(json.data.userId));"
+              "pm.collectionVariables.set('token', json.data.token);"
             ],
             "type": "text/javascript"
           }
@@ -153,12 +153,11 @@
       "request": {
         "method": "POST",
         "url": {
-          "raw": "{{baseUrl}}/admin/monitoring/heartbeat?userType=admin&userId={{adminId}}",
+          "raw": "{{baseUrl}}/monitoring/heartbeat",
           "host": [
             "{{baseUrl}}"
           ],
           "path": [
-            "admin",
             "monitoring",
             "heartbeat"
           ],
@@ -237,7 +236,7 @@
       ]
     },
     {
-      "name": "6) Negative - Invalid Admin ID",
+      "name": "6) Client-Supplied Admin ID Is Ignored",
       "request": {
         "method": "GET",
         "url": {
@@ -263,15 +262,13 @@
           "listen": "test",
           "script": {
             "exec": [
-              "pm.test('Status is 200 with failure envelope', function () {",
+              "pm.test('Authenticated request succeeds regardless of query adminId', function () {",
               "  pm.response.to.have.status(200);",
               "});",
               "",
               "const json = pm.response.json();",
-              "pm.test('Invalid admin is rejected', function () {",
-              "  pm.expect(json.success).to.eql(false);",
-              "  pm.expect(json.message).to.be.a('string');",
-              "  pm.expect(json.message.toLowerCase()).to.include('admin');",
+              "pm.test('The authenticated admin identity is used', function () {",
+              "  pm.expect(json.success).to.eql(true);",
               "});"
             ],
             "type": "text/javascript"
@@ -280,6 +277,10 @@
       ]
     }
   ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+  },
   "variable": [
     {
       "key": "baseUrl",
@@ -287,14 +288,14 @@
     },
     {
       "key": "adminUsername",
-      "value": "admin"
+      "value": ""
     },
     {
       "key": "adminPassword",
-      "value": "password123"
+      "value": ""
     },
     {
-      "key": "adminId",
+      "key": "token",
       "value": ""
     }
   ]
