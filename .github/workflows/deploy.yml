@@ -20,8 +20,7 @@ jobs:
           script: |
             set -e
             cd IntelligentLearnerAssessmentSystem/ILAS
-            git pull --branch gcp-deployment --single-branch https://github.com/soipanhamisi/ILAS.git
-            
+            git pull https://github.com/soipanhamisi/ILAS.git gcp-deployment 
             cd..
             echo "DB_URL=${{ vars.DB_URL }}" > env
             echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> env
