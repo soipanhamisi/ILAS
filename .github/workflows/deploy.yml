@@ -33,6 +33,7 @@ jobs:
             echo "GRADING_LLM_PROVIDER=${{ vars.GRADING_LLM_PROVIDER }}" >> env
             echo "GEMINI_STUDIO_ENDPOINT_URL=${{ vars.GEMINI_STUDIO_ENDPOINT_URL }}" >> env
             echo "GEMINI_STUDIO_MODEL=${{ vars.GEMINI_STUDIO_MODEL }}" >> env
+            echo "JWT_SECRET=${{secrets.JWT_SECRET}}" >> env
             echo "GEMINI_STUDIO_API_KEY=${{ secrets.GEMINI_STUDIO_API_KEY }}" >> env
 
             sudo -n docker compose build backend
