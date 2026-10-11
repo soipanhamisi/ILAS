@@ -31,29 +31,7 @@ A complete, modern full-stack Learning Management System for exam creation, subm
 
 ## Architecture
 
-```
-┌─────────────────────────────────────┐
-│   Vue.js 3 Frontend (Port 3000)    │
-│   • Modern responsive UI            │
-│   • 8 complete views                │
-│   • File upload support             │
-└─────────────┬───────────────────────┘
-              │ REST API
-┌─────────────▼───────────────────────┐
-│  Spring Boot Backend (Port 8081)   │
-│  • 13 REST endpoints                │
-│  • JWT authentication               │
-│  • File storage service             │
-└─────────────┬───────────────────────┘
-              │ JPA/Hibernate
-┌─────────────▼───────────────────────┐
-│  MySQL/PostgreSQL Database          │
-│  • 6 normalized tables              │
-│  • Automatic schema generation      │
-└─────────────────────────────────────┘
-```
-
----
+<img src="ilas-architecture-diagram.svg" alt="architecture diagram" width="700">
 
 ## Quick Start
 
