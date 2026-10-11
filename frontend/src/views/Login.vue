@@ -12,11 +12,11 @@
         <p>{{ isSignup ? 'Join educators and students making every answer count.' : 'Continue marking smarter and helping students improve.' }}</p>
       </div>
 
-      <div class="auth-toggle">
-        <button :class="['toggle-btn', { active: !isSignup }]" @click="isSignup = false">
+      <div class="auth-toggle" :class="{ 'signup-active': isSignup }" role="group" aria-label="Choose login or sign up">
+        <button type="button" class="toggle-btn" :aria-pressed="!isSignup" @click="isSignup = false">
           Login
         </button>
-        <button :class="['toggle-btn', { active: isSignup }]" @click="isSignup = true">
+        <button type="button" class="toggle-btn" :aria-pressed="isSignup" @click="isSignup = true">
           Sign Up
         </button>
       </div>
@@ -43,7 +43,12 @@
         </div>
 
         <button type="submit" class="btn-login" :disabled="loading">
-          {{ loading ? 'Logging in...' : 'Log in' }}
+          <span class="btn-login-content">
+            <span>{{ loading ? 'Logging in...' : 'Log in' }}</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M5 12h13m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </span>
         </button>
       </form>
 
@@ -78,7 +83,12 @@
         </div>
 
         <button type="submit" class="btn-login" :disabled="loading">
-          {{ loading ? 'Creating account...' : 'Create account' }}
+          <span class="btn-login-content">
+            <span>{{ loading ? 'Creating account...' : 'Create account' }}</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M5 12h13m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </span>
         </button>
       </form>
 
@@ -200,15 +210,16 @@ const handleSignup = async () => {
 .auth-shell {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.9fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 0;
   background: #f8efdc;
 }
 
 .auth-panel {
   width: 100%;
-  max-width: 680px;
+  max-width: none;
   min-height: 100vh;
-  margin: 0 auto;
+  margin: 0;
   padding: clamp(24px, 4vw, 52px) clamp(20px, 5vw, 72px);
   background: #fffefb;
   border-right: 1px solid rgba(116, 83, 64, 0.15);
@@ -272,23 +283,58 @@ const handleSignup = async () => {
 }
 
 .auth-toggle {
+  position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  gap: 0;
   margin-top: 28px;
-  background: #f4e8cf;
-  padding: 5px;
-  border-radius: 14px;
-  border: 1px solid rgba(116, 83, 64, 0.18);
+  padding: 4px;
+  border: 0;
+  border-radius: 12px;
+  background: #f7f0e1;
+}
+
+.auth-toggle::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  border-radius: 9px;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(59, 18, 18, 0.14);
+  transition: transform 220ms ease;
+}
+
+.auth-toggle.signup-active::before {
+  transform: translateX(100%);
 }
 
 .toggle-btn {
-  min-height: 48px;
+  position: relative;
+  z-index: 1;
+  min-height: 40px;
+  padding: 8px 12px;
   border: 0;
+  border-radius: 9px;
   background: transparent;
-  color: #7d6052;
+  color: #755e55;
   font-weight: 700;
   font-size: clamp(14px, 1.5vw, 16px);
+  box-shadow: none;
+  transition: color 220ms ease;
+}
+
+.toggle-btn:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.toggle-btn[aria-pressed='true'] {
+  color: #3b1212;
 }
 
 .login-form {
@@ -321,16 +367,49 @@ const handleSignup = async () => {
 
 .btn-login {
   width: 100%;
-  min-height: 54px;
+  min-height: 52px;
   margin-top: 4px;
   padding: 13px 20px;
-  background: linear-gradient(180deg, #61201f 0%, #481614 100%);
-  color: #fff8ef;
-  border-radius: 14px;
-  border: 1px solid rgba(78, 26, 24, 0.5);
+  background: #3b1212;
+  color: #fff;
+  border-radius: 12px;
+  border: 0;
   font-size: 16px;
   line-height: 1.2;
   font-weight: 700;
+  box-shadow: 0 6px 0 #b85b0a;
+}
+
+.btn-login-content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.btn-login-content svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+}
+
+.btn-login:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 7px 0 #b85b0a;
+}
+
+.btn-login:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 4px 0 #b85b0a;
+}
+
+.btn-login:focus-visible {
+  outline: 3px solid rgba(184, 91, 10, 0.45);
+  outline-offset: 3px;
+}
+
+.btn-login:disabled {
+  box-shadow: none;
 }
 
 .error-message,
@@ -427,7 +506,7 @@ blockquote {
   overflow-wrap: anywhere;
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 900px) {
   .auth-shell {
     grid-template-columns: 1fr;
   }
@@ -435,6 +514,7 @@ blockquote {
   .auth-panel {
     max-width: 720px;
     min-height: auto;
+    margin: 0 auto;
     border-right: 0;
   }
 

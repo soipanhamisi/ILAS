@@ -27,7 +27,7 @@
 
       <div class="section">
         <div class="section-header">
-          <h2 class="section-title">✅ Enrolled Courses</h2>
+          <h2 class="section-title">Enrolled Courses</h2>
           <span class="pill">{{ enrolledCourses.length }} active</span>
         </div>
 
@@ -41,7 +41,9 @@
             :key="`enrolled-${course.courseId}`"
             class="course-card"
           >
-            <img class="thumb-image" :src="getCourseCover(course.courseId)" :alt="`${course.courseTitle} cover`" @error="onCardImageError" />
+            <div class="course-abbreviation" role="img" :aria-label="`${course.courseTitle}: ${getCourseAbbreviation(course.courseTitle)}`">
+              {{ getCourseAbbreviation(course.courseTitle) }}
+            </div>
             <h3>{{ course.courseTitle }}</h3>
             <p class="course-meta">Instructor: {{ course.instructorName || 'TBA' }}</p>
             <span class="status-badge enrolled">Enrolled</span>
@@ -51,7 +53,7 @@
 
       <div class="section">
         <div class="section-header">
-          <h2 class="section-title">⏳ Pending Assessments</h2>
+          <h2 class="section-title">Pending Assessments</h2>
           <span class="pill">{{ pendingAssessments.length }} pending</span>
         </div>
 
@@ -87,7 +89,7 @@
 
       <div class="section">
         <div class="section-header">
-          <h2 class="section-title">🧭 Course Enrollment</h2>
+          <h2 class="section-title">Course Enrollment</h2>
           <span class="pill">{{ enrolledCourseIds.size }} enrolled</span>
         </div>
 
@@ -101,7 +103,9 @@
             :key="course.courseId"
             class="course-card"
           >
-            <img class="thumb-image" :src="getCourseCover(course.courseId)" :alt="`${course.courseTitle} cover`" @error="onCardImageError" />
+            <div class="course-abbreviation" role="img" :aria-label="`${course.courseTitle}: ${getCourseAbbreviation(course.courseTitle)}`">
+              {{ getCourseAbbreviation(course.courseTitle) }}
+            </div>
             <h3>{{ course.courseTitle }}</h3>
             <p class="course-meta">Instructor: {{ course.instructorName || 'TBA' }}</p>
 
@@ -123,7 +127,7 @@
 
       <!-- Available Exams Section -->
       <div class="section">
-        <h2 class="section-title">📚 Available Exams</h2>
+        <h2 class="section-title">Available Exams</h2>
 
         <div v-if="availableExams.length === 0" class="empty-state">
           <p>No exams available at the moment</p>
@@ -165,7 +169,7 @@
 
       <!-- My Submissions Section -->
       <div class="section">
-        <h2 class="section-title">📝 My Submissions</h2>
+        <h2 class="section-title">My Submissions</h2>
 
         <div v-if="submissions.length === 0" class="empty-state">
           <p>You haven't submitted any exams yet</p>
@@ -252,8 +256,18 @@ const resolveCoverIndex = (seed) => {
     .reduce((hash, char) => hash + char.charCodeAt(0), 0) % coverPool.length
 }
 
-const getCourseCover = (courseId) => coverPool[resolveCoverIndex(courseId)]
 const getExamCover = (examId) => coverPool[resolveCoverIndex(examId)]
+
+const getCourseAbbreviation = (courseTitle) => {
+  const words = String(courseTitle || '').trim().split(/\s+/).filter(Boolean)
+  if (words.length === 0) {
+    return 'CO'
+  }
+  if (words.length === 1) {
+    return words[0].slice(0, 2).toUpperCase()
+  }
+  return words.map(word => word[0]).join('').toUpperCase()
+}
 
 const onCardImageError = (event) => {
   if (!event?.target) {
@@ -481,6 +495,24 @@ onMounted(() => {
   border: 1px solid var(--glass-border);
   object-fit: cover;
   display: block;
+}
+
+.course-abbreviation {
+  width: 100%;
+  height: 120px;
+  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(232, 215, 181, 0.9), rgba(31, 97, 91, 0.16));
+  color: #3a1713;
+  font-size: clamp(28px, 5vw, 42px);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
 }
 
 .exam-thumb {
