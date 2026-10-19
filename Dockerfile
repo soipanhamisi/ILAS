@@ -1,6 +1,10 @@
 # syntax=docker/dockerfile:1.7
 
-FROM maven:3.9.11-eclipse-temurin-27 AS build
+FROM eclipse-temurin:27-jdk AS build
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends maven \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /workspace
 
 # Copy the Maven descriptor first to maximize layer caching.
@@ -12,7 +16,7 @@ COPY src ./src
 RUN mvn -B -DskipTests package \
     && cp "$(ls target/*.jar | grep -v 'original' | head -n 1)" /workspace/app.jar
 
-FROM eclipse-temurin:27-jre-jammy AS runtime
+FROM eclipse-temurin:27-jre AS runtime
 WORKDIR /app
 
 ENV FILE_STORAGE_UPLOAD_DIR=/data/ilas/uploads \
